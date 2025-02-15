@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles'
 
-const lightTheme = createTheme({
+export const lightTheme = createTheme({
     palette: {
         mode: 'light',
         background: {
@@ -11,6 +11,7 @@ const lightTheme = createTheme({
         }
     },
     typography: {
+        fontFamily: 'Futura LT, Arial, sans-serif',
         h1: {
             fontSize: '3rem',
             '@media (max-width:900px)': {
@@ -23,7 +24,7 @@ const lightTheme = createTheme({
     }
 })
 
-const darkTheme = createTheme({
+export const darkTheme = createTheme({
     palette: {
         mode: 'dark',
         background: {
@@ -34,6 +35,7 @@ const darkTheme = createTheme({
         }
     },
     typography: {
+        fontFamily: 'Futura LT, Arial, sans-serif',
         h1: {
             fontSize: '3rem',
             '@media (max-width:900px)': {
@@ -45,5 +47,3 @@ const darkTheme = createTheme({
         }
     }
 })
-
-export { lightTheme, darkTheme }

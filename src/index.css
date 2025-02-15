@@ -15,5 +15,5 @@ code {
 html, body {
   margin: 0;
   padding: 0;
-  cursor: url("../public/regular-cursor.png") 16 16, auto;
+  cursor: url("../public/images/regular-cursor.png") 16 16, auto;
 }
