@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/shelby-reilly-portfolio/static/css/main.d9823f44.css",
-    "main.js": "/shelby-reilly-portfolio/static/js/main.d13f4d5d.js",
+    "main.css": "/shelby-reilly-portfolio/static/css/main.177428f2.css",
+    "main.js": "/shelby-reilly-portfolio/static/js/main.254bf4a1.js",
     "index.html": "/shelby-reilly-portfolio/index.html",
-    "main.d9823f44.css.map": "/shelby-reilly-portfolio/static/css/main.d9823f44.css.map",
-    "main.d13f4d5d.js.map": "/shelby-reilly-portfolio/static/js/main.d13f4d5d.js.map"
+    "main.177428f2.css.map": "/shelby-reilly-portfolio/static/css/main.177428f2.css.map",
+    "main.254bf4a1.js.map": "/shelby-reilly-portfolio/static/js/main.254bf4a1.js.map"
   },
   "entrypoints": [
-    "static/css/main.d9823f44.css",
-    "static/js/main.d13f4d5d.js"
+    "static/css/main.177428f2.css",
+    "static/js/main.254bf4a1.js"
   ]
 }
