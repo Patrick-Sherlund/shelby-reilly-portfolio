@@ -17,8 +17,8 @@ export const MainWrapper = styled('div')(() => ({
   Then we shift it 80px to the right from center with transform.
 */
 export const PolaroidContainer = styled('div')(() => ({
-    margin: '-60px 0 80px 0',     // extra top/bottom space
-    transform: 'translateX(80px)', // shift 80px to the right of center
+    margin: '-60px 0 50px 0',     // reduced bottom margin from 80px to 50px (~15% reduction)
+    transform: 'translateX(100px)', // shift 100px to the right of center
     pointerEvents: 'auto',        // Make sure polaroids are clickable
 }))
 

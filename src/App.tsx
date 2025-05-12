@@ -18,6 +18,8 @@ import {useWandEmojis, WAND_LIFETIME, WAND_TRAVEL_DISTANCE} from './hooks/useWan
 import { useEmojiTool } from './hooks/useEmojiTool'
 import FloatingTopNav from "./components/FloatingTopNav/FloatingTopNav";
 import ZoomControls from './components/ZoomControls/ZoomControls'
+import { ZoomPanContext } from './context/ZoomPanContext'
+import { useDisableBrowserZoom } from './hooks/useDisableBrowserZoom'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -125,8 +127,20 @@ export default function App() {
         }
     }, [])
 
+    // Invoke custom hook to disable native browser zoom
+    useDisableBrowserZoom()
 
     return (
+        <ZoomPanContext.Provider value={{
+            stageRef,
+            stageScale,
+            setStageScale,
+            stagePos,
+            setStagePos,
+            clampStagePosition,
+            zoomIn,
+            zoomOut
+        }}>
         <AppContainer>
             <FloatingTopNav />
             <ZoomControls 
@@ -232,5 +246,6 @@ export default function App() {
                 <ProjectsPage />
             </PageWrapper>
         </AppContainer>
+        </ZoomPanContext.Provider>
     )
 }

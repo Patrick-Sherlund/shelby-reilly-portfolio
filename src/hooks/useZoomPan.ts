@@ -6,7 +6,7 @@ export function useZoomPan() {
     const [stagePos, setStagePos] = useState({ x: 0, y: 0 })
 
     const clampScale = useCallback((s: number) => {
-        if (s < 0.2) return 0.2
+        if (s < 1) return 1
         if (s > 3) return 3
         return s
     }, [])

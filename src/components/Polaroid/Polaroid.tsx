@@ -26,7 +26,7 @@ const PolaroidWrapper = styled('div')<{
   zIndex,
   transform: `rotate(${rotationDeg}deg)`,
   backgroundColor: '#ffffff',
-  padding: '12px 12px 12px 12px',
+  padding: '10px 10px 10px 10px',
   boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
   display: 'inline-block',
   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
@@ -51,6 +51,8 @@ const PolaroidCaption = styled('div')(() => ({
   fontSize: '14px',
   lineHeight: '1.2',
   fontFamily: '"Courier New", monospace',
+  whiteSpace: 'normal',
+  padding: '0 5px',
 }));
 
 const PolaroidTitle = styled('div')(() => ({
@@ -58,11 +60,13 @@ const PolaroidTitle = styled('div')(() => ({
   color: '#000',
   marginBottom: '0px',
   fontSize: '13px',
+  whiteSpace: 'normal',
 }));
 
 const PolaroidDate = styled('div')(() => ({
   fontSize: '11px',
   color: '#555',
+  whiteSpace: 'normal',
 }));
 
 export default function Polaroid({
