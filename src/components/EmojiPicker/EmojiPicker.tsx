@@ -1,4 +1,4 @@
-// EmojiPicker.tsx
+
 import React from 'react'
 import {
     BottomHalf,

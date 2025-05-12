@@ -10,6 +10,7 @@ type Props = {
 
 export default function EmojiBrushOverlay({ emoji, visible, x, y }: Props) {
     if (!emoji || !visible) return null
+
     return (
         <OverlayContainer style={{ top: y, left: x }}>
             <EmojiPreview src={emoji} alt="emoji-preview" />

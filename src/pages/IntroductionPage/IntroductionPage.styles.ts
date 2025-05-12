@@ -1,46 +1,57 @@
 import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
 
-type ContainerProps = {
-    scaleValue: number
-}
-
-export const IntroContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'scaleValue'
-})<ContainerProps>(({ theme, scaleValue }) => ({
+// The full-page (or Konva board) wrapper
+// We'll stack the polaroid (top) and text (middle) vertically
+export const MainWrapper = styled('div')(() => ({
     width: '100%',
     height: '100%',
-    minHeight: '100vh',
-    position: 'relative',
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.background.default,
-    backgroundImage:
-        theme.palette.mode === 'light'
-            ? `url(${process.env.PUBLIC_URL}/images/dots-light.svg)`
-            : `url(${process.env.PUBLIC_URL}/images/dots-dark.svg)`,
-    backgroundRepeat: 'repeat',
-    backgroundSize: `${20 * scaleValue}px ${20 * scaleValue}px`
+    flexDirection: 'column',   // vertical stack
+    alignItems: 'center',      // horizontally center each block
+    justifyContent: 'center'   // will center them in the vertical space
 }))
 
-export const IntroCenterText = styled('div')(({ theme }) => ({
-    fontSize: '3rem',
-    fontWeight: 600,
-    color: theme.palette.text.primary,
-    textAlign: 'center',
-    '@media (max-width:900px)': {
-        fontSize: '2rem'
-    },
-    '@media (max-width:600px)': {
-        fontSize: '1.5rem'
-    }
+/*
+  A separate section for the polaroid, in the normal flow,
+  so it pushes the text downward. We add vertical margin for extra space.
+  Then we shift it 80px to the right from center with transform.
+*/
+export const PolaroidContainer = styled('div')(() => ({
+    margin: '-60px 0 80px 0',     // extra top/bottom space
+    transform: 'translateX(80px)', // shift 80px to the right of center
+    pointerEvents: 'auto',        // Make sure polaroids are clickable
 }))
 
-export const TextWrapper = styled('div')(() => ({
+// Container holding the text blocks in a vertical stack
+export const TextsWrapper = styled('div')(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start', // keep text left-aligned as before
+    gap: '18px'
+}))
+
+// Each text container with #6675FF background, 16px padding, 4px corner radius
+export const SingleTextContainer = styled('div')(() => ({
+    position: 'relative',
+    backgroundColor: '#6675FF',
+    borderRadius: 4,
+    padding: '16px',
+    fontSize: '64px',
+    fontFamily: 'Futura, sans-serif',
+    color: '#FFFFFF',
+    lineHeight: 1.2
+}))
+
+// Sparkles pinned so the bottom-right corner aligns with the container's top-left
+export const SparklesImage = styled('img')(() => ({
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: 2
+    bottom: '70%',
+    right: '60%'
+}))
+
+// "I'm a Product Designer" line
+export const ProductDesignerText = styled('div')(({ theme }) => ({
+    fontFamily: '"Gloria Hallelujah", Futura, cursive',
+    fontSize: '24px',
+    color: theme.palette.text.primary
 }))

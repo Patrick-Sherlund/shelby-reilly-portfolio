@@ -1,11 +1,11 @@
-// DelightfulToolbar.tsx
 import React, { useRef, useEffect } from 'react'
 import { IconButton } from '@mui/material'
-import PanToolAltIcon from '@mui/icons-material/PanToolAlt'
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline'
-import StickyNote2Icon from '@mui/icons-material/StickyNote2'
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions'
-import { NavWrapper, ToolbarContainer, ToolSection } from './DelightfulToolbar.styles'
+import {
+    NavWrapper,
+    ToolbarContainer,
+    ToolSection,
+    ToolImage
+} from './DelightfulToolbar.styles'
 
 type Tool = 'hand' | 'pen' | 'sticky' | 'emoji' | null
 
@@ -24,7 +24,6 @@ export default function DelightfulToolbar({
                                           }: Props) {
     const emojiButtonRef = useRef<HTMLButtonElement | null>(null)
 
-    // Ensure the first tool (hand) is active by default
     useEffect(() => {
         if (activeTool === null) {
             setActiveTool('hand')
@@ -47,60 +46,92 @@ export default function DelightfulToolbar({
     return (
         <NavWrapper>
             <ToolbarContainer>
-                <ToolSection isActive={activeTool === 'hand'}>
+                {/* 1) Cursor tool (left corner) */}
+                <ToolSection isActive={activeTool === 'hand'} isCursorTool>
                     <IconButton
                         onClick={() => handleSelectTool('hand')}
                         sx={{
-                            color: activeTool === 'hand' ? '#fff' : 'inherit',
+                            p: 0,
                             '&:hover': {
-                                backgroundColor: activeTool === 'hand' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.04)'
+                                backgroundColor:
+                                    activeTool === 'hand'
+                                        ? 'rgba(255,255,255,0.1)'
+                                        : 'rgba(0,0,0,0.04)'
                             }
                         }}
                     >
-                        <PanToolAltIcon />
+                        <ToolImage
+                            sx={{width: 'auto', height: '50px'}}
+                            src={`${process.env.PUBLIC_URL}/images/bar-cursor.png`}
+                            alt="Cursor"
+                        />
                     </IconButton>
                 </ToolSection>
 
+                {/* 2) Pen tool (middle) */}
                 <ToolSection isActive={activeTool === 'pen'}>
                     <IconButton
                         onClick={() => handleSelectTool('pen')}
                         sx={{
-                            color: activeTool === 'pen' ? '#fff' : 'inherit',
+                            p: 0,
                             '&:hover': {
-                                backgroundColor: activeTool === 'pen' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.04)'
+                                backgroundColor:
+                                    activeTool === 'pen'
+                                        ? 'rgba(255,255,255,0.1)'
+                                        : 'rgba(0,0,0,0.04)'
                             }
                         }}
                     >
-                        <ModeEditOutlineIcon />
+                        <ToolImage
+                            src={`${process.env.PUBLIC_URL}/images/pen.png`}
+                            alt="Pen"
+                        />
                     </IconButton>
                 </ToolSection>
 
+                {/* 3) Sticky tool (middle) */}
                 <ToolSection isActive={activeTool === 'sticky'}>
                     <IconButton
                         onClick={() => handleSelectTool('sticky')}
                         sx={{
-                            color: activeTool === 'sticky' ? '#fff' : 'inherit',
+                            p: 0,
                             '&:hover': {
-                                backgroundColor: activeTool === 'sticky' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.04)'
+                                backgroundColor:
+                                    activeTool === 'sticky'
+                                        ? 'rgba(255,255,255,0.1)'
+                                        : 'rgba(0,0,0,0.04)'
                             }
                         }}
                     >
-                        <StickyNote2Icon />
+                        <ToolImage
+                            src={`${process.env.PUBLIC_URL}/images/sticky-notes.png`}
+                            alt="Sticky Notes"
+                        />
                     </IconButton>
                 </ToolSection>
 
-                <ToolSection isActive={activeTool === 'emoji'}>
+                {/* 4) Sticker/Emoji tool (right corner) */}
+                <ToolSection
+                    isActive={activeTool === 'emoji'}
+                    isStickerTool // <--- This will give the extra width
+                >
                     <IconButton
                         ref={emojiButtonRef}
                         onClick={() => handleSelectTool('emoji')}
                         sx={{
-                            color: activeTool === 'emoji' ? '#fff' : 'inherit',
+                            p: 0,
                             '&:hover': {
-                                backgroundColor: activeTool === 'emoji' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.04)'
+                                backgroundColor:
+                                    activeTool === 'emoji'
+                                        ? 'rgba(255,255,255,0.1)'
+                                        : 'rgba(0,0,0,0.04)'
                             }
                         }}
                     >
-                        <EmojiEmotionsIcon />
+                        <ToolImage
+                            src={`${process.env.PUBLIC_URL}/images/stickers.png`}
+                            alt="Stickers"
+                        />
                     </IconButton>
                 </ToolSection>
             </ToolbarContainer>

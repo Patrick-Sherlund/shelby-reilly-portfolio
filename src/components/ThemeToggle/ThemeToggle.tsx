@@ -11,7 +11,18 @@ export default function ThemeToggle() {
 
     return (
         <ToggleWrapper>
-            <IconButton onClick={toggleTheme} sx={{ color: 'inherit' }}>
+            {/* Same size and style as your social icon buttons */}
+            <IconButton
+                onClick={toggleTheme}
+                sx={{
+                    color: 'inherit',
+                    width: 40,
+                    height: 40,
+                    '& .MuiSvgIcon-root': {
+                        fontSize: 40
+                    }
+                }}
+            >
                 {isDark ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
         </ToggleWrapper>

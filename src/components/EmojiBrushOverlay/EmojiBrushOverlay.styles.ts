@@ -7,7 +7,10 @@ export const OverlayContainer = styled('div')(() => ({
 }))
 
 export const EmojiPreview = styled('img')(() => ({
-    width: 40,
-    height: 40,
+    maxWidth: '40px',
+    maxHeight: '40px',
+    width: 'auto',
+    height: 'auto',
+    objectFit: 'contain',
     opacity: 0.6
 }))

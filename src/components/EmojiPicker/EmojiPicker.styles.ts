@@ -1,4 +1,3 @@
-// EmojiPicker.styles.ts
 import { styled } from '@mui/material/styles'
 
 export const PickerContainer = styled('div')(({ theme }) => ({
@@ -86,15 +85,13 @@ export const BottomHalf = styled('div')<{ active: boolean }>(({ active }) => ({
     cursor: 'pointer'
 }))
 
-export const PieDivider = styled('div')(({theme}) => ({
+export const PieDivider = styled('div')(({ theme }) => ({
     position: 'absolute',
     top: '75%',
     left: '50%',
     width: '1px',
     height: '50%',
-    backgroundColor: theme.palette.mode === 'light'
-        ? '#e2e2e2'
-        : '#515151',
+    backgroundColor: theme.palette.mode === 'light' ? '#e2e2e2' : '#515151',
     transformOrigin: 'top center',
     zIndex: 1
 }))
@@ -104,8 +101,11 @@ type EmojiImageProps = {
 }
 
 export const EmojiImage = styled('img')<EmojiImageProps>(({ isSelected }) => ({
-    width: '2rem',
-    height: '2rem',
+    maxWidth: '2rem',
+    maxHeight: '2rem',
+    width: 'auto',
+    height: 'auto',
+    objectFit: 'contain', // ensure it won't crop but will preserve aspect ratio
     borderRadius: '50%',
     backgroundColor: isSelected ? 'rgba(255,255,255,0.4)' : 'transparent'
 }))
