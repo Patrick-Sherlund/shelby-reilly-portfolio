@@ -215,7 +215,6 @@ export default function CursorChat() {
             </div>
             )}
 
-            {/* Name label – always visible */}
             <div
                 style={{
                     marginTop: 0,
@@ -229,7 +228,7 @@ export default function CursorChat() {
                     width: 'max-content'
                 }}
             >
-                Anonymous
+                Bestie
             </div>
         </div>
     )

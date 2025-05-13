@@ -159,6 +159,46 @@ function ChatBubble({
     )
 }
 
+function NameLabel({
+    x,
+    y,
+    cursorWidth,
+    cursorHeight,
+    typing,
+    bgColor = '#2E90FA'
+}: {
+    x: number
+    y: number
+    cursorWidth: number
+    cursorHeight: number
+    typing: boolean
+    bgColor?: string
+}) {
+    const CHAT_HEIGHT = 28 // approximate chat bubble min-height
+    const offsetY = cursorHeight / 2 + 10 + (typing ? CHAT_HEIGHT + 4 : 0)
+    return (
+        <div
+            style={{
+                position: 'absolute',
+                left: x + cursorWidth / 2 + 10,
+                top: y + offsetY,
+                pointerEvents: 'none',
+                zIndex: 999999999,
+                backgroundColor: bgColor,
+                color: '#fff',
+                fontSize: 12,
+                fontWeight: 600,
+                fontFamily: 'Futura, Arial, sans-serif',
+                padding: '2px 6px',
+                borderRadius: 0,
+                whiteSpace: 'nowrap'
+            }}
+        >
+            Shelby Reilly
+        </div>
+    )
+}
+
 export function CursorSimulator({
                                     waypoints,
                                     startSide,
@@ -495,6 +535,14 @@ export function CursorSimulator({
                     cursorHeight={cursorSize.height}
                 />
             )}
+            <NameLabel
+                x={position.x}
+                y={position.y}
+                cursorWidth={cursorSize.width}
+                cursorHeight={cursorSize.height}
+                typing={typing}
+                bgColor={waypoints[index]?.chat?.bgColor || '#2E90FA'}
+            />
         </>
     )
 }

@@ -21,6 +21,7 @@ import ZoomControls from './components/ZoomControls/ZoomControls'
 import { ZoomPanContext } from './context/ZoomPanContext'
 import { useDisableBrowserZoom } from './hooks/useDisableBrowserZoom'
 import CursorChat from './components/CursorChat/CursorChat'
+import FastWaveCursor from './components/FastWaveCursor/FastWaveCursor'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -283,6 +284,7 @@ export default function App() {
                 <ProjectsPage />
             </PageWrapper>
             <CursorChat />
+            <FastWaveCursor />
         </AppContainer>
         </ZoomPanContext.Provider>
     )

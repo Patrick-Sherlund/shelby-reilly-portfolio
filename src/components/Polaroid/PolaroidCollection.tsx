@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { styled } from '@mui/material/styles';
+import { keyframes } from '@mui/system';
 import Polaroid from './Polaroid';
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction';
 
@@ -13,6 +14,15 @@ const CollectionContainer = styled('div')(() => ({
   pointerEvents: 'auto',
 }));
 
+const growFromCorner = keyframes`
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+`;
+
 // Simple selection box that exactly matches the container bounds
 const SelectionBox = styled('div')(() => ({
   position: 'absolute',
@@ -24,6 +34,9 @@ const SelectionBox = styled('div')(() => ({
   borderRadius: '6px',
   backgroundColor: 'rgba(23, 154, 255, 0.05)',
   zIndex: 0,
+  transformOrigin: 'bottom right',
+  transform: 'scale(0)',
+  animation: `${growFromCorner} 0.8s ease-out forwards`,
 }));
 
 // Dots at the corners of the selection box
