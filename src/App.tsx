@@ -22,6 +22,7 @@ import { ZoomPanContext } from './context/ZoomPanContext'
 import { useDisableBrowserZoom } from './hooks/useDisableBrowserZoom'
 import CursorChat from './components/CursorChat/CursorChat'
 import FastWaveCursor from './components/FastWaveCursor/FastWaveCursor'
+import CommentingLayer from './components/CommentingLayer/CommentingLayer'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -285,6 +286,7 @@ export default function App() {
             </PageWrapper>
             <CursorChat />
             <FastWaveCursor />
+            <CommentingLayer activeTool={activeTool} />
         </AppContainer>
         </ZoomPanContext.Provider>
     )

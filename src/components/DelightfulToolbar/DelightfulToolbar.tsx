@@ -7,7 +7,7 @@ import {
     ToolImage
 } from './DelightfulToolbar.styles'
 
-type Tool = 'hand' | 'pen' | 'sticky' | 'emoji' | null
+type Tool = 'hand' | 'commenting-cursor' | 'sticky' | 'emoji' | null
 
 type Props = {
     activeTool: Tool
@@ -44,7 +44,7 @@ export default function DelightfulToolbar({
     }
 
     return (
-        <NavWrapper>
+        <NavWrapper data-ignore-comment>
             <ToolbarContainer>
                 {/* 1) Cursor tool (left corner) */}
                 <ToolSection isActive={activeTool === 'hand'} isCursorTool>
@@ -68,23 +68,23 @@ export default function DelightfulToolbar({
                     </IconButton>
                 </ToolSection>
 
-                {/* 2) Pen tool (middle) */}
-                <ToolSection isActive={activeTool === 'pen'}>
+                {/* 2) commenting-cursor tool (middle) */}
+                <ToolSection isActive={activeTool === 'commenting-cursor'}>
                     <IconButton
-                        onClick={() => handleSelectTool('pen')}
+                        onClick={() => handleSelectTool('commenting-cursor')}
                         sx={{
                             p: 0,
                             '&:hover': {
                                 backgroundColor:
-                                    activeTool === 'pen'
+                                    activeTool === 'commenting-cursor'
                                         ? 'rgba(255,255,255,0.1)'
                                         : 'rgba(0,0,0,0.04)'
                             }
                         }}
                     >
                         <ToolImage
-                            src={`${process.env.PUBLIC_URL}/images/pen.png`}
-                            alt="Pen"
+                            src={`${process.env.PUBLIC_URL}/images/commenting-cursor-lg.png`}
+                            alt="commenting-cursor"
                         />
                     </IconButton>
                 </ToolSection>

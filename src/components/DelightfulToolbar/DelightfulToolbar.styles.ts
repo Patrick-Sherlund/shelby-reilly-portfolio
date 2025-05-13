@@ -32,7 +32,7 @@ export const ToolbarContainer = styled(Paper)(({ theme }) => ({
             ? 'rgba(255, 255, 255, 0.95)'
             : 'rgba(50, 50, 50, 0.8)',
     padding: 0,
-    overflow: 'hidden'
+    cursor: `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`,
 }))
 
 // We give each section a base width of 80px...
@@ -43,7 +43,7 @@ export const ToolSection = styled('div')<{
     isStickerTool?: boolean
 }>(({ isActive, isCursorTool, isStickerTool }) => ({
     width: isStickerTool ? 92 : 80, // 80 + 12 extra for sticker
-    height: 80,
+    height: 62,
     display: 'flex',
     justifyContent: 'center',
     // Cursor tool is centered vertically, others bottom-aligned

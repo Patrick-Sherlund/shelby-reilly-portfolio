@@ -15,11 +15,14 @@ const CollectionContainer = styled('div')(() => ({
 }));
 
 const growFromCorner = keyframes`
-  from {
+  0% {
     transform: scale(0);
   }
-  to {
-    transform: scale(1);
+  80% {
+    transform: scale(1.07); /* Overshoot */
+  }
+  100% {
+    transform: scale(1); /* Settle back to exact size */
   }
 `;
 
