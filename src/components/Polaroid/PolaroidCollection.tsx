@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import Polaroid from './Polaroid';
-import { useZoomPanContext } from '../../context/ZoomPanContext';
+import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction';
 
 // Set a fixed height that accommodates all polaroids with wrapped text
 const CollectionContainer = styled('div')(() => ({
@@ -55,105 +55,22 @@ const clampScale = (s: number) => {
 };
 
 export default function PolaroidCollection() {
-  const {
-    stageRef,
-    stageScale,
-    setStageScale,
-    stagePos,
-    setStagePos,
-    clampStagePosition,
-  } = useZoomPanContext();
-
-  // Ref for the container div so we can attach a non-passive wheel listener
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Memoised wheel handler so we can easily add/remove it
-  const wheelHandler = useCallback((e: WheelEvent) => {
-    // prevent page from scrolling
-    e.preventDefault();
-
-    const deltaY = e.deltaY;
-
-    if (e.ctrlKey || e.metaKey) {
-      if (!stageRef.current) return;
-
-      const oldScale = stageScale;
-      const newScale = clampScale(oldScale - deltaY * 0.01);
-
-      if (newScale === oldScale) return;
-
-      const pointerPosition = { x: e.clientX, y: e.clientY };
-      const stage = stageRef.current;
-
-      const mousePointTo = {
-        x: (pointerPosition.x - stage.x()) / oldScale,
-        y: (pointerPosition.y - stage.y()) / oldScale,
-      };
-
-      const newPos = {
-        x: pointerPosition.x - mousePointTo.x * newScale,
-        y: pointerPosition.y - mousePointTo.y * newScale,
-      };
-
-      newPos.y = clampStagePosition(newPos.y);
-
-      setStageScale(newScale);
-      setStagePos(newPos);
-    } else {
-      // Vertical pan
-      setStagePos(prev => {
-        const newY = clampStagePosition(prev.y - deltaY);
-        return { x: prev.x, y: newY };
-      });
-    }
-  }, [stageScale, stageRef, clampStagePosition, setStageScale, setStagePos]);
-
-  // Attach the non-passive wheel listener on mount
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    container.addEventListener('wheel', wheelHandler, { passive: false });
-    return () => container.removeEventListener('wheel', wheelHandler);
-  }, [wheelHandler]);
-
-  // Refs for drag-to-pan interaction
-  const isDraggingRef = useRef(false);
-  const dragStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const stageStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Only respond to left-click
-    if (e.button !== 0) return;
-    isDraggingRef.current = true;
-    dragStartPosRef.current = { x: e.clientX, y: e.clientY };
-    stageStartPosRef.current = { ...stagePos };
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return;
-
-    const dx = e.clientX - dragStartPosRef.current.x;
-    const dy = e.clientY - dragStartPosRef.current.y;
-
-    // Update stage position relative to the drag start
-    setStagePos({
-      x: stageStartPosRef.current.x + dx,
-      y: clampStagePosition(stageStartPosRef.current.y + dy),
-    });
-  };
-
-  const endDrag = () => {
-    isDraggingRef.current = false;
-  };
+  // Reuse shared interaction hook
+  const {
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+    handleMouseLeave
+  } = useZoomPanInteraction(containerRef);
 
   return (
     <CollectionContainer 
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
-      onMouseUp={endDrag}
-      onMouseLeave={endDrag}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Selection box with corner dots */}
       <SelectionBox>

@@ -20,6 +20,7 @@ import FloatingTopNav from "./components/FloatingTopNav/FloatingTopNav";
 import ZoomControls from './components/ZoomControls/ZoomControls'
 import { ZoomPanContext } from './context/ZoomPanContext'
 import { useDisableBrowserZoom } from './hooks/useDisableBrowserZoom'
+import CursorChat from './components/CursorChat/CursorChat'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -281,6 +282,7 @@ export default function App() {
             <PageWrapper baseY={window.innerHeight * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
                 <ProjectsPage />
             </PageWrapper>
+            <CursorChat />
         </AppContainer>
         </ZoomPanContext.Provider>
     )

@@ -8,7 +8,8 @@ export const MainWrapper = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',   // vertical stack
     alignItems: 'center',      // horizontally center each block
-    justifyContent: 'center'   // will center them in the vertical space
+    justifyContent: 'center',   // will center them in the vertical space
+    position: 'relative',       // allow absolutely positioned children like sticky notes
 }))
 
 /*
@@ -18,7 +19,7 @@ export const MainWrapper = styled('div')(() => ({
 */
 export const PolaroidContainer = styled('div')(() => ({
     margin: '-60px 0 50px 0',     // reduced bottom margin from 80px to 50px (~15% reduction)
-    transform: 'translateX(5vw)', // responsive shift relative to viewport width
+    transform: 'translateX(10vw)', // responsive shift relative to viewport width
     pointerEvents: 'auto',        // Make sure polaroids are clickable
 }))
 
@@ -37,8 +38,9 @@ export const SingleTextContainer = styled('div')(() => ({
     backgroundColor: '#6675FF',
     borderRadius: 4,
     padding: '16px',
-    fontSize: 'clamp(32px, 6vw, 64px)',
+    fontSize: 'clamp(28px, 5vw, 64px)',
     fontFamily: 'Futura, sans-serif',
+    fontWeight: 700, 
     color: '#FFFFFF',
     lineHeight: 1.2
 }))
@@ -56,3 +58,46 @@ export const SparklesImage = styled('img')(() => ({
 //     fontSize: 'clamp(18px, 2vw, 28px)',
 //     color: theme.palette.text.primary
 // }))
+
+export const StickyNotesWrapper = styled('div')(() => ({
+    position: 'absolute',
+    bottom: 40,
+    left: 40,
+    pointerEvents: 'auto', // allow interaction if needed
+}))
+
+export const StickyNote = styled('div')(() => ({
+    position: 'absolute',
+    width: 160,
+    height: 160,
+    padding: '16px',
+    borderRadius: 8,
+    fontFamily: 'Futura, sans-serif',
+    fontSize: 'clamp(14px, 2vw, 16px)',
+    fontWeight: 600,
+    lineHeight: 1.3,
+    color: '#000',
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+}))
+
+export const LogoRow = styled('div')(() => ({
+    marginTop: 8,
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    gap: 8,
+    alignItems: 'center',
+}))
+
+// Wrapper that shifts main intro content to the right, leaving sticky notes in place
+export const ContentWrapper = styled('div')(() => ({
+    transform: 'translateX(60px)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+}))

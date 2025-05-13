@@ -7,14 +7,27 @@ import {
     TextsWrapper,
     SingleTextContainer,
     SparklesImage,
-    ProductDesignerText
+    StickyNotesWrapper,
+    StickyNote,
+    LogoRow,
+    ContentWrapper
 } from './IntroductionPage.styles'
+import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 
 export default function IntroductionPage() {
     const topLeftRef = useRef<HTMLDivElement>(null)
     const textSectionRef = useRef<HTMLDivElement>(null)
     const bottomRightRef = useRef<HTMLDivElement>(null)
     const [waypoints, setWaypoints] = useState<any[]>([])
+
+    // sticky notes zoom/pan interaction
+    const stickyRef = useRef<HTMLDivElement>(null)
+    const {
+        handleMouseDown: stickyMouseDown,
+        handleMouseMove: stickyMouseMove,
+        handleMouseUp: stickyMouseUp,
+        handleMouseLeave: stickyMouseLeave
+    } = useZoomPanInteraction(stickyRef)
 
     useEffect(() => {
         if (
@@ -112,13 +125,14 @@ export default function IntroductionPage() {
                 }}
             />
 
+            <ContentWrapper>
             <PolaroidContainer>
                 <PolaroidCollection />
             </PolaroidContainer>
 
             <div
                 ref={textSectionRef}
-                style={{ position: 'relative' }}
+                style={{ position: 'relative', top: -50 }}
             >
                 <div
                     ref={bottomRightRef}
@@ -143,10 +157,61 @@ export default function IntroductionPage() {
                     <SingleTextContainer>
                         I'm Shelby :)
                     </SingleTextContainer>
-
-                    {/* <ProductDesignerText>I'm a Product Designer</ProductDesignerText> */}
                 </TextsWrapper>
             </div>
+            </ContentWrapper>
+
+            {/* Sticky Notes Cluster */}
+            <StickyNotesWrapper
+                ref={stickyRef}
+                onMouseDown={stickyMouseDown}
+                onMouseMove={stickyMouseMove}
+                onMouseUp={stickyMouseUp}
+                onMouseLeave={stickyMouseLeave}
+            >
+                {/* Top Sticky */}
+                <StickyNote
+                    style={{ backgroundColor: '#FFE066', bottom: 140, left: 50, zIndex: 3 }}
+                >
+                    I'm a product designer in Austin Texas 🤠
+                </StickyNote>
+
+                {/* Bottom Left Sticky */}
+                <StickyNote
+                    style={{ backgroundColor: '#FF66FC', bottom: 0, left: 10, zIndex: 1 }}
+                >
+                    M.S. HCI @ Georgia Tech
+                </StickyNote>
+
+                {/* Bottom Right Sticky */}
+                <StickyNote
+                    style={{ backgroundColor: '#FFFFFF', bottom: 20, left: 200, zIndex: 2 }}
+                >
+                    Previously:
+                    <LogoRow>
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/airforce.png`}
+                            alt="Air Force"
+                            height={18}
+                        />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/jamba.png`}
+                            alt="Jamba"
+                            height={20}
+                        />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/vmware.png`}
+                            alt="VMware"
+                            height={20}
+                        />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/google.png`}
+                            alt="Google"
+                            height={20}
+                        />
+                    </LogoRow>
+                </StickyNote>
+            </StickyNotesWrapper>
 
             {waypoints.length > 0 && (
                 <CursorSimulator
