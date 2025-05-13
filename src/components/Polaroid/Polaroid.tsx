@@ -59,7 +59,7 @@ const PolaroidTitle = styled('div')(() => ({
   fontWeight: 'bold',
   color: '#000',
   marginBottom: '0px',
-  fontSize: '13px',
+  fontSize: '12px',
   whiteSpace: 'normal',
 }));
 

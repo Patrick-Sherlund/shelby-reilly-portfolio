@@ -97,6 +97,12 @@ export default function App() {
     const isWandActive = activeTool === 'emoji' && emojiSubMode === 'wand'
     const canDragBackground = !isWandActive
 
+    // Track y position before first zoom, and whether user scrolled while zoomed
+    const yBeforeZoomRef = useRef<number | null>(null)
+    const scrolledWhileZoomedRef = useRef(false)
+    const prevScaleRef = useRef(1)
+    const prevPosYRef = useRef(stagePos.y)
+
     const dragBoundFunc = (pos: { x: number; y: number }) => ({
         x: pos.x,
         y: clampStagePosition(pos.y)
@@ -130,6 +136,34 @@ export default function App() {
     // Invoke custom hook to disable native browser zoom
     useDisableBrowserZoom()
 
+    // Detect entering zoom to capture initial y
+    useEffect(() => {
+        if (prevScaleRef.current === 1 && stageScale !== 1) {
+            // just started zooming
+            yBeforeZoomRef.current = stagePos.y
+            scrolledWhileZoomedRef.current = false
+        }
+        prevScaleRef.current = stageScale
+    }, [stageScale, stagePos.y])
+
+    // Detect vertical scroll (y change) while zoomed
+    useEffect(() => {
+        if (stageScale !== 1 && prevPosYRef.current !== stagePos.y) {
+            scrolledWhileZoomedRef.current = true
+        }
+        prevPosYRef.current = stagePos.y
+    }, [stagePos.y, stageScale])
+
+    const resetView = () => {
+        // Determine which page is currently in view based on stagePos & scale
+        const approxIndex = Math.round(-stagePos.y / (window.innerHeight * stageScale))
+        const clampedIndex = Math.max(0, Math.min(2, approxIndex)) // we have 3 pages (0-2)
+        const targetY = -clampedIndex * window.innerHeight
+
+        setStageScale(1)
+        setStagePos({ x: 0, y: targetY })
+    }
+
     return (
         <ZoomPanContext.Provider value={{
             stageRef,
@@ -144,9 +178,11 @@ export default function App() {
         <AppContainer>
             <FloatingTopNav />
             <ZoomControls 
-                scale={stageScale} 
+                scale={stageScale}
+                pos={stagePos}
                 onZoomIn={() => zoomIn(stageRef)} 
                 onZoomOut={() => zoomOut(stageRef)} 
+                onReset={resetView}
             />
             <DelightfulToolbar
                 activeTool={activeTool}

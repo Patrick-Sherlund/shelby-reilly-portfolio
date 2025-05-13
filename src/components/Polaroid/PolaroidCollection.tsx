@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import Polaroid from './Polaroid';
 import { useZoomPanContext } from '../../context/ZoomPanContext';
@@ -6,11 +6,10 @@ import { useZoomPanContext } from '../../context/ZoomPanContext';
 // Set a fixed height that accommodates all polaroids with wrapped text
 const CollectionContainer = styled('div')(() => ({
   position: 'relative',
-  width: '380px',
+  width: '455px',
   height: '275px', // Adjusted for the more compact polaroids
   marginTop: '0',
-  marginLeft: '15px',
-  // Allow wheel events but still remain clickable
+  marginLeft: '100px',
   pointerEvents: 'auto',
 }));
 
@@ -21,7 +20,7 @@ const SelectionBox = styled('div')(() => ({
   left: '0px',
   right: '0px',
   bottom: '0px',
-  border: '2px solid #179AFF',
+  border: '2px solid #6675FF',
   borderRadius: '6px',
   backgroundColor: 'rgba(23, 154, 255, 0.05)',
   zIndex: 0,
@@ -31,18 +30,18 @@ const SelectionBox = styled('div')(() => ({
 const SelectionDot = styled('div')<{ position: string }>(({ position }) => {
   // Calculate top/left/right/bottom based on position
   const posStyles: Record<string, React.CSSProperties> = {
-    'top-left': { top: '-5px', left: '-5px' },
-    'top-right': { top: '-5px', right: '-5px' },
-    'bottom-left': { bottom: '-5px', left: '-5px' },
-    'bottom-right': { bottom: '-5px', right: '-5px' },
+    'top-left': { top: '-7px', left: '-7px' },
+    'top-right': { top: '-7px', right: '-7px' },
+    'bottom-left': { bottom: '-7px', left: '-7px' },
+    'bottom-right': { bottom: '-7px', right: '-7px' },
   };
   
   return {
     position: 'absolute',
-    width: '8px',
-    height: '8px',
+    width: '12px',
+    height: '12px',
     backgroundColor: 'white',
-    border: '1px solid #179AFF',
+    border: '1px solid #6675FF',
     borderRadius: '0',
     ...posStyles[position],
   };
@@ -64,6 +63,11 @@ export default function PolaroidCollection() {
     setStagePos,
     clampStagePosition,
   } = useZoomPanContext();
+
+  // Refs for drag-to-pan interaction
+  const isDraggingRef = useRef(false);
+  const dragStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const stageStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     // Prevent default scrolling behaviour
@@ -106,8 +110,39 @@ export default function PolaroidCollection() {
     }
   };
 
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Only respond to left-click
+    if (e.button !== 0) return;
+    isDraggingRef.current = true;
+    dragStartPosRef.current = { x: e.clientX, y: e.clientY };
+    stageStartPosRef.current = { ...stagePos };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+
+    const dx = e.clientX - dragStartPosRef.current.x;
+    const dy = e.clientY - dragStartPosRef.current.y;
+
+    // Update stage position relative to the drag start
+    setStagePos({
+      x: stageStartPosRef.current.x + dx,
+      y: clampStagePosition(stageStartPosRef.current.y + dy),
+    });
+  };
+
+  const endDrag = () => {
+    isDraggingRef.current = false;
+  };
+
   return (
-    <CollectionContainer onWheel={handleWheel}>
+    <CollectionContainer 
+      onWheel={handleWheel}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={endDrag}
+      onMouseLeave={endDrag}
+    >
       {/* Selection box with corner dots */}
       <SelectionBox>
         <SelectionDot position="top-left" />
@@ -122,11 +157,11 @@ export default function PolaroidCollection() {
         alt="Ctrl+Y"
         title="Ctrl+Y"
         date="Nov 2024 - Current"
-        width={115}
-        rotationDeg={-3}
-        zIndex={2}
+        width={140}
+        rotationDeg={5.75}
+        zIndex={3}
         top="15px"
-        left="5px" // Adjusted slightly left
+        left="20px" // Adjusted slightly left
       />
 
       <Polaroid
@@ -134,11 +169,11 @@ export default function PolaroidCollection() {
         alt="dPod"
         title="dPod"
         date="Aug 2019 - Dec 2019"
-        width={105}
-        rotationDeg={3}
-        zIndex={3}
+        width={140}
+        rotationDeg={-10}
+        zIndex={2}
         top="35px"
-        left="115px" // Adjusted position
+        left="160px" // Adjusted position
       />
 
       {/* LED Basketball Hoop Polaroid */}
@@ -147,11 +182,11 @@ export default function PolaroidCollection() {
         alt="LED Basketball Hoop"
         title="LED Basketball Hoop"
         date="Sept [wk] 2022"
-        width={120} // Slightly smaller
-        rotationDeg={-2}
-        zIndex={1}
+        width={140} // Slightly smaller
+        rotationDeg={2.5}
+        zIndex={4}
         top="12px"
-        left="217px" // Adjusted horizontal position
+        left="302px" // Adjusted horizontal position
       />
     </CollectionContainer>
   );

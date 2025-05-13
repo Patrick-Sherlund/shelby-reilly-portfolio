@@ -8,6 +8,7 @@ export const ControlsWrapper = styled(Box)(({ theme }) => ({
     zIndex: 2,
     display: 'flex',
     alignItems: 'center',
+    gap: '4px',
     padding: '0.25rem 0.5rem',
     borderRadius: 8,
     backgroundColor:
