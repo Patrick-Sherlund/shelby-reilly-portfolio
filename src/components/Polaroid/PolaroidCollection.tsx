@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import Polaroid from './Polaroid';
 import { useZoomPanContext } from '../../context/ZoomPanContext';
@@ -6,10 +6,10 @@ import { useZoomPanContext } from '../../context/ZoomPanContext';
 // Set a fixed height that accommodates all polaroids with wrapped text
 const CollectionContainer = styled('div')(() => ({
   position: 'relative',
-  width: '455px',
-  height: '275px', // Adjusted for the more compact polaroids
-  marginTop: '0',
-  marginLeft: '100px',
+  width: 'clamp(320px, 36vw, 460px)',
+  height: 'clamp(220px, 24vw, 264px)', // responsive height tied to viewport width
+  marginTop: '70px',
+  marginLeft: 'clamp(20px, 5vw, 120px)',
   pointerEvents: 'auto',
 }));
 
@@ -64,18 +64,16 @@ export default function PolaroidCollection() {
     clampStagePosition,
   } = useZoomPanContext();
 
-  // Refs for drag-to-pan interaction
-  const isDraggingRef = useRef(false);
-  const dragStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const stageStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  // Ref for the container div so we can attach a non-passive wheel listener
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    // Prevent default scrolling behaviour
+  // Memoised wheel handler so we can easily add/remove it
+  const wheelHandler = useCallback((e: WheelEvent) => {
+    // prevent page from scrolling
     e.preventDefault();
 
     const deltaY = e.deltaY;
 
-    // When Ctrl/Cmd is pressed treat as zoom, otherwise vertical scroll (pan)
     if (e.ctrlKey || e.metaKey) {
       if (!stageRef.current) return;
 
@@ -108,7 +106,21 @@ export default function PolaroidCollection() {
         return { x: prev.x, y: newY };
       });
     }
-  };
+  }, [stageScale, stageRef, clampStagePosition, setStageScale, setStagePos]);
+
+  // Attach the non-passive wheel listener on mount
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    container.addEventListener('wheel', wheelHandler, { passive: false });
+    return () => container.removeEventListener('wheel', wheelHandler);
+  }, [wheelHandler]);
+
+  // Refs for drag-to-pan interaction
+  const isDraggingRef = useRef(false);
+  const dragStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const stageStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     // Only respond to left-click
@@ -137,7 +149,7 @@ export default function PolaroidCollection() {
 
   return (
     <CollectionContainer 
-      onWheel={handleWheel}
+      ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={endDrag}

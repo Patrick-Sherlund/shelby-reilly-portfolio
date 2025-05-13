@@ -12,6 +12,7 @@ import { ReactComponent as LinkedInIconLight } from '../../assets/linkedin-light
 import { Avatar } from '@mui/material'
 import ThemeToggle from '../ThemeToggle/ThemeToggle'
 import { useThemeMode } from '../../theme/ThemeProvider'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const AVATAR_IMAGES = [
     `${process.env.PUBLIC_URL}/images/shelby-rodeo.png`,
@@ -26,7 +27,7 @@ const FloatingNavBarContainer = styled(Paper)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: '8px 16px',
+    padding: '4px 12px',
     borderRadius: 8,
     zIndex: 999,
     // Match the DelightfulToolbar's shadow and background style
@@ -36,8 +37,8 @@ const FloatingNavBarContainer = styled(Paper)(({ theme }) => ({
             : '0 2px 8px rgba(0,0,0,0.4)',
     backgroundColor:
         theme.palette.mode === 'light'
-            ? 'rgba(255, 255, 255, 0.8)'
-            : 'rgba(50, 50, 50, 0.8)'
+            ? 'rgba(230, 230, 230, 0.7)'
+            : 'rgba(30, 30, 30, 0.8)'
 }))
 
 // -- First section: Overlapping avatars
@@ -105,8 +106,10 @@ export default function FloatingTopNav() {
                 ))}
             </AvatarsContainer>
 
-            {/* Divider between Avatars and Social Icons */}
-            <VerticalDivider />
+            {/* Small arrow icon next to avatars */}
+            <IconButton size="small" sx={{ ml: 0.5, mr: 2 }}>
+                <KeyboardArrowDownIcon fontSize="small" />
+            </IconButton>
 
             {/* Section 2: Social icons */}
             <SocialIconsContainer>

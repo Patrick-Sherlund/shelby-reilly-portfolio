@@ -144,7 +144,7 @@ export default function IntroductionPage() {
                         I'm Shelby :)
                     </SingleTextContainer>
 
-                    <ProductDesignerText>I'm a Product Designer</ProductDesignerText>
+                    {/* <ProductDesignerText>I'm a Product Designer</ProductDesignerText> */}
                 </TextsWrapper>
             </div>
 

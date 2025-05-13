@@ -18,7 +18,7 @@ export const MainWrapper = styled('div')(() => ({
 */
 export const PolaroidContainer = styled('div')(() => ({
     margin: '-60px 0 50px 0',     // reduced bottom margin from 80px to 50px (~15% reduction)
-    transform: 'translateX(100px)', // shift 100px to the right of center
+    transform: 'translateX(5vw)', // responsive shift relative to viewport width
     pointerEvents: 'auto',        // Make sure polaroids are clickable
 }))
 
@@ -27,7 +27,8 @@ export const TextsWrapper = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start', // keep text left-aligned as before
-    gap: '18px'
+    gap: 'clamp(12px, 2vw, 24px)',
+    transform: 'translate(-9vw, -9vh)' // responsive shift relative to viewport size
 }))
 
 // Each text container with #6675FF background, 16px padding, 4px corner radius
@@ -36,7 +37,7 @@ export const SingleTextContainer = styled('div')(() => ({
     backgroundColor: '#6675FF',
     borderRadius: 4,
     padding: '16px',
-    fontSize: '64px',
+    fontSize: 'clamp(32px, 6vw, 64px)',
     fontFamily: 'Futura, sans-serif',
     color: '#FFFFFF',
     lineHeight: 1.2
@@ -50,8 +51,8 @@ export const SparklesImage = styled('img')(() => ({
 }))
 
 // "I'm a Product Designer" line
-export const ProductDesignerText = styled('div')(({ theme }) => ({
-    fontFamily: '"Gloria Hallelujah", Futura, cursive',
-    fontSize: '24px',
-    color: theme.palette.text.primary
-}))
+// export const ProductDesignerText = styled('div')(({ theme }) => ({
+//     fontFamily: '"Gloria Hallelujah", Futura, cursive',
+//     fontSize: 'clamp(18px, 2vw, 28px)',
+//     color: theme.palette.text.primary
+// }))
