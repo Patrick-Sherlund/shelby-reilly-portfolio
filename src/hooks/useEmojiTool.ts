@@ -50,7 +50,7 @@ export function useEmojiTool({ stageRef }: UseEmojiToolParams) {
                     : `url(${process.env.PUBLIC_URL}/images/wand-cursor.png) 8 8, auto`
         } else if (tool === 'commenting-cursor') {
             setEmojiPickerOpen(false)
-            document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/commenting-cursor.png) 4 0, auto`
+            document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/commenting-cursor.png) 16 18, auto`
         } else {
             setEmojiPickerOpen(false)
             document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`

@@ -10,8 +10,6 @@ import EmojiPicker from './components/EmojiPicker/EmojiPicker'
 import EmojiBrushOverlay from './components/EmojiBrushOverlay/EmojiBrushOverlay'
 import EmojiObject from './components/EmojiObject/EmojiObject'
 import IntroductionPage from './pages/IntroductionPage/IntroductionPage'
-import OverviewPage from './pages/OverviewPage/OverviewPage'
-import ProjectsPage from './pages/ProjectsPage/ProjectsPage'
 import { usePointerOverlay } from './hooks/usePointerOverlay'
 import { useZoomPan } from './hooks/useZoomPan'
 import {useWandEmojis, WAND_LIFETIME, WAND_TRAVEL_DISTANCE} from './hooks/useWandEmojis'
@@ -23,6 +21,7 @@ import { useDisableBrowserZoom } from './hooks/useDisableBrowserZoom'
 import CursorChat from './components/CursorChat/CursorChat'
 import FastWaveCursor from './components/FastWaveCursor/FastWaveCursor'
 import CommentingLayer from './components/CommentingLayer/CommentingLayer'
+import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -45,7 +44,7 @@ const PageWrapper = styled('div')<{
     scale: number
 }>(({ baseY, translateX, translateY, scale }) => ({
     position: 'absolute',
-    top: baseY,
+    top: 0,
     left: 0,
     width: '100vw',
     height: '100vh',
@@ -279,10 +278,7 @@ export default function App() {
                 <IntroductionPage />
             </PageWrapper>
             <PageWrapper baseY={window.innerHeight} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
-                <OverviewPage />
-            </PageWrapper>
-            <PageWrapper baseY={window.innerHeight * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
-                <ProjectsPage />
+                <MedTrackerPage />
             </PageWrapper>
             <CursorChat />
             <FastWaveCursor />

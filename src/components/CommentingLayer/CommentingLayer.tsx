@@ -30,12 +30,55 @@ const Overlay = styled('div')<{ enabled: boolean }>(({ enabled }) => ({
     pointerEvents: enabled ? 'auto' : 'none',
 }))
 
-const MarkerImg = styled('img')({
-    width: 20,
-    height: 20,
-    transform: 'translate(-50%, -50%)', // center the marker
+// Generic bubble shape (bottom-left corner subtly squared to mimic Figma comment bubble)
+const BUBBLE_SIZE = 25 // 1.25x previous 20px
+const BUBBLE_RADIUS = BUBBLE_SIZE / 2
+
+const BubbleBase = styled('div')({
+    width: BUBBLE_SIZE,
+    height: BUBBLE_SIZE,
+    borderRadius: `${BUBBLE_RADIUS}px ${BUBBLE_RADIUS}px ${BUBBLE_RADIUS}px 1px`,
+    transform: 'translate(-50%, -50%)',
     position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 600,
 })
+
+// Blue bubble for the in-progress (normal) comment marker
+const BlueBubble = styled(BubbleBase)({
+    backgroundColor: '#0B99FF',
+    color: '#fff',
+})
+
+// Small inner circle that holds the letter (centered inside the bubble)
+const LetterCircle = styled('div')({
+    width: 14,
+    height: 14,
+    borderRadius: '50%',
+    backgroundColor: '#5263FF',
+    color: '#fff',
+    fontSize: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 700,
+    flexShrink: 0,
+})
+
+// White bubble for existing user comments
+const UserBubble = styled(BubbleBase)(({ theme }) => ({
+    backgroundColor: '#ffffff',
+    boxShadow:
+        theme.palette.mode === 'light'
+            ? '0 0 0 1px rgba(0,0,0,0.15)'
+            : '0 0 0 1px rgba(255,255,255,0.4)',
+    color: '#000',
+    display: 'flex',
+    alignItems: 'center',
+    pointerEvents: 'auto',
+}))
 
 const CommentBoxWrapper = styled('div')(({ theme }) => ({
     position: 'absolute',
@@ -83,6 +126,7 @@ export default function CommentingLayer({ activeTool }: Props) {
     const [comments, setComments] = useState<CommentData[]>([])
     const [editing, setEditing] = useState<CommentData | null>(null)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+    const [hoveredId, setHoveredId] = useState<string | null>(null)
 
     // Access zoom / pan / stage information
     const { stageScale, stagePos } = useZoomPanContext()
@@ -174,12 +218,48 @@ export default function CommentingLayer({ activeTool }: Props) {
             {comments.map((c) => {
                 const screenX = stagePos.x + c.x * stageScale
                 const screenY = stagePos.y + c.y * stageScale
+                const isHovered = hoveredId === c.id
+
+                // When hovered, bubble should expand to the right without shifting left border
+                const leftPosition = isHovered ? screenX - BUBBLE_SIZE / 2 : screenX
+
                 return (
-                    <MarkerImg
+                    <UserBubble
                         key={c.id}
-                        src={`${process.env.PUBLIC_URL}/images/user-comment-marker.png`}
-                        style={{ left: screenX, top: screenY }}
-                    />
+                        style={{
+                            left: leftPosition,
+                            top: screenY,
+                            padding: isHovered ? '12px 16px' : 0,
+                            minWidth: BUBBLE_SIZE,
+                            minHeight: BUBBLE_SIZE,
+                            width: isHovered ? 'auto' : BUBBLE_SIZE,
+                            height: isHovered ? 'auto' : BUBBLE_SIZE,
+                            justifyContent: isHovered ? 'flex-start' : 'center',
+                            transform: isHovered ? 'translate(0, -50%)' : 'translate(-50%, -50%)',
+                            borderRadius: isHovered
+                                ? `${BUBBLE_RADIUS}px ${BUBBLE_RADIUS}px ${BUBBLE_RADIUS}px 1px`
+                                : undefined,
+                        }}
+                        onMouseEnter={() => {
+                            if (activeTool !== 'commenting-cursor') {
+                                setHoveredId(c.id)
+                            }
+                        }}
+                        onMouseLeave={() => setHoveredId(null)}
+                    >
+                        <LetterCircle style={{ marginRight: isHovered ? 8 : 0 }}>B</LetterCircle>
+                        {isHovered && (
+                            <span
+                                style={{
+                                    fontSize: 16,
+                                    lineHeight: '24px',
+                                    whiteSpace: 'pre-wrap',
+                                }}
+                            >
+                                {c.text}
+                            </span>
+                        )}
+                    </UserBubble>
                 )
             })}
 
@@ -191,8 +271,7 @@ export default function CommentingLayer({ activeTool }: Props) {
                         const screenY = stagePos.y + editing.y * stageScale
                         return (
                         <>
-                            <MarkerImg
-                                src={`${process.env.PUBLIC_URL}/images/comment-marker.png`}
+                            <BlueBubble
                                 style={{ left: screenX, top: screenY }}
                                 data-ignore-comment
                             />

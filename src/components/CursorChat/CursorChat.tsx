@@ -214,7 +214,7 @@ export default function CursorChat() {
                 {text || ' '}
             </div>
             )}
-
+{/* 
             <div
                 style={{
                     marginTop: 0,
@@ -229,7 +229,7 @@ export default function CursorChat() {
                 }}
             >
                 Bestie
-            </div>
+            </div> */}
         </div>
     )
 } 

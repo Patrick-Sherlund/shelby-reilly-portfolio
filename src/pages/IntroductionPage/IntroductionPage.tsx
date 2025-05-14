@@ -13,6 +13,7 @@ import {
     ContentWrapper
 } from './IntroductionPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
+import { useZoomPanContext } from '../../context/ZoomPanContext'
 
 export default function IntroductionPage() {
     const topLeftRef = useRef<HTMLDivElement>(null)
@@ -28,6 +29,52 @@ export default function IntroductionPage() {
         handleMouseUp: stickyMouseUp,
         handleMouseLeave: stickyMouseLeave
     } = useZoomPanInteraction(stickyRef)
+
+    // ---- DRAGGABLE STICKY NOTES ----
+    const { stageScale } = useZoomPanContext()
+    const [noteOffsets, setNoteOffsets] = useState<Record<string, { x: number; y: number }>>({
+        note1: { x: 0, y: 0 },
+        note2: { x: 0, y: 0 },
+        note3: { x: 0, y: 0 }
+    })
+    const dragInfoRef = useRef<{
+        id: string
+        startX: number
+        startY: number
+        initialX: number
+        initialY: number
+    } | null>(null)
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+        if (!dragInfoRef.current) return
+        const { id, startX, startY, initialX, initialY } = dragInfoRef.current
+        const dx = (e.clientX - startX) / stageScale
+        const dy = (e.clientY - startY) / stageScale
+        setNoteOffsets((prev) => ({
+            ...prev,
+            [id]: { x: initialX + dx, y: initialY + dy }
+        }))
+    }
+
+    const endDrag = () => {
+        dragInfoRef.current = null
+        window.removeEventListener('mousemove', handleGlobalMouseMove)
+        window.removeEventListener('mouseup', endDrag)
+    }
+
+    const handleNoteMouseDown = (id: string) => (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (e.button !== 0) return // left button only
+        dragInfoRef.current = {
+            id,
+            startX: e.clientX,
+            startY: e.clientY,
+            initialX: noteOffsets[id].x,
+            initialY: noteOffsets[id].y
+        }
+        window.addEventListener('mousemove', handleGlobalMouseMove)
+        window.addEventListener('mouseup', endDrag)
+    }
 
     useEffect(() => {
         if (
@@ -171,21 +218,45 @@ export default function IntroductionPage() {
             >
                 {/* Top Sticky */}
                 <StickyNote
-                    style={{ backgroundColor: '#FFE066', bottom: 140, left: 50, zIndex: 3 }}
+                    onMouseDown={handleNoteMouseDown('note1')}
+                    style={{
+                        backgroundColor: '#FFE066',
+                        bottom: 140,
+                        left: 50,
+                        zIndex: 3,
+                        transform: `translate(${noteOffsets.note1.x}px, ${noteOffsets.note1.y}px)`,
+                        cursor: dragInfoRef.current?.id === 'note1' ? 'grabbing' : 'grab'
+                    }}
                 >
                     I'm a product designer in Austin Texas 🤠
                 </StickyNote>
 
                 {/* Bottom Left Sticky */}
                 <StickyNote
-                    style={{ backgroundColor: '#FF66FC', bottom: 0, left: 10, zIndex: 1 }}
+                    onMouseDown={handleNoteMouseDown('note2')}
+                    style={{
+                        backgroundColor: '#FF66FC',
+                        bottom: 0,
+                        left: 10,
+                        zIndex: 1,
+                        transform: `translate(${noteOffsets.note2.x}px, ${noteOffsets.note2.y}px)`,
+                        cursor: dragInfoRef.current?.id === 'note2' ? 'grabbing' : 'grab'
+                    }}
                 >
                     M.S. HCI @ Georgia Tech
                 </StickyNote>
 
                 {/* Bottom Right Sticky */}
                 <StickyNote
-                    style={{ backgroundColor: '#FFFFFF', bottom: 20, left: 200, zIndex: 2 }}
+                    onMouseDown={handleNoteMouseDown('note3')}
+                    style={{
+                        backgroundColor: '#FFFFFF',
+                        bottom: 20,
+                        left: 200,
+                        zIndex: 2,
+                        transform: `translate(${noteOffsets.note3.x}px, ${noteOffsets.note3.y}px)`,
+                        cursor: dragInfoRef.current?.id === 'note3' ? 'grabbing' : 'grab'
+                    }}
                 >
                     Previously:
                     <LogoRow>
