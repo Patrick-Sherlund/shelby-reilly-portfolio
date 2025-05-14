@@ -41,14 +41,15 @@ export default function MedTrackerPage() {
                     onMouseUp={imagesInteraction.handleMouseUp}
                     onMouseLeave={imagesInteraction.handleMouseLeave}
                 >
-                    <Box sx={{ height: 'clamp(440px, 32vw, 360px)', width: 'auto' }}>
-                        <IphoneOutline />
+                    {/* Battalions demo */}
+                    <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto' }}>
+                        <IphoneOutline initialTab={0} />
                     </Box>
-                    <IphoneImg
-                        src={`${process.env.PUBLIC_URL}/images/iphone-bulk-inventory.png`}
-                        alt="Bulk inventory screen"
-                        style={{ transform: 'translateY(-20%)' }}
-                    />
+                    {/* Bulk inventory demo */}
+                    <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto', transform:'translateY(-20%)' }}>
+                        <IphoneOutline initialTab={1} />
+                    </Box>
+                    {/* Static move-items image */}
                     <IphoneImg
                         src={`${process.env.PUBLIC_URL}/images/iphone-move-items.png`}
                         alt="Move items screen"
@@ -56,7 +57,7 @@ export default function MedTrackerPage() {
                     />
                 </ImagesWrapper>
 
-                {/* Right – description copy */}
+                {/* Right – Description */}
                 <DescriptionWrapper
                     ref={descRef}
                     onMouseDown={descInteraction.handleMouseDown}
@@ -76,4 +77,4 @@ export default function MedTrackerPage() {
             </MidSection>
         </MainWrapper>
     )
-} 
+}

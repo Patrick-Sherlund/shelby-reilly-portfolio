@@ -48,7 +48,7 @@ export const ImagesWrapper = styled('div')(() => ({
 }))
 
 export const IphoneImg = styled('img')(() => ({
-    height: 'clamp(440px, 32vw, 360px)',
+    height: 'clamp(240px, 32vw, 360px)',
     width: 'auto',
     transition: 'transform 0.3s ease-out',
     WebkitUserDrag: 'none',
