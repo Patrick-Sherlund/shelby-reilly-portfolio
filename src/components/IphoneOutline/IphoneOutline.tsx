@@ -38,7 +38,7 @@ const ScreenOverlay = styled(Box)(() => ({
     position: 'absolute',
     color: '#000000',
     backgroundColor: '#FFFFFF',
-    borderRadius: '18px',
+    borderRadius: '32px',
     overflow: 'hidden',
     pointerEvents: 'auto',
     display: 'flex',
@@ -95,6 +95,13 @@ export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number 
                     showLabels
                     value={navValue}
                     onChange={(_, newValue) => setNavValue(newValue)}
+                    sx={{
+                        backgroundColor: 'transparent',
+                        borderTop: '1px solid #E0E0E0',
+                        '& .MuiBottomNavigationAction-root': {
+                            color: '#403F3E',
+                        },
+                    }}
                 >
                     <BottomNavigationAction label="Sets" icon={<WorkOutlineIcon />} />
                     <BottomNavigationAction label="Bulk" icon={<Inventory2OutlinedIcon />} />
