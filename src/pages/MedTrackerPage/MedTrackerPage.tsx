@@ -5,9 +5,15 @@ import {
     MidSection,
     ImagesWrapper,
     DescriptionWrapper,
-    IphoneImg
+    IphoneImg,
+    Title,
+    LineText,
+    CaseStudyButton,
+    CornerSketch
 } from './MedTrackerPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
+import IphoneOutline from '../../components/IphoneOutline/IphoneOutline'
+import { Box } from '@mui/material'
 
 export default function MedTrackerPage() {
     // Refs for interaction areas
@@ -35,11 +41,9 @@ export default function MedTrackerPage() {
                     onMouseUp={imagesInteraction.handleMouseUp}
                     onMouseLeave={imagesInteraction.handleMouseLeave}
                 >
-                    <IphoneImg
-                        src={`${process.env.PUBLIC_URL}/images/iphone-battalions.png`}
-                        alt="Battalions screen"
-                        style={{ transform: 'translateY(0%)' }}
-                    />
+                    <Box sx={{ height: 'clamp(440px, 32vw, 360px)', width: 'auto' }}>
+                        <IphoneOutline />
+                    </Box>
                     <IphoneImg
                         src={`${process.env.PUBLIC_URL}/images/iphone-bulk-inventory.png`}
                         alt="Bulk inventory screen"
@@ -60,17 +64,14 @@ export default function MedTrackerPage() {
                     onMouseUp={descInteraction.handleMouseUp}
                     onMouseLeave={descInteraction.handleMouseLeave}
                 >
-                    <h2>MedTracker</h2>
-                    <p>
-                        MedTracker is a concept mobile application I designed to help field
-                        medics and logistics teams quickly record, track, and move
-                        medical inventory during disaster relief operations.
-                    </p>
-                    <ul>
-                        <li>Real-time battalion-level inventory dashboards</li>
-                        <li>Bulk inventory adjustments with barcode scanning</li>
-                        <li>Intuitive drag-and-drop UI for moving items between units</li>
-                    </ul>
+                    <Title>MedTracker</Title>
+                    <LineText>2024</LineText>
+                    <LineText>UX Designer</LineText>
+                    <LineText>Hardware Engineer</LineText>
+
+                    <div style={{ marginTop: '32px' }}>
+                        <CaseStudyButton>READ CASE STUDY</CaseStudyButton>
+                    </div>
                 </DescriptionWrapper>
             </MidSection>
         </MainWrapper>

@@ -43,6 +43,9 @@ const PolaroidImage = styled('img')<{ aspectRatio: number }>(({ aspectRatio, the
   height: 'auto',
   aspectRatio: `${aspectRatio}`,
   backgroundColor: theme.palette.mode === 'light' ? '#f5f5f5' : '#333',
+  userSelect: 'none',
+  WebkitUserDrag: 'none',
+  userDrag: 'none',
 }));
 
 const PolaroidCaption = styled('div')(() => ({

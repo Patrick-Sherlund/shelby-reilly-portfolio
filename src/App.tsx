@@ -22,6 +22,7 @@ import CursorChat from './components/CursorChat/CursorChat'
 import FastWaveCursor from './components/FastWaveCursor/FastWaveCursor'
 import CommentingLayer from './components/CommentingLayer/CommentingLayer'
 import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
+import { GlobalStyles } from '@mui/material'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -178,6 +179,14 @@ export default function App() {
             zoomOut
         }}>
         <AppContainer>
+            {/* Global rule: prevent default image drag/select */}
+            <GlobalStyles styles={{
+                img: {
+                    WebkitUserDrag: 'none',
+                    userDrag: 'none',
+                    userSelect: 'none',
+                },
+            }} />
             <FloatingTopNav />
             <ZoomControls 
                 scale={stageScale}
