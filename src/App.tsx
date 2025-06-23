@@ -22,6 +22,8 @@ import CursorChat from './components/CursorChat/CursorChat'
 import FastWaveCursor from './components/FastWaveCursor/FastWaveCursor'
 import CommentingLayer from './components/CommentingLayer/CommentingLayer'
 import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
+import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
+import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import { GlobalStyles } from '@mui/material'
 
 const AppContainer = styled(Box)(({ theme }) => ({
@@ -160,7 +162,7 @@ export default function App() {
     const resetView = () => {
         // Determine which page is currently in view based on stagePos & scale
         const approxIndex = Math.round(-stagePos.y / (window.innerHeight * stageScale))
-        const clampedIndex = Math.max(0, Math.min(2, approxIndex)) // we have 3 pages (0-2)
+        const clampedIndex = Math.max(0, Math.min(3, approxIndex)) // we have 4 pages (0-3)
         const targetY = -clampedIndex * window.innerHeight
 
         setStageScale(1)
@@ -288,6 +290,12 @@ export default function App() {
             </PageWrapper>
             <PageWrapper baseY={window.innerHeight} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
                 <MedTrackerPage />
+            </PageWrapper>
+            <PageWrapper baseY={window.innerHeight * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+                <ProjectBishopPage />
+            </PageWrapper>
+            <PageWrapper baseY={window.innerHeight * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+                <GoogleCodesignPage />
             </PageWrapper>
             <CursorChat />
             <FastWaveCursor />

@@ -12,7 +12,7 @@ export function useZoomPan() {
     }, [])
 
     const clampStagePosition = useCallback((y: number) => {
-        const minY = -2 * window.innerHeight * stageScale
+        const minY = -3 * window.innerHeight * stageScale
         if (y < minY) return minY
         if (y > 0) return 0
         return y

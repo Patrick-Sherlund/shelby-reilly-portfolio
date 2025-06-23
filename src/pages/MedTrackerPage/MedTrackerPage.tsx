@@ -5,7 +5,6 @@ import {
     MidSection,
     ImagesWrapper,
     DescriptionWrapper,
-    IphoneImg,
     Title,
     LineText,
     CaseStudyButton,
@@ -42,19 +41,17 @@ export default function MedTrackerPage() {
                     onMouseLeave={imagesInteraction.handleMouseLeave}
                 >
                     {/* Battalions demo */}
-                    <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto' }}>
+                    <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: '246px' }}>
                         <IphoneOutline initialTab={0} />
                     </Box>
                     {/* Bulk inventory demo */}
-                    <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto', transform:'translateY(-20%)' }}>
+                    <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: '246px', transform:'translateY(-20%)' }}>
                         <IphoneOutline initialTab={1} />
                     </Box>
-                    {/* Static move-items image */}
-                    <IphoneImg
-                        src={`${process.env.PUBLIC_URL}/images/iphone-move-items.png`}
-                        alt="Move items screen"
-                        style={{ transform: 'translateY(0%)' }}
-                    />
+                    {/* Move items demo */}
+                    <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto', transform:'translateY(0%)' }}>
+                        <IphoneOutline initialTab={2} />
+                    </Box>
                 </ImagesWrapper>
 
                 {/* Right – Description */}

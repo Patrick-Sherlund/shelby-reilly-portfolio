@@ -12,6 +12,8 @@ interface CommentData {
     x: number
     y: number
     text: string
+    userName: string
+    createdAt: number // epoch millis
 }
 
 interface Props {
@@ -131,12 +133,27 @@ export default function CommentingLayer({ activeTool }: Props) {
     // Access zoom / pan / stage information
     const { stageScale, stagePos } = useZoomPanContext()
 
+    // Utility to coerce any loaded comment to the latest shape
+    const normalizeComment = (raw: any): CommentData => {
+        return {
+            id: raw.id ?? Date.now().toString(),
+            x: raw.x ?? 0,
+            y: raw.y ?? 0,
+            text: raw.text ?? '',
+            userName: raw.userName ?? 'Anonymous',
+            createdAt: raw.createdAt ?? Date.now(),
+        }
+    }
+
     // Load from localStorage on mount
     useEffect(() => {
         const stored = window.localStorage.getItem('figma-comments')
         if (stored) {
             try {
-                setComments(JSON.parse(stored))
+                const parsed = JSON.parse(stored)
+                if (Array.isArray(parsed)) {
+                    setComments(parsed.map(normalizeComment))
+                }
             } catch {
                 // ignore parse errors
             }
@@ -186,6 +203,8 @@ export default function CommentingLayer({ activeTool }: Props) {
             x: stageX,
             y: stageY,
             text: '',
+            userName: 'Anonymous',
+            createdAt: Date.now(),
         }
         setEditing(newComment)
     }
@@ -201,7 +220,10 @@ export default function CommentingLayer({ activeTool }: Props) {
         if (!editing) return
         const trimmed = editing.text.trim()
         if (trimmed === '') return
-        setComments((prev) => [...prev, { ...editing, text: trimmed }])
+        setComments((prev) => [
+            ...prev,
+            { ...editing, text: trimmed, createdAt: Date.now(), userName: editing.userName ?? 'Anonymous' },
+        ])
         setEditing(null)
     }
 
@@ -210,6 +232,22 @@ export default function CommentingLayer({ activeTool }: Props) {
             e.preventDefault()
             handleSubmit()
         }
+    }
+
+    // Helper to format relative time (seconds/minutes/hours/days/months/years ago)
+    const timeAgo = (timestamp: number) => {
+        const seconds = Math.floor((Date.now() - timestamp) / 1000)
+        if (seconds < 60) return `${seconds} second${seconds === 1 ? '' : 's'} ago`
+        const minutes = Math.floor(seconds / 60)
+        if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`
+        const hours = Math.floor(minutes / 60)
+        if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`
+        const days = Math.floor(hours / 24)
+        if (days < 30) return `${days} day${days === 1 ? '' : 's'} ago`
+        const months = Math.floor(days / 30)
+        if (months < 12) return `${months} month${months === 1 ? '' : 's'} ago`
+        const years = Math.floor(months / 12)
+        return `${years} year${years === 1 ? '' : 's'} ago`
     }
 
     return (
@@ -247,17 +285,46 @@ export default function CommentingLayer({ activeTool }: Props) {
                         }}
                         onMouseLeave={() => setHoveredId(null)}
                     >
-                        <LetterCircle style={{ marginRight: isHovered ? 8 : 0 }}>B</LetterCircle>
+                        <LetterCircle style={{ marginRight: isHovered ? 8 : 0 }}>
+                            {c.userName.charAt(0).toUpperCase()}
+                        </LetterCircle>
                         {isHovered && (
-                            <span
-                                style={{
-                                    fontSize: 16,
-                                    lineHeight: '24px',
-                                    whiteSpace: 'pre-wrap',
-                                }}
-                            >
-                                {c.text}
-                            </span>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 4,
+                                        marginBottom: 2,
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            fontWeight: 700,
+                                            fontSize: 16, // 2px larger than comment text (14)
+                                        }}
+                                    >
+                                        {c.userName}
+                                    </span>
+                                    <span
+                                        style={{
+                                            fontSize: 12,
+                                            color: '#777',
+                                        }}
+                                    >
+                                        {timeAgo(c.createdAt)}
+                                    </span>
+                                </div>
+                                <span
+                                    style={{
+                                        fontSize: 14,
+                                        lineHeight: '20px',
+                                        whiteSpace: 'pre-wrap',
+                                    }}
+                                >
+                                    {c.text}
+                                </span>
+                            </div>
                         )}
                     </UserBubble>
                 )

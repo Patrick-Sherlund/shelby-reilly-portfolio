@@ -14,11 +14,12 @@ import BottomNavigation from '@mui/material/BottomNavigation'
 import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import BulkInventoryScreen from './screens/BulkInventoryScreen'
 import BattalionsScreen from './screens/BattalionsScreen'
+import MoveItemsScreen from './screens/MoveItemsScreen'
 
 // Wrapper holds the phone image and the overlay UI
 const PhoneWrapper = styled('div')(() => ({
     position: 'relative',
-    width: '100%',
+    width: '246px',
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -80,6 +81,7 @@ export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number 
                 <Box sx={{ flex: 1, overflow: 'auto', p: 1, position:'relative' }}>
                     {navValue === 0 && <BattalionsScreen />}
                     {navValue === 1 && <BulkInventoryScreen />}
+                    {navValue === 2 && <MoveItemsScreen />}
                     {navValue === 0 && (
                         <>
                         {/* Spacer to push legend to bottom */}
