@@ -12,6 +12,7 @@
     "framer-motion": "^12.18.1",
     "konva": "^8.0.3",
     "js-yaml": "^4.1.0",
+    "video.js": "7.14.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-konva": "^18.0.0",
@@ -20,6 +21,7 @@
     "use-image": "^1.1.1"
   },
   "devDependencies": {
+    "@types/video.js": "^7.14.3",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.28",

@@ -56,6 +56,7 @@ export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number 
         if (!img) return
         const update = () => {
             const rect = img.getBoundingClientRect()
+            if (rect.width === 0 || rect.height === 0) return
             const scaleX = rect.width / 1404
             const scaleY = rect.height / 2896
             setOverlayStyle({
@@ -65,9 +66,16 @@ export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number 
                 height: 2619 * scaleY,
             })
         }
-        update()
+
+        if (img.complete) {
+            update()
+        } else {
+            img.addEventListener('load', update, { once: true })
+        }
         window.addEventListener('resize', update)
-        return () => window.removeEventListener('resize', update)
+        return () => {
+            window.removeEventListener('resize', update)
+        }
     }, [])
 
     return (

@@ -1,4 +1,6 @@
 import { styled } from '@mui/material/styles'
+import {css} from "@emotion/react";
+import {SxProps} from "@mui/material";
 
 // Full-page wrapper similar to IntroductionPage and MedTrackerPage
 export const MainWrapper = styled('div')(() => ({
@@ -123,3 +125,75 @@ export const CaseStudyButton = styled('button')(() => ({
         zIndex: -1,
     },
 })) 
+
+export const stackContainer: SxProps = {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    backgroundColor: "#010413",
+    height: "100vh",
+    boxSizing: "border-box",
+    padding: "16px 0px 16px 24px",
+};
+
+
+export const boxContainer: SxProps = {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    boxSizing: "border-box",
+};
+
+
+export const title: SxProps = {
+    color: "#FFFFFF",
+    mb: 1,
+    fontWeight: 500,
+};
+
+
+export const stackStyles = css`
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    height: 100%;
+`;
+
+
+export const videoBox: SxProps = {
+    pt: 1,
+    borderRadius: "8px",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    position: "relative",
+};
+
+
+export const videoWrapper: SxProps = {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    width: "100%",
+};
+
+
+export const video = {
+    height: "100%",
+    width: "100%",
+};
+
+
+export const loadingOverlay: SxProps = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+};
