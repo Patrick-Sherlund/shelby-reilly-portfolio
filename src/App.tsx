@@ -25,6 +25,7 @@ import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
 import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
 import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import { GlobalStyles } from '@mui/material'
+import SearchPalette from './components/SearchPalette/SearchPalette'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -300,6 +301,7 @@ export default function App() {
             <CursorChat />
             <FastWaveCursor />
             <CommentingLayer activeTool={activeTool} />
+            <SearchPalette />
         </AppContainer>
         </ZoomPanContext.Provider>
     )

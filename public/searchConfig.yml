@@ -1,0 +1,18 @@
+groups:
+  Home:
+    - id: intro-polaroids
+      label: Polaroid Collection
+      keywords: [polaroid, photos, collection]
+    - id: intro-text
+      label: Introduction Text
+      keywords: [intro, text, welcome]
+    - id: intro-sticky
+      label: Sticky Notes
+      keywords: [sticky, notes]
+  MedTracker:
+    - id: med-images
+      label: iPhone Mockups
+      keywords: [iphone, mockups, images]
+    - id: med-description
+      label: Description
+      keywords: [description, text] 

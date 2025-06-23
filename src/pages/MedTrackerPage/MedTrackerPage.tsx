@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import {
     MainWrapper,
     LogoImage,
@@ -13,17 +13,41 @@ import {
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import IphoneOutline from '../../components/IphoneOutline/IphoneOutline'
 import { Box } from '@mui/material'
+import { useSearchContext } from '../../context/SearchContext'
 
 export default function MedTrackerPage() {
     // Refs for interaction areas
+    const sectionRef = useRef<HTMLDivElement>(null)
     const imagesRef = useRef<HTMLDivElement>(null)
     const descRef = useRef<HTMLDivElement>(null)
 
     const imagesInteraction = useZoomPanInteraction(imagesRef)
     const descInteraction = useZoomPanInteraction(descRef)
+    const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
+
+    useEffect(() => {
+        const items: { id: string; ref: React.RefObject<HTMLElement> }[] = [
+            { id: 'med-images', ref: imagesRef },
+            { id: 'med-description', ref: descRef }
+        ]
+
+        items.forEach((it) => {
+            if (it.ref.current) {
+                registerItem({ id: it.id, element: it.ref.current })
+            }
+        })
+
+        if (sectionRef.current) {
+            registerGroupAnchor('MedTracker', sectionRef.current, 1)
+        }
+
+        return () => {
+            items.forEach((it) => unregisterItem(it.id))
+        }
+    }, [registerItem, unregisterItem, registerGroupAnchor])
 
     return (
-        <MainWrapper>
+        <MainWrapper ref={sectionRef}>
             {/* Top-left logo */}
             <LogoImage
                 src={`${process.env.PUBLIC_URL}/images/vmware.png`}

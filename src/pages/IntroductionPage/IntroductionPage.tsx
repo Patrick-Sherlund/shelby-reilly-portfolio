@@ -14,11 +14,14 @@ import {
 } from './IntroductionPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import { useZoomPanContext } from '../../context/ZoomPanContext'
+import { useSearchContext } from '../../context/SearchContext'
 
 export default function IntroductionPage() {
+    const sectionRef = useRef<HTMLDivElement>(null)
     const topLeftRef = useRef<HTMLDivElement>(null)
     const textSectionRef = useRef<HTMLDivElement>(null)
     const bottomRightRef = useRef<HTMLDivElement>(null)
+    const polaroidSectionRef = useRef<HTMLDivElement>(null)
     const [waypoints, setWaypoints] = useState<any[]>([])
 
     // sticky notes zoom/pan interaction
@@ -44,6 +47,8 @@ export default function IntroductionPage() {
         initialX: number
         initialY: number
     } | null>(null)
+
+    const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
 
     const handleGlobalMouseMove = (e: MouseEvent) => {
         if (!dragInfoRef.current) return
@@ -158,8 +163,31 @@ export default function IntroductionPage() {
         }
     }, [])
 
+    /* --- Register search items --- */
+    useEffect(() => {
+        const items: { id: string; ref: React.RefObject<HTMLElement> }[] = [
+            { id: 'intro-polaroids', ref: polaroidSectionRef as React.RefObject<HTMLElement> },
+            { id: 'intro-text', ref: textSectionRef as React.RefObject<HTMLElement> },
+            { id: 'intro-sticky', ref: stickyRef as React.RefObject<HTMLElement> }
+        ]
+
+        if (sectionRef.current) {
+            registerGroupAnchor('Home', sectionRef.current, 0)
+        }
+
+        items.forEach((it) => {
+            if (it.ref.current) {
+                registerItem({ id: it.id, element: it.ref.current })
+            }
+        })
+
+        return () => {
+            items.forEach((it) => unregisterItem(it.id))
+        }
+    }, [registerItem, unregisterItem, registerGroupAnchor])
+
     return (
-        <MainWrapper>
+        <MainWrapper ref={sectionRef}>
             <div
                 ref={topLeftRef}
                 style={{
@@ -173,7 +201,7 @@ export default function IntroductionPage() {
             />
 
             <ContentWrapper>
-            <PolaroidContainer>
+            <PolaroidContainer ref={polaroidSectionRef}>
                 <PolaroidCollection />
             </PolaroidContainer>
 
