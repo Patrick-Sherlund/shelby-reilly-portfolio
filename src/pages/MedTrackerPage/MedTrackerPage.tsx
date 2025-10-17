@@ -14,6 +14,7 @@ import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import IphoneOutline from '../../components/IphoneOutline/IphoneOutline'
 import { Box } from '@mui/material'
 import { useSearchContext } from '../../context/SearchContext'
+import { useZoomPanContext } from '../../context/ZoomPanContext'
 
 export default function MedTrackerPage() {
     // Refs for interaction areas
@@ -24,6 +25,13 @@ export default function MedTrackerPage() {
     const imagesInteraction = useZoomPanInteraction(imagesRef)
     const descInteraction = useZoomPanInteraction(descRef)
     const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
+    const { openCaseStudy } = useZoomPanContext()
+
+    const handleCaseStudyClick = () => {
+        if (openCaseStudy) {
+            openCaseStudy()
+        }
+    }
 
     useEffect(() => {
         const items: { id: string; ref: React.RefObject<HTMLElement> }[] = [
@@ -92,7 +100,7 @@ export default function MedTrackerPage() {
                     <LineText>Hardware Engineer</LineText>
 
                     <div style={{ marginTop: '32px' }}>
-                        <CaseStudyButton>READ CASE STUDY</CaseStudyButton>
+                        <CaseStudyButton onClick={handleCaseStudyClick}>READ CASE STUDY</CaseStudyButton>
                     </div>
                 </DescriptionWrapper>
             </MidSection>

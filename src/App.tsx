@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Rect } from 'react-konva'
 import { styled } from '@mui/material/styles'
@@ -22,6 +22,7 @@ import CursorChat from './components/CursorChat/CursorChat'
 import FastWaveCursor from './components/FastWaveCursor/FastWaveCursor'
 import CommentingLayer from './components/CommentingLayer/CommentingLayer'
 import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
+import MedTrackerCaseStudyPage from './pages/MedTrackerCaseStudyPage/MedTrackerCaseStudyPage'
 import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
 import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import { GlobalStyles } from '@mui/material'
@@ -58,6 +59,7 @@ const PageWrapper = styled('div')<{
 }))
 
 export default function App() {
+    const [caseStudyOpen, setCaseStudyOpen] = useState(false)
     const stageRef = useRef<Konva.Stage>(null)
     const prevTouchRef = useRef<{
         touches: Touch[];
@@ -170,6 +172,20 @@ export default function App() {
         setStagePos({ x: 0, y: targetY })
     }
 
+    const navigateToPage = (pageIndex: number) => {
+        const targetY = -pageIndex * window.innerHeight
+        setStageScale(1)
+        setStagePos({ x: 0, y: targetY })
+    }
+
+    const openCaseStudy = () => {
+        setCaseStudyOpen(true)
+    }
+
+    const closeCaseStudy = () => {
+        setCaseStudyOpen(false)
+    }
+
     return (
         <ZoomPanContext.Provider value={{
             stageRef,
@@ -179,7 +195,10 @@ export default function App() {
             setStagePos,
             clampStagePosition,
             zoomIn,
-            zoomOut
+            zoomOut,
+            navigateToPage,
+            openCaseStudy,
+            closeCaseStudy
         }}>
         <AppContainer>
             {/* Global rule: prevent default image drag/select */}
@@ -303,6 +322,7 @@ export default function App() {
             <CommentingLayer activeTool={activeTool} />
             <SearchPalette />
         </AppContainer>
+        {caseStudyOpen && <MedTrackerCaseStudyPage />}
         </ZoomPanContext.Provider>
     )
 }
