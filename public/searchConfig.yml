@@ -1,0 +1,15 @@
+groups:
+  Home:
+    - id: intro-polaroids
+      label: Shelby's Polaroids!!!
+      keywords: [polaroid, photos, collection]
+    - id: intro-sticky
+      label: Little Stickies :)
+      keywords: [sticky, notes]
+  MedTracker:
+    - id: med-images
+      label: MedTracker Mockups
+      keywords: [iphone, mockups, images]
+    - id: med-description
+      label: Information
+      keywords: [description, text] 

@@ -1,6 +1,7 @@
 import React, { useState, ReactNode, createContext, useContext } from 'react'
 import { ThemeProvider, CssBaseline } from '@mui/material'
 import { lightTheme, darkTheme } from './theme'
+import GlobalFonts from './GlobalFonts'
 
 type Props = {
     children: ReactNode
@@ -32,6 +33,7 @@ export default function ThemeProviderWrapper({ children }: Props) {
         <ThemeContext.Provider value={{ mode, toggleTheme }}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
+                <GlobalFonts />
                 {children}
             </ThemeProvider>
         </ThemeContext.Provider>

@@ -8,7 +8,7 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -19,6 +19,13 @@
     "jsx": "react"
   },
   "include": [
-    "src"
+    "src",
+    "src/types/svg.d.ts",
+    "src/third-party/types/react-player.d.ts",
+    "src/third-party/types/videojs.d.ts",
+    "src/third-party/types/svg.d.ts",
+    "node_modules/@types/node/buffer.d.ts",
+    "node_modules/@types/node/buffer.d.ts",
+    "src/**/*"
   ]
 }

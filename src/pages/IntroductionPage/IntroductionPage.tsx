@@ -1,0 +1,326 @@
+import React, { useRef, useEffect, useState } from 'react'
+import { CursorSimulator } from '../../components/CursorSimulator/CursorSimulator'
+import PolaroidCollection from '../../components/Polaroid/PolaroidCollection'
+import {
+    MainWrapper,
+    PolaroidContainer,
+    TextsWrapper,
+    SingleTextContainer,
+    SparklesImage,
+    StickyNotesWrapper,
+    StickyNote,
+    LogoRow,
+    ContentWrapper
+} from './IntroductionPage.styles'
+import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
+import { useZoomPanContext } from '../../context/ZoomPanContext'
+import { useSearchContext } from '../../context/SearchContext'
+
+export default function IntroductionPage() {
+    const sectionRef = useRef<HTMLDivElement>(null)
+    const topLeftRef = useRef<HTMLDivElement>(null)
+    const textSectionRef = useRef<HTMLDivElement>(null)
+    const bottomRightRef = useRef<HTMLDivElement>(null)
+    const polaroidSectionRef = useRef<HTMLDivElement>(null)
+    const [waypoints, setWaypoints] = useState<any[]>([])
+
+    // sticky notes zoom/pan interaction
+    const stickyRef = useRef<HTMLDivElement>(null)
+    const {
+        handleMouseDown: stickyMouseDown,
+        handleMouseMove: stickyMouseMove,
+        handleMouseUp: stickyMouseUp,
+        handleMouseLeave: stickyMouseLeave
+    } = useZoomPanInteraction(stickyRef)
+
+    // ---- DRAGGABLE STICKY NOTES ----
+    const { stageScale } = useZoomPanContext()
+    const [noteOffsets, setNoteOffsets] = useState<Record<string, { x: number; y: number }>>({
+        note1: { x: 0, y: 0 },
+        note2: { x: 0, y: 0 },
+        note3: { x: 0, y: 0 }
+    })
+    const dragInfoRef = useRef<{
+        id: string
+        startX: number
+        startY: number
+        initialX: number
+        initialY: number
+    } | null>(null)
+
+    const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+        if (!dragInfoRef.current) return
+        const { id, startX, startY, initialX, initialY } = dragInfoRef.current
+        const dx = (e.clientX - startX) / stageScale
+        const dy = (e.clientY - startY) / stageScale
+        setNoteOffsets((prev) => ({
+            ...prev,
+            [id]: { x: initialX + dx, y: initialY + dy }
+        }))
+    }
+
+    const endDrag = () => {
+        dragInfoRef.current = null
+        window.removeEventListener('mousemove', handleGlobalMouseMove)
+        window.removeEventListener('mouseup', endDrag)
+    }
+
+    const handleNoteMouseDown = (id: string) => (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (e.button !== 0) return // left button only
+        dragInfoRef.current = {
+            id,
+            startX: e.clientX,
+            startY: e.clientY,
+            initialX: noteOffsets[id].x,
+            initialY: noteOffsets[id].y
+        }
+        window.addEventListener('mousemove', handleGlobalMouseMove)
+        window.addEventListener('mouseup', endDrag)
+    }
+
+    useEffect(() => {
+        if (
+            topLeftRef.current &&
+            textSectionRef.current &&
+            bottomRightRef.current
+        ) {
+            setWaypoints([
+                {
+                    element: topLeftRef.current,
+                    speed: 600,
+                    anchor: 'center',
+                    pathStyle: 'straight',
+                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+                },
+                {
+                    element: topLeftRef.current,
+                    speed: 0,
+                    anchor: 'center',
+                    pathStyle: 'straight',
+                    cursor: `${process.env.PUBLIC_URL}/images/wave.png`,
+                    wave: {
+                        waveSpeed: 100,
+                        waveDuration: 1500
+                    },
+                    chat: {
+                        text: 'Hey there! 👋',
+                        typingDuration: 500,
+                        startTiming: 'before',
+                        waitAfterTyping: 1200
+                    }
+                },
+                {
+                    element: textSectionRef.current,
+                    speed: 600,
+                    anchor: 'top-center',
+                    pathStyle: 'straight',
+                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+                    chat: {
+                        text: 'Welcome to my Portfolio :D',
+                        typingDuration: 500,
+                        startTiming: 'after',
+                        waitAfterTyping: 1800
+                    }
+                },
+
+                {
+                    element: bottomRightRef.current,
+                    speed: 600,
+                    anchor: 'center',
+                    pathStyle: 'straight',
+                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+                },
+                {
+                    element: bottomRightRef.current,
+                    speed: 600,
+                    anchor: 'center',
+                    pathStyle: 'straight',
+                    cursor: `${process.env.PUBLIC_URL}/images/pointer-down.png`,
+                    chat: {
+                        text: 'Follow me!!',
+                        typingDuration: 300,
+                        startTiming: 'after',
+                        waitAfterTyping: 1500
+                    },
+                    pointing: {
+                        pointingSpeed: 200,
+                        pointingDuration: 1500,
+                        direction: 'down',
+                        distance: 8
+                    }
+                },
+                {
+                    element: bottomRightRef.current,
+                    speed: 600,
+                    anchor: 'center',
+                    pathStyle: 'straight',
+                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+                },
+            ])
+        }
+    }, [])
+
+    /* --- Register search items --- */
+    useEffect(() => {
+        const items: { id: string; ref: React.RefObject<HTMLElement> }[] = [
+            { id: 'intro-polaroids', ref: polaroidSectionRef as React.RefObject<HTMLElement> },
+            { id: 'intro-text', ref: textSectionRef as React.RefObject<HTMLElement> },
+            { id: 'intro-sticky', ref: stickyRef as React.RefObject<HTMLElement> }
+        ]
+
+        if (sectionRef.current) {
+            registerGroupAnchor('Home', sectionRef.current, 0)
+        }
+
+        items.forEach((it) => {
+            if (it.ref.current) {
+                registerItem({ id: it.id, element: it.ref.current })
+            }
+        })
+
+        return () => {
+            items.forEach((it) => unregisterItem(it.id))
+        }
+    }, [registerItem, unregisterItem, registerGroupAnchor])
+
+    return (
+        <MainWrapper ref={sectionRef}>
+            <div
+                ref={topLeftRef}
+                style={{
+                    position: 'absolute',
+                    top: 60,
+                    left: 60,
+                    width: 1,
+                    height: 1,
+                    opacity: 0
+                }}
+            />
+
+            <ContentWrapper>
+            <PolaroidContainer ref={polaroidSectionRef}>
+                <PolaroidCollection />
+            </PolaroidContainer>
+
+            <div
+                ref={textSectionRef}
+                style={{ position: 'relative', top: -50 }}
+            >
+                <div
+                    ref={bottomRightRef}
+                    style={{
+                        position: 'absolute',
+                        bottom: 20,
+                        right: 20,
+                        width: 1,
+                        height: 1,
+                        opacity: 0
+                    }}
+                />
+                <TextsWrapper>
+                    <SingleTextContainer>
+                        <SparklesImage
+                            src={`${process.env.PUBLIC_URL}/images/sparkles.png`}
+                            alt="sparkles"
+                        />
+                        Hi!
+                    </SingleTextContainer>
+
+                    <SingleTextContainer>
+                        I'm Shelby :)
+                    </SingleTextContainer>
+                </TextsWrapper>
+            </div>
+            </ContentWrapper>
+
+            {/* Sticky Notes Cluster */}
+            <StickyNotesWrapper
+                ref={stickyRef}
+                onMouseDown={stickyMouseDown}
+                onMouseMove={stickyMouseMove}
+                onMouseUp={stickyMouseUp}
+                onMouseLeave={stickyMouseLeave}
+            >
+                {/* Top Sticky */}
+                <StickyNote
+                    onMouseDown={handleNoteMouseDown('note1')}
+                    style={{
+                        backgroundColor: '#FFE066',
+                        bottom: 140,
+                        left: 50,
+                        zIndex: 3,
+                        transform: `translate(${noteOffsets.note1.x}px, ${noteOffsets.note1.y}px)`,
+                        cursor: dragInfoRef.current?.id === 'note1' ? 'grabbing' : 'grab'
+                    }}
+                >
+                    I'm a product designer in Austin Texas 🤠
+                </StickyNote>
+
+                {/* Bottom Left Sticky */}
+                <StickyNote
+                    onMouseDown={handleNoteMouseDown('note2')}
+                    style={{
+                        backgroundColor: '#FF66FC',
+                        bottom: 0,
+                        left: 10,
+                        zIndex: 1,
+                        transform: `translate(${noteOffsets.note2.x}px, ${noteOffsets.note2.y}px)`,
+                        cursor: dragInfoRef.current?.id === 'note2' ? 'grabbing' : 'grab'
+                    }}
+                >
+                    M.S. HCI @ Georgia Tech
+                </StickyNote>
+
+                {/* Bottom Right Sticky */}
+                <StickyNote
+                    onMouseDown={handleNoteMouseDown('note3')}
+                    style={{
+                        backgroundColor: '#FFFFFF',
+                        bottom: 20,
+                        left: 200,
+                        zIndex: 2,
+                        transform: `translate(${noteOffsets.note3.x}px, ${noteOffsets.note3.y}px)`,
+                        cursor: dragInfoRef.current?.id === 'note3' ? 'grabbing' : 'grab'
+                    }}
+                >
+                    Previously:
+                    <LogoRow>
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/airforce.png`}
+                            alt="Air Force"
+                            height={18}
+                        />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/jamba.png`}
+                            alt="Jamba"
+                            height={20}
+                        />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/vmware.png`}
+                            alt="VMware"
+                            height={20}
+                        />
+                        <img
+                            src={`${process.env.PUBLIC_URL}/images/intro/google.png`}
+                            alt="Google"
+                            height={20}
+                        />
+                    </LogoRow>
+                </StickyNote>
+            </StickyNotesWrapper>
+
+            {waypoints.length > 0 && (
+                <CursorSimulator
+                    startSide="left"
+                    endSide="bottom"
+                    waypoints={waypoints}
+                    start={true}
+                    offScreenSpeed={800}
+                />
+            )}
+        </MainWrapper>
+    )
+}
