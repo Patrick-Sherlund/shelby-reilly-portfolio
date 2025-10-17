@@ -1,0 +1,394 @@
+import React, { useRef, useEffect } from 'react'
+import Konva from 'konva'
+import { Stage, Layer, Rect } from 'react-konva'
+import Box from '@mui/material/Box'
+import DelightfulToolbar from '../../components/DelightfulToolbar/DelightfulToolbar'
+import ThemeToggle from '../../components/ThemeToggle/ThemeToggle'
+import EmojiPicker from '../../components/EmojiPicker/EmojiPicker'
+import EmojiBrushOverlay from '../../components/EmojiBrushOverlay/EmojiBrushOverlay'
+import EmojiObject from '../../components/EmojiObject/EmojiObject'
+import { usePointerOverlay } from '../../hooks/usePointerOverlay'
+import { useZoomPan } from '../../hooks/useZoomPan'
+import { useWandEmojis, WAND_LIFETIME, WAND_TRAVEL_DISTANCE } from '../../hooks/useWandEmojis'
+import { useEmojiTool } from '../../hooks/useEmojiTool'
+import ZoomControls from '../../components/ZoomControls/ZoomControls'
+import { ZoomPanContext } from '../../context/ZoomPanContext'
+import { useDisableBrowserZoom } from '../../hooks/useDisableBrowserZoom'
+import CursorChat from '../../components/CursorChat/CursorChat'
+import FastWaveCursor from '../../components/FastWaveCursor/FastWaveCursor'
+import CommentingLayer from '../../components/CommentingLayer/CommentingLayer'
+import {
+    ProjectPageContainer,
+    ContentWrapper,
+    BackButton,
+    HeroSection,
+    HeroTitle,
+    HeroMeta,
+    HeroMetaItem,
+    HeroMetaLabel,
+    HeroMetaValue,
+    HeroDescription,
+    SectionDivider,
+    Section,
+    SectionTitle,
+    SectionContent,
+    TwoColumn,
+    ThreeColumn,
+    TextBlock,
+    BoldText,
+    ListItem,
+    StatCard,
+    StatNumber,
+    StatLabel,
+    StatDescription
+} from './MedTrackerProjectPage.styles'
+import FloatingTopNav from "../../components/FloatingTopNav/FloatingTopNav";
+
+export default function ProjectPage() {
+    const stageRef = useRef<Konva.Stage>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    const { stageScale, stagePos, setStagePos, setStageScale, clampStagePosition, zoomIn, zoomOut } = useZoomPan()
+    const { showOverlay, setShowOverlay, overlayPos } = usePointerOverlay()
+    const {
+        activeTool,
+        handleToolChange,
+        emojiPickerOpen,
+        stampEmojis,
+        smileyEmojis,
+        selectedEmoji,
+        handleSelectEmoji,
+        emojiButtonRect,
+        setEmojiButtonRect,
+        emojiSubMode,
+        handleSetSubMode,
+        objects,
+        handleStamp
+    } = useEmojiTool({ stageRef })
+    const { wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave } =
+        useWandEmojis({
+            stageRef,
+            activeTool,
+            emojiSubMode,
+            selectedEmoji
+        })
+
+    useDisableBrowserZoom()
+
+    useEffect(() => {
+        setShowOverlay(activeTool === 'emoji')
+    }, [activeTool, setShowOverlay])
+
+    const handleBackClick = () => {
+        window.location.hash = ''
+    }
+
+    const resetView = () => {
+        setStageScale(1)
+        setStagePos({ x: 0, y: 0 })
+    }
+
+    return (
+        <ZoomPanContext.Provider value={{ stageRef, stageScale, setStageScale, stagePos, setStagePos, clampStagePosition, zoomIn, zoomOut }}>
+            <ProjectPageContainer ref={containerRef}>
+                {/* KONVA STAGE (unchanged background, purely decorative emoji trail) */}
+                <Stage
+                    ref={stageRef}
+                    x={stagePos.x}
+                    y={stagePos.y}
+                    scaleX={stageScale}
+                    scaleY={stageScale}
+                    width={typeof window !== 'undefined' ? window.innerWidth : 0}
+                    height={typeof window !== 'undefined' ? window.innerHeight : 0}
+                    onMouseDown={handleStageMouseDown}
+                    onTouchStart={handleStageMouseDown}
+                    onMouseUp={handleStageMouseUp}
+                    onTouchEnd={handleStageMouseUp}
+                    onMouseLeave={handleStageMouseLeave}
+                    onTouchCancel={handleStageMouseLeave}
+                    style={{ position: 'fixed', top: 0, left: 0, zIndex: 1 }}
+                >
+                    <Layer listening={false}>
+                        <Rect width={window.innerWidth} height={window.innerHeight} fill="#000000" opacity={0} />
+                        {objects.map((obj) =>
+                            !obj.src ? null : (
+                                <EmojiObject scale={1.5} key={obj.id} src={obj.src!} x={obj.x} y={obj.y} />
+                            )
+                        )}
+                        {wandEmojis.map((we) => {
+                            const elapsed = performance.now() - we.bornAt
+                            const progress = Math.min(elapsed / WAND_LIFETIME, 1)
+                            const offsetX = WAND_TRAVEL_DISTANCE * progress * Math.sin(we.floatAngle)
+                            const offsetY = -WAND_TRAVEL_DISTANCE * progress * Math.cos(we.floatAngle)
+                            const currentX = we.x + offsetX
+                            const currentY = we.y + offsetY
+                            const currentOpacity = 1 - progress
+
+                            return (
+                                <EmojiObject
+                                    key={we.id}
+                                    src={we.src}
+                                    x={currentX}
+                                    y={currentY}
+                                    rotation={we.rotation}
+                                    opacity={currentOpacity}
+                                    scale={1.5}
+                                />
+                            )
+                        })}
+                    </Layer>
+                </Stage>
+
+                {/* CONTENT */}
+                <ContentWrapper>
+                    <BackButton onClick={handleBackClick}>← Back to Portfolio</BackButton>
+
+                    {/* HERO */}
+                    <HeroSection>
+                        <HeroTitle>MedTracker — Medical Inventory Readiness</HeroTitle>
+                        <HeroMeta>
+                            <HeroMetaItem>
+                                <HeroMetaLabel>Timeline</HeroMetaLabel>
+                                <HeroMetaValue>6 months</HeroMetaValue>
+                            </HeroMetaItem>
+                            <HeroMetaItem>
+                                <HeroMetaLabel>Team</HeroMetaLabel>
+                                <HeroMetaValue>6 Eng · 2 Design · 1 PM</HeroMetaValue>
+                            </HeroMetaItem>
+                            <HeroMetaItem>
+                                <HeroMetaLabel>Role</HeroMetaLabel>
+                                <HeroMetaValue>Product Designer (0→1)</HeroMetaValue>
+                            </HeroMetaItem>
+                        </HeroMeta>
+                        <HeroDescription>
+                            Limited tooling and fragmented workflows reduced visibility into <BoldText>$12M</BoldText> of on-hand medical
+                            inventory—introducing risk to supply accuracy and readiness. MedTracker reimagines the end-to-end lifecycle
+                            (in-processing → picking/packing → disposition) with a mobile-first, real-time system that surfaces what matters
+                            fast and enables collaboration across units. <i>Data and terminology adjusted for security/legal reasons.</i>
+                        </HeroDescription>
+                    </HeroSection>
+
+                    <SectionDivider />
+
+                    {/* PROBLEM OVERVIEW */}
+                    <Section>
+                        <SectionTitle>Problem Overview</SectionTitle>
+                        <SectionContent>
+                            <TextBlock>
+                                Users relied on desktop spreadsheets with dozens of tabs to manage time-sensitive supplies. Expired and excess
+                                inventory went undetected; expiration reporting was manual and slow; and preparing a MED box for deployment
+                                took 18 steps end-to-end. The result: poor visibility, duplication of effort, and readiness risk.
+                            </TextBlock>
+                            <TwoColumn>
+                                <div>
+                                    <h4>User Process</h4>
+                                    <ListItem>In-processing → picking → packing → disposition (18 steps total)</ListItem>
+                                    <ListItem>MED box prep for deployment with no standardized intake/disposition</ListItem>
+                                    <ListItem>Field coordination across battalions without a shared source of truth</ListItem>
+                                </div>
+                                <div>
+                                    <h4>User Systems & Pains</h4>
+                                    <ListItem>3 separate Excel files, &gt;24 tabs, desktop-only access</ListItem>
+                                    <ListItem>Lack of visibility—expired/excess inventory undetected</ListItem>
+                                    <ListItem>Manual expiration reporting; excessive time on inventory management</ListItem>
+                                </div>
+                            </TwoColumn>
+                        </SectionContent>
+                    </Section>
+
+                    <SectionDivider />
+
+                    {/* PROCESS */}
+                    <Section>
+                        <SectionTitle>Process</SectionTitle>
+                        <SectionContent>
+                            <TextBlock>
+                                We co-located with users to understand real workflows, then aligned with data/engineering on feasibility and
+                                coupling before prototyping. We iterated in the field and tightened the information architecture to reduce
+                                clicks while preserving critical cues users relied on.
+                            </TextBlock>
+                            <TwoColumn>
+                                <div>
+                                    <h4>Research & Alignment</h4>
+                                    <ListItem>On-site user + stakeholder interviews; pain-point analysis</ListItem>
+                                    <ListItem>Contextual inquiry &amp; affinity mapping of tasks and edge cases</ListItem>
+                                    <ListItem>Process mapping of current flow with explicit pain points</ListItem>
+                                </div>
+                                <div>
+                                    <h4>Data Mapping & Feasibility</h4>
+                                    <ListItem>Define what’s required/optional; user vs. system inputs</ListItem>
+                                    <ListItem>Back-end structure &amp; data coupling with Eng</ListItem>
+                                    <ListItem>Primary flows prioritized: in-processing, packing, disposition, expirations, readiness</ListItem>
+                                </div>
+                            </TwoColumn>
+                        </SectionContent>
+                    </Section>
+
+                    <SectionDivider />
+
+                    {/* SOLUTION */}
+                    <Section>
+                        <SectionTitle>Solution</SectionTitle>
+                        <SectionContent>
+                            <TextBlock>
+                                MedTracker is a mobile-first web app with real-time updates, visual indicators, and three-clicks-or-less access
+                                to the core jobs: in-processing inventory, packing MED boxes, disposing excess, ordering/viewing expirations,
+                                and monitoring overall readiness.
+                            </TextBlock>
+
+                            <TwoColumn>
+                                <Box
+                                    sx={{
+                                        height: 280,
+                                        borderRadius: 2,
+                                        border: '1px solid',
+                                        borderColor: 'rgba(255,255,255,0.08)',
+                                        backdropFilter: 'blur(4px)'
+                                    }}
+                                    aria-label="Primary flows mock — Inventory & Sets"
+                                />
+                                <Box
+                                    sx={{
+                                        height: 280,
+                                        borderRadius: 2,
+                                        border: '1px solid',
+                                        borderColor: 'rgba(255,255,255,0.08)',
+                                        backdropFilter: 'blur(4px)'
+                                    }}
+                                    aria-label="Detail view mock — Lots, quantities, and expiration"
+                                />
+                            </TwoColumn>
+
+                            <TextBlock style={{ marginTop: 32 }}>
+                                <BoldText>Design principles: Mobile first · Real-time updates · Clear visual indicators · User-validated · 3 clicks or less</BoldText>
+                            </TextBlock>
+
+                            <ThreeColumn>
+                                <div>
+                                    <h4>Inventory &amp; Sets</h4>
+                                    <p>Searchable sets, bulk inventory actions, and structured item details (lot, quantity, expiration) for quick edits.</p>
+                                </div>
+                                <div>
+                                    <h4>Expiration &amp; Disposition</h4>
+                                    <p>Automated expiration reporting with a new viability window and guided workflows for reallocating/disposal.</p>
+                                </div>
+                                <div>
+                                    <h4>Readiness &amp; Ordering</h4>
+                                    <p>At-a-glance readiness views (0–80 / 81–99 / 100%) and hooks for ordering to close loops faster.</p>
+                                </div>
+                            </ThreeColumn>
+                        </SectionContent>
+                    </Section>
+
+                    <SectionDivider />
+
+                    {/* RESULTS / IMPACT */}
+                    <Section>
+                        <SectionTitle>Results &amp; Impact</SectionTitle>
+                        <SectionContent>
+                            <TextBlock>
+                                Process optimization, warehouse mapping, and a purpose-built interface delivered dramatic efficiency gains and
+                                visibility into real inventory health across units.
+                            </TextBlock>
+
+                            <ThreeColumn>
+                                <StatCard>
+                                    <StatNumber>5 min</StatNumber>
+                                    <StatLabel>MED box fulfillment time</StatLabel>
+                                    <StatDescription>Reduced from ~40 min (≈87% faster)</StatDescription>
+                                </StatCard>
+                                <StatCard>
+                                    <StatNumber>11,000+</StatNumber>
+                                    <StatLabel>hours saved / year</StatLabel>
+                                    <StatDescription>Across the inventory lifecycle</StatDescription>
+                                </StatCard>
+                                <StatCard>
+                                    <StatNumber>$4M+</StatNumber>
+                                    <StatLabel>identified &amp; removed</StatLabel>
+                                    <StatDescription>Expired / excess inventory surfaced</StatDescription>
+                                </StatCard>
+                            </ThreeColumn>
+
+                            <TextBlock style={{ marginTop: 32 }}>
+                                <BoldText>Additional wins: +5,800 hours/year saved via the new expiration viability window for 900+ MED boxes.</BoldText>
+                            </TextBlock>
+
+                            <TwoColumn>
+                                <div>
+                                    <ListItem><BoldText>Business impacts</BoldText></ListItem>
+                                    <ListItem>Organization-wide annual savings &gt;$4M</ListItem>
+                                    <ListItem>Disposition and mission viability reporting for downtrace allocation</ListItem>
+                                    <ListItem>Real-time collaboration → fewer delays and handoffs</ListItem>
+                                </div>
+                                <div>
+                                    <ListItem><BoldText>User impacts</BoldText></ListItem>
+                                    <ListItem>Mobile app with 3-click access to core tasks</ListItem>
+                                    <ListItem>Automated expiration reporting; fewer spreadsheet loops</ListItem>
+                                    <ListItem>Clear readiness signals; simple set/lot updates</ListItem>
+                                </div>
+                            </TwoColumn>
+                        </SectionContent>
+                    </Section>
+
+                    <SectionDivider />
+
+                    {/* LEARNINGS */}
+                    <Section>
+                        <SectionTitle>Learnings</SectionTitle>
+                        <SectionContent>
+                            <ThreeColumn>
+                                <div>
+                                    <h4>Be concise</h4>
+                                    <p>Tons of data—only surface what drives action. Remove noise, keep necessary cues.</p>
+                                </div>
+                                <div>
+                                    <h4>Align early with Eng/Data</h4>
+                                    <p>Co-design data structures and mapping to avoid rework and ensure feasible, fast UI.</p>
+                                </div>
+                                <div>
+                                    <h4>Design for familiarity</h4>
+                                    <p>We kept certain workflow cues users relied on—fewer clicks without disorientation.</p>
+                                </div>
+                            </ThreeColumn>
+                        </SectionContent>
+                    </Section>
+                </ContentWrapper>
+
+                {/* UI CHROME */}
+                <ThemeToggle />
+                <FloatingTopNav />
+                <ZoomControls
+                    scale={stageScale}
+                    pos={stagePos}
+                    onZoomIn={() => zoomIn(stageRef)}
+                    onZoomOut={() => zoomOut(stageRef)}
+                    onReset={resetView}
+                />
+                <DelightfulToolbar
+                    activeTool={activeTool}
+                    setActiveTool={handleToolChange}
+                    setEmojiButtonRect={setEmojiButtonRect}
+                />
+                <EmojiPicker
+                    visible={emojiPickerOpen}
+                    stampEmojis={stampEmojis}
+                    smileyEmojis={smileyEmojis}
+                    selected={selectedEmoji}
+                    onSelect={handleSelectEmoji}
+                    anchorRect={emojiButtonRect}
+                    subMode={emojiSubMode}
+                    setSubMode={handleSetSubMode}
+                />
+                <EmojiBrushOverlay
+                    emoji={selectedEmoji}
+                    visible={showOverlay}
+                    x={overlayPos.x}
+                    y={overlayPos.y}
+                />
+                <CursorChat />
+                <FastWaveCursor />
+                <CommentingLayer activeTool={activeTool} />
+            </ProjectPageContainer>
+        </ZoomPanContext.Provider>
+    )
+}

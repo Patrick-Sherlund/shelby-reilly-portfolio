@@ -26,6 +26,7 @@ import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
 import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import { GlobalStyles } from '@mui/material'
 import SearchPalette from './components/SearchPalette/SearchPalette'
+import MedTrackerProjectPage from './pages/MedTrackerProjectPage/MedTrackerProjectPage'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -103,7 +104,7 @@ export default function App() {
     const isWandActive = activeTool === 'emoji' && emojiSubMode === 'wand'
     const canDragBackground = !isWandActive
 
-    // Track y position before first zoom, and whether user scrolled while zoomed
+
     const yBeforeZoomRef = useRef<number | null>(null)
     const scrolledWhileZoomedRef = useRef(false)
     const prevScaleRef = useRef(1)
@@ -139,20 +140,20 @@ export default function App() {
         }
     }, [])
 
-    // Invoke custom hook to disable native browser zoom
+
     useDisableBrowserZoom()
 
-    // Detect entering zoom to capture initial y
+
     useEffect(() => {
         if (prevScaleRef.current === 1 && stageScale !== 1) {
-            // just started zooming
+
             yBeforeZoomRef.current = stagePos.y
             scrolledWhileZoomedRef.current = false
         }
         prevScaleRef.current = stageScale
     }, [stageScale, stagePos.y])
 
-    // Detect vertical scroll (y change) while zoomed
+
     useEffect(() => {
         if (stageScale !== 1 && prevPosYRef.current !== stagePos.y) {
             scrolledWhileZoomedRef.current = true
@@ -161,13 +162,27 @@ export default function App() {
     }, [stagePos.y, stageScale])
 
     const resetView = () => {
-        // Determine which page is currently in view based on stagePos & scale
+
         const approxIndex = Math.round(-stagePos.y / (window.innerHeight * stageScale))
-        const clampedIndex = Math.max(0, Math.min(3, approxIndex)) // we have 4 pages (0-3)
+        const clampedIndex = Math.max(0, Math.min(3, approxIndex))
         const targetY = -clampedIndex * window.innerHeight
 
         setStageScale(1)
         setStagePos({ x: 0, y: targetY })
+    }
+
+    const [currentRoute, setCurrentRoute] = React.useState<string>(window.location.hash)
+
+    useEffect(() => {
+        const handleHashChange = () => {
+            setCurrentRoute(window.location.hash)
+        }
+        window.addEventListener('hashchange', handleHashChange)
+        return () => window.removeEventListener('hashchange', handleHashChange)
+    }, [])
+
+    if (currentRoute === '#/medtracker-project') {
+        return <MedTrackerProjectPage />
     }
 
     return (

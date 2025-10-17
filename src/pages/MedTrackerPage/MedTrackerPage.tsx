@@ -46,17 +46,17 @@ export default function MedTrackerPage() {
         }
     }, [registerItem, unregisterItem, registerGroupAnchor])
 
+    const handleCaseStudyClick = () => {
+        window.location.hash = '#/medtracker-project'
+    }
+
     return (
         <MainWrapper ref={sectionRef}>
-            {/* Top-left logo */}
             <LogoImage
                 src={`${process.env.PUBLIC_URL}/images/vmware.png`}
                 alt="VMware Logo"
             />
-
-            {/* Middle section */}
             <MidSection>
-                {/* Left – iPhone mock-ups */}
                 <ImagesWrapper
                     ref={imagesRef}
                     onMouseDown={imagesInteraction.handleMouseDown}
@@ -64,21 +64,17 @@ export default function MedTrackerPage() {
                     onMouseUp={imagesInteraction.handleMouseUp}
                     onMouseLeave={imagesInteraction.handleMouseLeave}
                 >
-                    {/* Battalions demo */}
                     <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: '246px' }}>
                         <IphoneOutline initialTab={0} />
                     </Box>
-                    {/* Bulk inventory demo */}
                     <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: '246px', transform:'translateY(-20%)' }}>
                         <IphoneOutline initialTab={1} />
                     </Box>
-                    {/* Move items demo */}
                     <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto', transform:'translateY(0%)' }}>
                         <IphoneOutline initialTab={2} />
                     </Box>
                 </ImagesWrapper>
 
-                {/* Right – Description */}
                 <DescriptionWrapper
                     ref={descRef}
                     onMouseDown={descInteraction.handleMouseDown}
@@ -92,7 +88,7 @@ export default function MedTrackerPage() {
                     <LineText>Hardware Engineer</LineText>
 
                     <div style={{ marginTop: '32px' }}>
-                        <CaseStudyButton>READ CASE STUDY</CaseStudyButton>
+                        <CaseStudyButton onClick={handleCaseStudyClick}>READ CASE STUDY</CaseStudyButton>
                     </div>
                 </DescriptionWrapper>
             </MidSection>
