@@ -10,7 +10,8 @@ export const NavWrapper = styled(Box)(() => ({
     right: 0,
     display: 'flex',
     justifyContent: 'center',
-    zIndex: 2
+    zIndex: 1500,
+    pointerEvents: 'auto'
 }))
 
 // The container (Paper) for all tools

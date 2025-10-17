@@ -65,18 +65,18 @@ export const BackButton = styled('button')(({ theme }) => ({
 
 export const HeroSection = styled('div')(({ theme }) => ({
     marginBottom: 60,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    gap: 16,
 }))
 
-export const HeroTitle = styled('h1')(({ theme }) => ({
-    margin: '0 0 24px 0',
-    fontFamily: "'Futura LT', 'Futura', sans-serif",
-    fontSize: 'clamp(48px, 8vw, 80px)',
-    fontWeight: 700,
-    background: 'linear-gradient(135deg, #6675FF 0%, #8B9EFF 100%)',
-    backgroundClip: 'text',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    lineHeight: 1.1,
+export const HeroLogo = styled('img')(() => ({
+    display: 'block',
+    width: 'min(100%, 420px)',
+    margin: '0 auto 16px auto',
+    filter: 'drop-shadow(0 20px 35px rgba(7, 10, 30, 0.45))',
 }))
 
 export const HeroMeta = styled('div')(({ theme }) => ({
@@ -84,6 +84,7 @@ export const HeroMeta = styled('div')(({ theme }) => ({
     gap: 48,
     marginBottom: 32,
     flexWrap: 'wrap',
+    justifyContent: 'center',
 
     [theme.breakpoints.down('sm')]: {
         gap: 32,
@@ -94,6 +95,7 @@ export const HeroMetaItem = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
     gap: 4,
+    alignItems: 'center',
 }))
 
 export const HeroMetaLabel = styled('span')(({ theme }) => ({
@@ -111,11 +113,12 @@ export const HeroMetaValue = styled('span')(({ theme }) => ({
 }))
 
 export const HeroDescription = styled('p')(({ theme }) => ({
-    margin: '32px 0 0 0',
+    margin: '32px auto 0 auto',
     fontSize: 18,
     lineHeight: 1.8,
     color: theme.palette.text.secondary,
     maxWidth: 700,
+    textAlign: 'center',
 }))
 
 export const SectionDivider = styled('div')(({ theme }) => ({

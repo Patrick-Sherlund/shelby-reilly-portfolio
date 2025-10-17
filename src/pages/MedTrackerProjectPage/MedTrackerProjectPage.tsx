@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Rect } from 'react-konva'
 import Box from '@mui/material/Box'
@@ -22,7 +22,7 @@ import {
     ContentWrapper,
     BackButton,
     HeroSection,
-    HeroTitle,
+    HeroLogo,
     HeroMeta,
     HeroMetaItem,
     HeroMetaLabel,
@@ -43,6 +43,7 @@ import {
     StatDescription
 } from './MedTrackerProjectPage.styles'
 import FloatingTopNav from "../../components/FloatingTopNav/FloatingTopNav";
+import medTrackerLogo from '../../assets/images/MedTracker-Logo.png'
 
 export default function ProjectPage() {
     const stageRef = useRef<Konva.Stage>(null)
@@ -63,7 +64,6 @@ export default function ProjectPage() {
         emojiSubMode,
         handleSetSubMode,
         objects,
-        handleStamp
     } = useEmojiTool({ stageRef })
     const { wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave } =
         useWandEmojis({
@@ -88,10 +88,100 @@ export default function ProjectPage() {
         setStagePos({ x: 0, y: 0 })
     }
 
+    // ------------------------------
+    // Sticky Process Stepper (left) + Scrolling Panels (right)
+    // ------------------------------
+    const [activeStep, setActiveStep] = useState<number>(0)
+    const step1Ref = useRef<HTMLDivElement>(null)
+    const step2Ref = useRef<HTMLDivElement>(null)
+    const step3Ref = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const mapIdToIndex: Record<string, number> = {
+            step_flows: 0,
+            step_data: 1,
+            step_ui: 2
+        }
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id') || ''
+                        if (mapIdToIndex[id] !== undefined) setActiveStep(mapIdToIndex[id])
+                    }
+                })
+            },
+            {
+                root: null,
+                // Centers the "active" region roughly in the middle of the viewport
+                rootMargin: '-35% 0px -50% 0px',
+                threshold: 0.25
+            }
+        )
+        const nodes = [step1Ref.current, step2Ref.current, step3Ref.current].filter(Boolean) as Element[]
+        nodes.forEach((n) => observer.observe(n))
+        return () => observer.disconnect()
+    }, [])
+
+    const StepChip: React.FC<{ index: number; label: string; title: string }> = ({ index, label, title }) => {
+        const isActive = activeStep === index
+        return (
+            <Box
+                role="link"
+                aria-current={isActive ? 'step' : undefined}
+                sx={{
+                    position: 'relative',
+                    p: 1.5,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: isActive ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)',
+                    background: isActive
+                        ? 'linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))'
+                        : 'transparent',
+                    transition: 'all .25s ease',
+                    transform: isActive ? 'scale(1.02)' : 'scale(1)',
+                    cursor: 'pointer',
+                    mb: 1.25,
+                    boxShadow: isActive ? '0 6px 24px rgba(0,0,0,0.25)' : 'none',
+                    '&:hover': { borderColor: 'rgba(255,255,255,0.22)' }
+                }}
+                onClick={() => {
+                    const anchors = [step1Ref.current, step2Ref.current, step3Ref.current]
+                    anchors[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+                    <Box
+                        sx={{
+                            fontFamily: 'ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial',
+                            fontWeight: 700,
+                            fontSize: 12,
+                            letterSpacing: 0.6,
+                            textTransform: 'uppercase',
+                            opacity: 0.8
+                        }}
+                    >
+                        {label}
+                    </Box>
+                </Box>
+                <Box
+                    sx={{
+                        mt: 0.5,
+                        fontWeight: 800,
+                        fontSize: 22,
+                        lineHeight: 1.15
+                    }}
+                >
+                    {title}
+                </Box>
+            </Box>
+        )
+    }
+
     return (
         <ZoomPanContext.Provider value={{ stageRef, stageScale, setStageScale, stagePos, setStagePos, clampStagePosition, zoomIn, zoomOut }}>
             <ProjectPageContainer ref={containerRef}>
-                {/* KONVA STAGE (unchanged background, purely decorative emoji trail) */}
+                {/* KONVA STAGE (unchanged) */}
                 <Stage
                     ref={stageRef}
                     x={stagePos.x}
@@ -145,7 +235,7 @@ export default function ProjectPage() {
 
                     {/* HERO */}
                     <HeroSection>
-                        <HeroTitle>MedTracker — Medical Inventory Readiness</HeroTitle>
+                        <HeroLogo src={medTrackerLogo} alt="Med Tracker — VMware by Broadcom logo" />
                         <HeroMeta>
                             <HeroMetaItem>
                                 <HeroMetaLabel>Timeline</HeroMetaLabel>
@@ -198,34 +288,6 @@ export default function ProjectPage() {
 
                     <SectionDivider />
 
-                    {/* PROCESS */}
-                    <Section>
-                        <SectionTitle>Process</SectionTitle>
-                        <SectionContent>
-                            <TextBlock>
-                                We co-located with users to understand real workflows, then aligned with data/engineering on feasibility and
-                                coupling before prototyping. We iterated in the field and tightened the information architecture to reduce
-                                clicks while preserving critical cues users relied on.
-                            </TextBlock>
-                            <TwoColumn>
-                                <div>
-                                    <h4>Research & Alignment</h4>
-                                    <ListItem>On-site user + stakeholder interviews; pain-point analysis</ListItem>
-                                    <ListItem>Contextual inquiry &amp; affinity mapping of tasks and edge cases</ListItem>
-                                    <ListItem>Process mapping of current flow with explicit pain points</ListItem>
-                                </div>
-                                <div>
-                                    <h4>Data Mapping & Feasibility</h4>
-                                    <ListItem>Define what’s required/optional; user vs. system inputs</ListItem>
-                                    <ListItem>Back-end structure &amp; data coupling with Eng</ListItem>
-                                    <ListItem>Primary flows prioritized: in-processing, packing, disposition, expirations, readiness</ListItem>
-                                </div>
-                            </TwoColumn>
-                        </SectionContent>
-                    </Section>
-
-                    <SectionDivider />
-
                     {/* SOLUTION */}
                     <Section>
                         <SectionTitle>Solution</SectionTitle>
@@ -235,6 +297,169 @@ export default function ProjectPage() {
                                 to the core jobs: in-processing inventory, packing MED boxes, disposing excess, ordering/viewing expirations,
                                 and monitoring overall readiness.
                             </TextBlock>
+
+                            {/* DESIGN PROCESS (integrated into solution) */}
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    gridTemplateColumns: { xs: '1fr', md: '320px 1fr' },
+                                    gap: { xs: 2, md: 4 },
+                                    alignItems: 'start'
+                                }}
+                            >
+                                {/* LEFT: Sticky Steps */}
+                                <Box
+                                    sx={{
+                                        position: { md: 'sticky' },
+                                        top: { md: 96 },
+                                        alignSelf: 'start',
+                                        pt: 1,
+                                        pb: 2,
+                                        // Vertical gradient spine behind chips
+                                        '::before': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            left: { md: 12 },
+                                            top: 0,
+                                            bottom: 0,
+                                            width: '2px',
+                                            background:
+                                                'linear-gradient(180deg, #5EF0FF, #9C5DFF 45%, #FFB86B 80%)',
+                                            opacity: 0.7,
+                                            borderRadius: 999
+                                        }
+                                    }}
+                                >
+                                    <Box sx={{ pl: { md: 4 } }}>
+                                        <StepChip index={0} label="Step one" title="Defining the user flows" />
+                                        <StepChip index={1} label="Step two" title="Data mapping" />
+                                        <StepChip index={2} label="Step three" title="UI design decisions" />
+                                    </Box>
+                                </Box>
+
+                                {/* RIGHT: Panels that control active state */}
+                                <Box sx={{ display: 'grid', gap: 8 }}>
+                                    {/* STEP 1 PANEL */}
+                                    <Box
+                                        id="step_flows"
+                                        ref={step1Ref}
+                                        sx={{
+                                            p: { xs: 2.5, md: 3 },
+                                            borderRadius: 3,
+                                            border: '1px solid rgba(255,255,255,0.08)',
+                                            background:
+                                                'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+                                            backdropFilter: 'blur(2px)'
+                                        }}
+                                    >
+                                        <Box sx={{ fontSize: 12, fontWeight: 700, opacity: 0.8, letterSpacing: 0.6, textTransform: 'uppercase' }}>
+                                            Step one
+                                        </Box>
+                                        <Box sx={{ mt: 0.75, fontWeight: 800, fontSize: 28, lineHeight: 1.15 }}>
+                                            Defining the user flows
+                                        </Box>
+                                        <TextBlock>
+                                            We mapped the end-to-end tasks and decision points across roles to minimize hops and context switching.
+                                            The baseline contained 18 steps across in-processing, picking, packing, and disposition. We collapsed
+                                            redundant actions and clarified ownership to target a “3-clicks-or-less” path to core tasks.
+                                        </TextBlock>
+                                        <TwoColumn>
+                                            <div>
+                                                <h4>Artifacts</h4>
+                                                <ListItem>As-is / to-be flow diagrams per role</ListItem>
+                                                <ListItem>Task inventory &amp; success metrics</ListItem>
+                                                <ListItem>Entry/exit criteria for each stage</ListItem>
+                                            </div>
+                                            <div>
+                                                <h4>Decisions</h4>
+                                                <ListItem>Prioritized flows: in-processing, packing, disposition</ListItem>
+                                                <ListItem>Kept familiar cues; removed dead-ends</ListItem>
+                                                <ListItem>Introduced readiness &amp; expiration shortcuts</ListItem>
+                                            </div>
+                                        </TwoColumn>
+                                    </Box>
+
+                                    {/* STEP 2 PANEL */}
+                                    <Box
+                                        id="step_data"
+                                        ref={step2Ref}
+                                        sx={{
+                                            p: { xs: 2.5, md: 3 },
+                                            borderRadius: 3,
+                                            border: '1px solid rgba(255,255,255,0.08)',
+                                            background:
+                                                'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+                                            backdropFilter: 'blur(2px)'
+                                        }}
+                                    >
+                                        <Box sx={{ fontSize: 12, fontWeight: 700, opacity: 0.8, letterSpacing: 0.6, textTransform: 'uppercase' }}>
+                                            Step two
+                                        </Box>
+                                        <Box sx={{ mt: 0.75, fontWeight: 800, fontSize: 28, lineHeight: 1.15 }}>
+                                            Data mapping
+                                        </Box>
+                                        <TextBlock>
+                                            With engineering, we defined the schema that powers search, bulk updates, and expiration reporting.
+                                            Required vs. optional fields were clarified, and system-derived values (e.g., viability windows) were
+                                            introduced to automate previously manual reporting.
+                                        </TextBlock>
+                                        <TwoColumn>
+                                            <div>
+                                                <h4>What we mapped</h4>
+                                                <ListItem>Item → Lot → Set relationships &amp; ownership</ListItem>
+                                                <ListItem>Required fields, validation, and defaults</ListItem>
+                                                <ListItem>Primary/secondary keys for edits &amp; bulk ops</ListItem>
+                                            </div>
+                                            <div>
+                                                <h4>Why it matters</h4>
+                                                <ListItem>Reliable readiness signals per unit</ListItem>
+                                                <ListItem>Automated expiration &amp; disposition reporting</ListItem>
+                                                <ListItem>Fast, conflict-free updates from mobile</ListItem>
+                                            </div>
+                                        </TwoColumn>
+                                    </Box>
+
+                                    {/* STEP 3 PANEL */}
+                                    <Box
+                                        id="step_ui"
+                                        ref={step3Ref}
+                                        sx={{
+                                            p: { xs: 2.5, md: 3 },
+                                            borderRadius: 3,
+                                            border: '1px solid rgba(255,255,255,0.08)',
+                                            background:
+                                                'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+                                            backdropFilter: 'blur(2px)'
+                                        }}
+                                    >
+                                        <Box sx={{ fontSize: 12, fontWeight: 700, opacity: 0.8, letterSpacing: 0.6, textTransform: 'uppercase' }}>
+                                            Step three
+                                        </Box>
+                                        <Box sx={{ mt: 0.75, fontWeight: 800, fontSize: 28, lineHeight: 1.15 }}>
+                                            UI design decisions (UI/UX)
+                                        </Box>
+                                        <TextBlock>
+                                            We optimized the information architecture for scan-ability: prominent readiness and expiration signals,
+                                            clear set/lot hierarchy, and in-place editing. Mobile-first patterns and a familiar table-detail model
+                                            enabled quick wins without cognitive overhead.
+                                        </TextBlock>
+                                        <ThreeColumn>
+                                            <div>
+                                                <h4>IA &amp; patterns</h4>
+                                                <p>List → detail with persistent context; 3-click rule; prominent status chips.</p>
+                                            </div>
+                                            <div>
+                                                <h4>Affordances</h4>
+                                                <p>Inline edits for qty/lot; bulk actions; search &amp; filters tuned to tasks.</p>
+                                            </div>
+                                            <div>
+                                                <h4>Signals</h4>
+                                                <p>Readiness bands (0–80 / 81–99 / 100%), expiration badges, disposition prompts.</p>
+                                            </div>
+                                        </ThreeColumn>
+                                    </Box>
+                                </Box>
+                            </Box>
 
                             <TwoColumn>
                                 <Box
