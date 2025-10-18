@@ -333,7 +333,7 @@ export default function ProjectPage() {
         setStagePos({ x: 0, y: 0 })
     }
 
-    // Sticky Process Stepper state (kept as-is for later sections)
+    // Sticky Process Stepper state (used in Process section)
     const [activeStep, setActiveStep] = useState<number>(0)
     const step1Ref = useRef<HTMLDivElement>(null)
     const step2Ref = useRef<HTMLDivElement>(null)
@@ -354,11 +354,7 @@ export default function ProjectPage() {
                     }
                 })
             },
-            {
-                root: null,
-                rootMargin: '-35% 0px -50% 0px',
-                threshold: 0.25
-            }
+            { root: null, rootMargin: '-35% 0px -50% 0px', threshold: 0.25 }
         )
         const nodes = [step1Ref.current, step2Ref.current, step3Ref.current].filter(Boolean) as Element[]
         nodes.forEach((n) => observer.observe(n))
@@ -391,14 +387,7 @@ export default function ProjectPage() {
                     const anchors = [step1Ref.current, step2Ref.current, step3Ref.current]
                     const anchor = anchors[index]
                     if (!anchor) return
-                    const rect = anchor.getBoundingClientRect()
-                    const anchorCenter = rect.top + rect.height / 2
-                    const viewportCenter = window.innerHeight / 2
-                    const delta = viewportCenter - anchorCenter
-                    setStagePos((prev) => ({
-                        x: prev.x,
-                        y: clampStagePosition(prev.y + delta / stageScale)
-                    }))
+                    anchor.scrollIntoView({ behavior: 'smooth', block: 'center' })
                 }}
             >
                 <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
@@ -415,14 +404,7 @@ export default function ProjectPage() {
                         {label}
                     </Box>
                 </Box>
-                <Box
-                    sx={{
-                        mt: 0.5,
-                        fontWeight: 800,
-                        fontSize: 22,
-                        lineHeight: 1.15
-                    }}
-                >
+                <Box sx={{ mt: 0.5, fontWeight: 800, fontSize: 22, lineHeight: 1.15 }}>
                     {title}
                 </Box>
             </Box>
@@ -483,14 +465,16 @@ export default function ProjectPage() {
                     <ContentWrapper ref={contentRef}>
                         <BackButton data-ignore-stage onClick={handleBackClick}>← Back to Portfolio</BackButton>
 
-                        {/* HERO — refraction layout */}
+                        {/* HERO — orientation like the provided reference */}
                         <HeroSection>
                             <HeroLogo src={medTrackerLogo} alt="Med Tracker logo" />
                             <HeroBadge>VMware by Broadcom</HeroBadge>
 
                             <HeroGrid>
+                                {/* Left: phones collage */}
                                 <HeroDevices src={iphoneRefraction} alt="MedTracker iPhone screens" />
 
+                                {/* Right: meta and overview */}
                                 <Box sx={{ justifySelf: 'center' }}>
                                     <HeroMetaList>
                                         <HeroMetaKey>Project Type</HeroMetaKey>
@@ -505,56 +489,36 @@ export default function ProjectPage() {
                                         <HeroMetaKey>Impact</HeroMetaKey>
                                         <HeroMetaVal>$4M saved annually · 11k+ work hours saved yearly</HeroMetaVal>
                                     </HeroMetaList>
+
+                                    {/* Problem Overview placed under the meta, right column */}
+                                    <Box sx={{ mt: 20 }}>
+                                        <Box
+                                            component="h3"
+                                            sx={{
+                                                m: 0,
+                                                mb: 1.25,
+                                                fontSize: 18,
+                                                fontWeight: 700,
+                                                textAlign: 'left'
+                                            }}
+                                        >
+                                            Problem Overview
+                                        </Box>
+                                        <HeroDescription>
+                                            “Limited tooling and fragmented workflows reduced visibility into <BoldText>$12M</BoldText> of on-hand
+                                            medical inventory, introducing risk to supply accuracy and readiness.”
+                                        </HeroDescription>
+                                    </Box>
                                 </Box>
                             </HeroGrid>
-
-                            <HeroDescription>
-                                Limited tooling and fragmented workflows reduced visibility into <BoldText>$12M</BoldText> of on-hand medical
-                                inventory—introducing risk to supply accuracy and readiness. MedTracker reimagines the end-to-end lifecycle
-                                (in-processing → picking/packing → disposition) with a mobile-first, real-time system that surfaces what matters
-                                fast and enables collaboration across units. <i>Data and terminology adjusted for security/legal reasons.</i>
-                            </HeroDescription>
                         </HeroSection>
 
                         <SectionDivider />
 
-                        {/* PROBLEM OVERVIEW */}
-                        <Section>
-                            <SectionTitle>Problem Overview</SectionTitle>
+                        {/* PROCESS — sticky stepper before Solution */}
+                        <Section id="process">
+                            <SectionTitle>Process</SectionTitle>
                             <SectionContent>
-                                <TextBlock>
-                                    Users relied on desktop spreadsheets with dozens of tabs to manage time-sensitive supplies. Expired and excess
-                                    inventory went undetected; expiration reporting was manual and slow; and preparing a MED box for deployment
-                                    took 18 steps end-to-end. The result: poor visibility, duplication of effort, and readiness risk.
-                                </TextBlock>
-                                <TwoColumn>
-                                    <div>
-                                        <h4>User Process</h4>
-                                        <ListItem>In-processing → picking → packing → disposition (18 steps total)</ListItem>
-                                        <ListItem>MED box prep for deployment with no standardized intake/disposition</ListItem>
-                                        <ListItem>Field coordination across battalions without a shared source of truth</ListItem>
-                                    </div>
-                                    <div>
-                                        <h4>User Systems & Pains</h4>
-                                        <ListItem>3 separate Excel files, &gt;24 tabs, desktop-only access</ListItem>
-                                        <ListItem>Lack of visibility—expired/excess inventory undetected</ListItem>
-                                        <ListItem>Manual expiration reporting; excessive time on inventory management</ListItem>
-                                    </div>
-                                </TwoColumn>
-                            </SectionContent>
-                        </Section>
-
-                        {/* SOLUTION (kept) */}
-                        <Section>
-                            <SectionTitle>Solution</SectionTitle>
-                            <SectionContent>
-                                <TextBlock>
-                                    MedTracker is a mobile-first web app with real-time updates, visual indicators, and three-clicks-or-less access
-                                    to the core jobs: in-processing inventory, packing MED boxes, disposing excess, ordering/viewing expirations,
-                                    and monitoring overall readiness.
-                                </TextBlock>
-
-                                {/* DESIGN PROCESS (sticky stepper) */}
                                 <Box
                                     sx={{
                                         display: 'grid',
@@ -594,6 +558,7 @@ export default function ProjectPage() {
 
                                     {/* RIGHT: Panels that control active state */}
                                     <Box sx={{ display: 'grid', gap: 8 }}>
+                                        {/* STEP 1 PANEL */}
                                         <Box
                                             id="step_flows"
                                             ref={step1Ref}
@@ -633,6 +598,7 @@ export default function ProjectPage() {
                                             </TwoColumn>
                                         </Box>
 
+                                        {/* STEP 2 PANEL */}
                                         <Box
                                             id="step_data"
                                             ref={step2Ref}
@@ -672,6 +638,7 @@ export default function ProjectPage() {
                                             </TwoColumn>
                                         </Box>
 
+                                        {/* STEP 3 PANEL */}
                                         <Box
                                             id="step_ui"
                                             ref={step3Ref}
@@ -712,6 +679,20 @@ export default function ProjectPage() {
                                         </Box>
                                     </Box>
                                 </Box>
+                            </SectionContent>
+                        </Section>
+
+                        <SectionDivider />
+
+                        {/* SOLUTION */}
+                        <Section>
+                            <SectionTitle>Solution</SectionTitle>
+                            <SectionContent>
+                                <TextBlock>
+                                    MedTracker is a mobile-first web app with real-time updates, visual indicators, and three-clicks-or-less access
+                                    to the core jobs: in-processing inventory, packing MED boxes, disposing excess, ordering/viewing expirations,
+                                    and monitoring overall readiness.
+                                </TextBlock>
 
                                 <TwoColumn>
                                     <Box

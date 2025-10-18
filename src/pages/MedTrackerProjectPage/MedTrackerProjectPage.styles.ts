@@ -81,7 +81,7 @@ export const HeroSection = styled('section')(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'center',
     textAlign: 'center',
-    gap: 16,
+    gap: 12,
 }))
 
 export const HeroLogo = styled('img')(() => ({
@@ -91,7 +91,7 @@ export const HeroLogo = styled('img')(() => ({
     filter: 'drop-shadow(0 20px 35px rgba(7, 10, 30, 0.45))',
 }))
 
-// New hero primitives for the refraction layout
+// New hero primitives (for orientation like the reference)
 export const HeroBadge = styled('div')(({ theme }) => ({
     fontSize: 12,
     fontWeight: 700,
@@ -106,10 +106,10 @@ export const HeroGrid = styled('div')(({ theme }) => ({
     width: '100%',
     maxWidth: 1100,
     display: 'grid',
-    gridTemplateColumns: 'minmax(0, 560px) minmax(0, 1fr)',
-    gap: 48,
+    gridTemplateColumns: 'minmax(0, 540px) minmax(0, 1fr)',
+    gap: 56,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 12,
 
     [theme.breakpoints.down('md')]: {
         gridTemplateColumns: '1fr',
@@ -191,12 +191,12 @@ export const HeroMetaValue = styled('span')(({ theme }) => ({
 }))
 
 export const HeroDescription = styled('p')(({ theme }) => ({
-    margin: '28px auto 0 auto',
+    margin: '0',
     fontSize: 18,
     lineHeight: 1.8,
     color: theme.palette.text.secondary,
     maxWidth: 820,
-    textAlign: 'center',
+    textAlign: 'left',
 }))
 
 export const SectionDivider = styled('div')(({ theme }) => ({
