@@ -42,7 +42,7 @@ export default function EmojiPicker({
     const centerTop = anchorRect.y + anchorRect.height / 2 + window.scrollY - 90
 
     return (
-        <PickerContainer style={{ left: centerLeft, top: centerTop }}>
+        <PickerContainer data-ignore-stage style={{ left: centerLeft, top: centerTop }}>
             {emojisToShow.map((_, i) => {
                 const angle = i * angleStep + 10
                 return (

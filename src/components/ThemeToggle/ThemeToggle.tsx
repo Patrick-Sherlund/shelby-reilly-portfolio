@@ -10,7 +10,7 @@ export default function ThemeToggle() {
     const isDark = mode === 'dark'
 
     return (
-        <ToggleWrapper>
+        <ToggleWrapper data-ignore-stage>
             {/* Same size and style as your social icon buttons */}
             <IconButton
                 onClick={toggleTheme}

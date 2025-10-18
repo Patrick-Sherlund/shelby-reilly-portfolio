@@ -182,7 +182,7 @@ export default function FloatingTopNav() {
 
     return (
         <>
-            <FloatingNavBarContainer open={openProfiles}>
+            <FloatingNavBarContainer data-ignore-stage open={openProfiles}>
                 {/* Section 1: Overlapping avatars */}
                 <AvatarsContainer
                     open={openProfiles}

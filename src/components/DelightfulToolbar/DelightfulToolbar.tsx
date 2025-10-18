@@ -44,7 +44,7 @@ export default function DelightfulToolbar({
     }
 
     return (
-        <NavWrapper data-ignore-comment>
+        <NavWrapper data-ignore-comment data-ignore-stage>
             <ToolbarContainer>
                 {/* 1) Cursor tool (left corner) */}
                 <ToolSection isActive={activeTool === 'hand'} isCursorTool>

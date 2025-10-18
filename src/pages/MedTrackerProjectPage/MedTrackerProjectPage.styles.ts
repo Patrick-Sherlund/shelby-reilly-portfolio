@@ -1,9 +1,10 @@
+// MedTrackerProjectPage.styles.ts
 import { styled } from '@mui/material/styles'
 
 export const ProjectPageContainer = styled('div')(({ theme }) => ({
     width: '100vw',
     height: '100vh',
-    overflow: 'auto',
+    overflow: 'hidden',
     position: 'relative',
     backgroundColor: theme.palette.background.default,
     backgroundImage:
@@ -16,12 +17,23 @@ export const ProjectPageContainer = styled('div')(({ theme }) => ({
     zIndex: 0,
 }))
 
+export const BoardContent = styled('div')(() => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    paddingBottom: 240,
+    boxSizing: 'border-box'
+}))
+
 export const ContentWrapper = styled('div')(({ theme }) => ({
     position: 'relative',
     zIndex: 10,
     pointerEvents: 'auto',
     width: '100%',
-    maxWidth: 1000,
+    maxWidth: 1100,
     margin: '0 auto',
     padding: '40px 32px 120px 32px',
     boxSizing: 'border-box',
@@ -63,7 +75,7 @@ export const BackButton = styled('button')(({ theme }) => ({
     },
 }))
 
-export const HeroSection = styled('div')(({ theme }) => ({
+export const HeroSection = styled('section')(({ theme }) => ({
     marginBottom: 60,
     display: 'flex',
     flexDirection: 'column',
@@ -75,8 +87,74 @@ export const HeroSection = styled('div')(({ theme }) => ({
 export const HeroLogo = styled('img')(() => ({
     display: 'block',
     width: 'min(100%, 420px)',
-    margin: '0 auto 16px auto',
+    margin: '0 auto 6px auto',
     filter: 'drop-shadow(0 20px 35px rgba(7, 10, 30, 0.45))',
+}))
+
+// New hero primitives for the refraction layout
+export const HeroBadge = styled('div')(({ theme }) => ({
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: theme.palette.text.secondary,
+    opacity: 0.75,
+    marginBottom: 8,
+}))
+
+export const HeroGrid = styled('div')(({ theme }) => ({
+    width: '100%',
+    maxWidth: 1100,
+    display: 'grid',
+    gridTemplateColumns: 'minmax(0, 560px) minmax(0, 1fr)',
+    gap: 48,
+    alignItems: 'center',
+    marginTop: 8,
+
+    [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: '1fr',
+        gap: 28,
+        textAlign: 'left',
+    },
+}))
+
+export const HeroDevices = styled('img')(() => ({
+    width: '100%',
+    height: 'auto',
+    display: 'block',
+    borderRadius: 12,
+    filter: 'drop-shadow(0 24px 60px rgba(0,0,0,0.45))',
+    pointerEvents: 'none',
+    userSelect: 'none',
+}))
+
+export const HeroMetaList = styled('dl')(({ theme }) => ({
+    margin: 0,
+    padding: 0,
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr',
+    rowGap: 18,
+    columnGap: 24,
+    textAlign: 'left',
+    [theme.breakpoints.down('sm')]: {
+        rowGap: 14,
+    },
+}))
+
+export const HeroMetaKey = styled('dt')(({ theme }) => ({
+    fontSize: 13,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    color: theme.palette.text.secondary,
+    whiteSpace: 'nowrap',
+}))
+
+export const HeroMetaVal = styled('dd')(({ theme }) => ({
+    margin: 0,
+    fontSize: 18,
+    fontWeight: 600,
+    color: theme.palette.text.primary,
 }))
 
 export const HeroMeta = styled('div')(({ theme }) => ({
@@ -113,11 +191,11 @@ export const HeroMetaValue = styled('span')(({ theme }) => ({
 }))
 
 export const HeroDescription = styled('p')(({ theme }) => ({
-    margin: '32px auto 0 auto',
+    margin: '28px auto 0 auto',
     fontSize: 18,
     lineHeight: 1.8,
     color: theme.palette.text.secondary,
-    maxWidth: 700,
+    maxWidth: 820,
     textAlign: 'center',
 }))
 
@@ -241,7 +319,7 @@ export const StatCard = styled('div')(({ theme }) => ({
     },
 }))
 
-export const StatNumber = styled('div')(({ theme }) => ({
+export const StatNumber = styled('div')(() => ({
     fontSize: 'clamp(36px, 6vw, 52px)',
     fontWeight: 700,
     background: 'linear-gradient(135deg, #6675FF 0%, #8B9EFF 100%)',

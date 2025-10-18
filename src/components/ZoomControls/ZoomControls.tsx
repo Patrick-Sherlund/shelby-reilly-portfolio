@@ -17,7 +17,7 @@ export default function ZoomControls({ scale, pos, onZoomIn, onZoomOut, onReset 
     const isDefault = scale === 1 && pos.x === 0
 
     return (
-        <ControlsWrapper>
+        <ControlsWrapper data-ignore-stage>
             <IconButton onClick={onZoomOut}>
                 <RemoveIcon />
             </IconButton>

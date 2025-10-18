@@ -5,7 +5,7 @@ export const ControlsWrapper = styled(Box)(({ theme }) => ({
     position: 'absolute',
     top: 20,
     left: 20,
-    zIndex: 2,
+    zIndex: 1600,
     display: 'flex',
     alignItems: 'center',
     gap: '4px',
