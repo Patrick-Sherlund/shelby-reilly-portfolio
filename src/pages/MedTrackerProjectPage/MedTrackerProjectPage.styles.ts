@@ -13,6 +13,7 @@ const PROCESS_BAR_GRADIENT_H =
 export const ProjectPageContainer = styled('div')(() => ({
   width: '100%',
   minHeight: '100vh',
+  paddingTop: '50px',
   position: 'relative',
   backgroundColor: BLACK,
   backgroundImage: 'none',
@@ -33,7 +34,7 @@ export const ContentWrapper = styled('div')(({ theme }) => ({
   zIndex: 10,
   pointerEvents: 'auto',
   width: '100%',
-  maxWidth: 1100,
+  maxWidth: 1420,
   margin: '0 auto',
   padding: '40px 32px 120px 32px',
   boxSizing: 'border-box',
@@ -153,11 +154,11 @@ export const StatNumber = styled('div')(() => ({ fontSize: 'clamp(36px, 6vw, 52p
 export const StatLabel = styled('div')(() => ({ fontSize: 14, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(255,255,255,0.75)', marginBottom: 8 }))
 export const StatDescription = styled('p')(() => ({ fontSize: 14, lineHeight: 1.5, color: 'rgba(255,255,255,0.8)', margin: 0 }))
 
-/* ---- Process Panels ---- */
+/* ---- Process/Design Panels ---- */
 export const StepPanel = styled('div')<{ $active?: boolean }>(({ $active }) => ({
   position: 'relative',
-  padding: '20px clamp(18px, 2.2vw, 24px) 22px',
-  borderRadius: 12,
+  padding: '22px clamp(18px, 2.2vw, 26px) 24px',
+  borderRadius: 14,
   border: '1px solid rgba(255,255,255,0.12)',
   background: 'rgba(255,255,255,0.03)',
   transition: 'transform .25s ease, box-shadow .25s ease, border-color .25s ease',
@@ -165,33 +166,57 @@ export const StepPanel = styled('div')<{ $active?: boolean }>(({ $active }) => (
   transform: $active ? 'translateY(-2px)' : 'translateY(0)',
   color: WHITE,
 
+  // left accent rail
   '&::before': {
     content: '""',
     position: 'absolute',
     left: 10,
-    top: 12,
-    bottom: 12,
+    top: 14,
+    bottom: 14,
     width: 4,
     borderRadius: 999,
     background: $active ? PROCESS_BAR_GRADIENT_V : 'rgba(255,255,255,0.18)'
   },
 
+  // Panel title
   '& h3': {
-    margin: '4px 0 4px',
-    fontSize: 28,
-    lineHeight: 1.15,
+    margin: '2px 0 2px',
+    fontSize: 'clamp(24px, 3.6vw, 36px)',
+    lineHeight: 1.12,
     fontWeight: 900,
     color: WHITE
   },
 
+  // Kicker “STEP ONE/TWO/THREE”
   '& .eyebrow': {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 900,
     letterSpacing: 0.7,
     textTransform: 'uppercase',
     color: 'rgba(255,255,255,0.75)'
+  },
+
+  // Head line of each bullet (exact left start with subtext)
+  '& .bullet-h': {
+    fontWeight: 900,
+    fontSize: 'clamp(18px, 2.2vw, 24px)',
+    lineHeight: 1.2,
+    marginBottom: 6,
+    color: WHITE,
+    paddingLeft: '8px'
+  },
+
+  // Subtext line of each bullet (same inset as header)
+  '& .bullet-p': {
+    fontSize: 'clamp(15px, 1.7vw, 18px)',
+    lineHeight: 1.6,
+    color: 'rgba(255,255,255,0.84)',
+    marginBottom: 16,
+    paddingLeft: '8px'
   }
 }))
+
+
 
 export const StepHeader = styled('div')(() => ({
   display: 'flex',
