@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Rect } from 'react-konva'
 import { styled } from '@mui/material/styles'
@@ -66,6 +66,27 @@ export default function App() {
         midpoint?: { x: number; y: number };
         time: number;
     } | null>(null)
+
+    // --- Viewport-safe sizing for mobile toolbars / browser chrome ---
+    const [viewport, setViewport] = useState<{w: number; h: number}>({
+        w: window.innerWidth,
+        h: window.innerHeight
+    })
+    useEffect(() => {
+        const update = () => setViewport({ w: window.innerWidth, h: window.innerHeight })
+        window.addEventListener('resize', update)
+        window.addEventListener('orientationchange', update)
+        // iOS address bar hide/show
+        window.addEventListener('focus', update)
+        window.addEventListener('blur', update)
+        return () => {
+            window.removeEventListener('resize', update)
+            window.removeEventListener('orientationchange', update)
+            window.removeEventListener('focus', update)
+            window.removeEventListener('blur', update)
+        }
+    }, [])
+
     const { 
         stageScale, 
         setStageScale, 
@@ -104,7 +125,6 @@ export default function App() {
     const isWandActive = activeTool === 'emoji' && emojiSubMode === 'wand'
     const canDragBackground = !isWandActive
 
-
     const yBeforeZoomRef = useRef<number | null>(null)
     const scrolledWhileZoomedRef = useRef(false)
     const prevScaleRef = useRef(1)
@@ -140,19 +160,15 @@ export default function App() {
         }
     }, [])
 
-
     useDisableBrowserZoom()
-
 
     useEffect(() => {
         if (prevScaleRef.current === 1 && stageScale !== 1) {
-
             yBeforeZoomRef.current = stagePos.y
             scrolledWhileZoomedRef.current = false
         }
         prevScaleRef.current = stageScale
     }, [stageScale, stagePos.y])
-
 
     useEffect(() => {
         if (stageScale !== 1 && prevPosYRef.current !== stagePos.y) {
@@ -162,11 +178,10 @@ export default function App() {
     }, [stagePos.y, stageScale])
 
     const resetView = () => {
-
-        const approxIndex = Math.round(-stagePos.y / (window.innerHeight * stageScale))
+        const pageH = viewport.h
+        const approxIndex = Math.round(-stagePos.y / (pageH * stageScale))
         const clampedIndex = Math.max(0, Math.min(3, approxIndex))
-        const targetY = -clampedIndex * window.innerHeight
-
+        const targetY = -clampedIndex * pageH
         setStageScale(1)
         setStagePos({ x: 0, y: targetY })
     }
@@ -197,13 +212,17 @@ export default function App() {
             zoomOut
         }}>
         <AppContainer>
-            {/* Global rule: prevent default image drag/select */}
+            {/* Mobile polish without touching desktop */}
             <GlobalStyles styles={{
                 img: {
                     WebkitUserDrag: 'none',
                     userDrag: 'none',
                     userSelect: 'none',
+                    maxWidth: '100%',
                 },
+                '*': {
+                    WebkitTapHighlightColor: 'transparent'
+                }
             }} />
             <FloatingTopNav />
             <ZoomControls 
@@ -240,8 +259,8 @@ export default function App() {
                 y={stagePos.y}
                 scaleX={stageScale}
                 scaleY={stageScale}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={viewport.w}
+                height={viewport.h}
                 draggable={canDragBackground}
                 dragBoundFunc={dragBoundFunc}
                 onDragMove={handleDragMove}
@@ -268,8 +287,8 @@ export default function App() {
                     <Rect
                         x={0}
                         y={0}
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={viewport.w}
+                        height={viewport.h}
                         fill="rgba(0,0,0,0)"
                         listening={true}
                     />
@@ -301,18 +320,21 @@ export default function App() {
                     })}
                 </Layer>
             </Stage>
+
+            {/* NOTE: use viewport.h for page offsets to respect mobile browser chrome */}
             <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
                 <IntroductionPage />
             </PageWrapper>
-            <PageWrapper baseY={window.innerHeight} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+            <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
                 <MedTrackerPage />
             </PageWrapper>
-            <PageWrapper baseY={window.innerHeight * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+            <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
                 <ProjectBishopPage />
             </PageWrapper>
-            <PageWrapper baseY={window.innerHeight * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+            <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
                 <GoogleCodesignPage />
             </PageWrapper>
+
             <CursorChat />
             <FastWaveCursor />
             <CommentingLayer activeTool={activeTool} />

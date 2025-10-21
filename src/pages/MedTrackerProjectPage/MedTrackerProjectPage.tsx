@@ -43,6 +43,8 @@ import {
 
 import medTrackerLogo from '../../assets/images/MedTracker-Logo.png'
 import iphoneRefraction from '../../assets/images/iphone-refraction.png'
+import inventoryImg from '../../assets/images/Inventory.png'
+import setsImg from '../../assets/images/Sets.png'
 
 export default function ProjectPage() {
   // ——— Process sticky + active step ———
@@ -441,34 +443,59 @@ export default function ProjectPage() {
           <SectionDivider />
 
           {/* SOLUTION */}
-          <Section>
-            <SectionTitle>Solution</SectionTitle>
-            <SectionContent>
-              <TextBlock>
-                MedTracker is a mobile-first web app with real-time updates, visual indicators, and three-clicks-or-less
-                access to the core jobs.
-              </TextBlock>
+<Section>
+  <SectionTitle>Solution</SectionTitle>
+  <SectionContent>
+    <TextBlock>
+      MedTracker is a mobile-first web app with real-time updates, visual indicators, and three-clicks-or-less
+      access to the core jobs.
+    </TextBlock>
 
-              <TwoColumn>
-                <Box
-                  sx={{
-                    height: 280,
-                    borderRadius: 12,
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    background: 'rgba(255,255,255,0.03)'
-                  }}
-                />
-                <Box
-                  sx={{
-                    height: 280,
-                    borderRadius: 12,
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    background: 'rgba(255,255,255,0.03)'
-                  }}
-                />
-              </TwoColumn>
-            </SectionContent>
-          </Section>
+    <TwoColumn>
+      {/* Inventory */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <h4>Inventory</h4>
+        <Box
+          component="img"
+          src={inventoryImg}
+          alt="Inventory flows: list, detail, and edit screens"
+          loading="lazy"
+          sx={{
+  // make both images the same height across breakpoints
+  height: { xs: 220, sm: 260, md: 360 },
+  width: 'auto',          // keep aspect ratio
+  maxWidth: '100%',       // don't overflow the column
+  display: 'block',
+  mx: 'auto',             // center it
+  borderRadius: 2,
+}}
+        />
+      </Box>
+
+      {/* Sets */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <h4>Sets</h4>
+        <Box
+          component="img"
+          src={setsImg}
+          alt="Sets flows: set overview, type groups, and items"
+          loading="lazy"
+          sx={{
+  // make both images the same height across breakpoints
+  height: { xs: 220, sm: 260, md: 360 },
+  width: 'auto',          // keep aspect ratio
+  maxWidth: '100%',       // don't overflow the column
+  display: 'block',
+  mx: 'auto',             // center it
+  borderRadius: 2,
+}}
+
+        />
+      </Box>
+    </TwoColumn>
+  </SectionContent>
+</Section>
+
 
           <SectionDivider />
 

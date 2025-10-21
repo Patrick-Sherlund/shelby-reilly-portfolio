@@ -176,20 +176,6 @@ export const StepPanel = styled('div')<{ $active?: boolean }>(({ $active }) => (
     background: $active ? PROCESS_BAR_GRADIENT_V : 'rgba(255,255,255,0.18)'
   },
 
-  '&::after': {
-    content: 'attr(data-step)',
-    position: 'absolute',
-    right: 14,
-    top: -6,
-    fontWeight: 900,
-    fontSize: '96px',
-    lineHeight: 1,
-    letterSpacing: '-2px',
-    color: 'rgba(255,255,255,0.06)',
-    pointerEvents: 'none',
-    userSelect: 'none'
-  },
-
   '& h3': {
     margin: '4px 0 4px',
     fontSize: 28,

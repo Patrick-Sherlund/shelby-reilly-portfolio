@@ -1,39 +1,68 @@
 import { styled } from '@mui/material/styles'
 
-// The full-page (or Konva board) wrapper
-// We'll stack the polaroid (top) and text (middle) vertically
-export const MainWrapper = styled('div')(() => ({
+// Full-page wrapper
+export const MainWrapper = styled('div')(({ theme }) => ({
     width: '100%',
     height: '100%',
     display: 'flex',
-    flexDirection: 'column',   // vertical stack
-    alignItems: 'center',      // horizontally center each block
-    justifyContent: 'center',   // will center them in the vertical space
-    position: 'relative',       // allow absolutely positioned children like sticky notes
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    [theme.breakpoints.down('md')]: {
+        justifyContent: 'flex-start',
+        paddingTop: 72,   // clears FloatingTopNav/hamburger on phones
+        paddingBottom: 24
+    }
 }))
 
 /*
-  A separate section for the polaroid, in the normal flow,
-  so it pushes the text downward. We add vertical margin for extra space.
-  Then we shift it 80px to the right from center with transform.
+  Polaroids:
+  - Desktop: preserve original offset & spacing exactly.
+  - Mobile: center the block and non-destructively scale the inner composition
+            using CSS vars provided from the TSX (fit + nudge so nothing overflows).
 */
-export const PolaroidContainer = styled('div')(() => ({
-    margin: '-60px 0 50px 0',     // reduced bottom margin from 80px to 50px (~15% reduction)
-    transform: 'translateX(10vw)', // responsive shift relative to viewport width
-    pointerEvents: 'auto',        // Make sure polaroids are clickable
+export const PolaroidContainer = styled('div')(({ theme }) => ({
+    margin: '-60px 0 50px 0',
+    transform: 'translateX(10vw)',
+    pointerEvents: 'auto',
+    willChange: 'transform',
+    [theme.breakpoints.down('md')]: {
+        margin: '0 0 12px 0',
+        transform: 'none',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        width: '100%',
+        maxWidth: '92vw',
+        overflow: 'visible',
+        // Scale + micro-nudge the immediate child (PolaroidCollection root)
+        '& > *': {
+            transform:
+                'translate(var(--polaroidX, 0px), var(--polaroidY, 0px)) scale(var(--polaroidScale, 0.78))',
+            transformOrigin: 'top center',
+            willChange: 'transform'
+        }
+    }
 }))
 
-// Container holding the text blocks in a vertical stack
-export const TextsWrapper = styled('div')(() => ({
+// Container holding the text blocks
+export const TextsWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start', // keep text left-aligned as before
+    alignItems: 'flex-start',
     gap: 'clamp(12px, 2vw, 24px)',
-    transform: 'translate(-9vw, -9vh)' // responsive shift relative to viewport size
+    transform: 'translate(-9vw, -9vh)', // desktop composition (source of truth)
+    [theme.breakpoints.down('md')]: {
+        transform: 'none',
+        padding: '0 16px',
+        maxWidth: '92vw',
+        gap: '12px'
+    }
 }))
 
-// Each text container with #6675FF background, 16px padding, 4px corner radius
-export const SingleTextContainer = styled('div')(() => ({
+// Blue text chips
+export const SingleTextContainer = styled('div')(({ theme }) => ({
     position: 'relative',
     backgroundColor: '#6675FF',
     borderRadius: 4,
@@ -42,31 +71,47 @@ export const SingleTextContainer = styled('div')(() => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 700, 
     color: '#FFFFFF',
-    lineHeight: 1.2
+    lineHeight: 1.2,
+    // Important: allow sparkles to extend outside without clipping.
+    overflow: 'visible',
+    [theme.breakpoints.down('md')]: {
+        fontSize: 'clamp(22px, 7vw, 32px)',
+        maxWidth: '92vw',
+        width: 'fit-content',
+        whiteSpace: 'nowrap'
+    }
 }))
 
-// Sparkles pinned so the bottom-right corner aligns with the container's top-left
-export const SparklesImage = styled('img')(() => ({
+// Sparkles pinned above "Hi!" — desktop unchanged, mobile scaled & repositioned to match composition
+export const SparklesImage = styled('img')(({ theme }) => ({
     position: 'absolute',
     bottom: '70%',
-    right: '60%'
+    right: '60%',
+    zIndex: 10,
+    pointerEvents: 'none',
+    [theme.breakpoints.down('md')]: {
+        // Larger and moved slightly left/up to mirror desktop arrangement
+        width: 'clamp(44px, 7vw, 64px)',
+        height: 'auto',
+        bottom: '118%',
+        left: '-20px',
+        right: 'auto'
+    }
 }))
 
-// "I'm a Product Designer" line
-// export const ProductDesignerText = styled('div')(({ theme }) => ({
-//     fontFamily: '"Gloria Hallelujah", Futura, cursive',
-//     fontSize: 'clamp(18px, 2vw, 28px)',
-//     color: theme.palette.text.primary
-// }))
-
-export const StickyNotesWrapper = styled('div')(() => ({
+// Sticky notes cluster
+export const StickyNotesWrapper = styled('div')(({ theme }) => ({
     position: 'absolute',
     bottom: 40,
     left: 40,
-    pointerEvents: 'auto', // allow interaction if needed
+    pointerEvents: 'auto',
+    [theme.breakpoints.down('md')]: {
+        bottom: 96, // safely above the bottom toolbar on phones
+        left: 16
+    }
 }))
 
-export const StickyNote = styled('div')(() => ({
+export const StickyNote = styled('div')(({ theme }) => ({
     position: 'absolute',
     width: 160,
     height: 160,
@@ -83,21 +128,35 @@ export const StickyNote = styled('div')(() => ({
     justifyContent: 'center',
     alignItems: 'center',
     boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+    [theme.breakpoints.down('md')]: {
+        width: 120,
+        height: 120,
+        padding: '12px',
+        fontSize: 'clamp(12px, 3.4vw, 14px)'
+    }
 }))
 
-export const LogoRow = styled('div')(() => ({
+export const LogoRow = styled('div')(({ theme }) => ({
     marginTop: 8,
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
     gap: 8,
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+        gap: 6
+    }
 }))
 
-// Wrapper that shifts main intro content to the right, leaving sticky notes in place
-export const ContentWrapper = styled('div')(() => ({
+// Wrapper that shifts main intro content to the right on desktop;
+// on mobile we keep it centered and full-width.
+export const ContentWrapper = styled('div')(({ theme }) => ({
     transform: 'translateX(60px)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+        transform: 'none',
+        width: '100%'
+    }
 }))

@@ -20,8 +20,13 @@ export default function IntroductionPage() {
     const sectionRef = useRef<HTMLDivElement>(null)
     const topLeftRef = useRef<HTMLDivElement>(null)
     const textSectionRef = useRef<HTMLDivElement>(null)
+
+    // Chat waypoint — we push it left on phones so chat bubbles never bleed off-screen.
     const bottomRightRef = useRef<HTMLDivElement>(null)
+
+    // Polaroid container (we measure & fit it on mobile so nothing overflows)
     const polaroidSectionRef = useRef<HTMLDivElement>(null)
+
     const [waypoints, setWaypoints] = useState<any[]>([])
 
     // sticky notes zoom/pan interaction
@@ -81,6 +86,99 @@ export default function IntroductionPage() {
         window.addEventListener('mouseup', endDrag)
     }
 
+    // --- responsive runtime flags ---
+    const isClient = typeof window !== 'undefined'
+    const vw = isClient ? window.innerWidth : 1200
+    const vh = isClient ? window.innerHeight : 800
+    const isMobile = vw < 900
+
+    // CursorSimulator normalization by viewport size (keeps motion consistent)
+    const diag = Math.hypot(vw, vh)
+    const norm = Math.min(1.0, Math.max(0.72, diag / 1450))
+    const SPEED = Math.round(600 * norm)
+    const WAVE_SPEED = Math.round(100 * norm)
+    const POINT_SPEED = Math.round(200 * norm)
+
+    // ---- MOBILE POLAROID FITTING (guarantees all 3 stay inside the blue frame) ----
+    const [polaroidX, setPolaroidX] = useState<number>(0)
+    const [polaroidScale, setPolaroidScale] = useState<number>(() =>
+        isMobile ? Math.min(0.84, Math.max(0.68, vw / 520)) : 1
+    )
+
+    // Fit logic: compute a scale that keeps the inner composition inside safe bounds,
+    // then micro-nudge horizontally so nothing clips either edge.
+    useEffect(() => {
+        if (!isMobile || !polaroidSectionRef.current) return
+
+        const fitOnce = () => {
+            const wrap = polaroidSectionRef.current!
+            const child = wrap.firstElementChild as HTMLElement | null
+            if (!child) return
+
+            const wrapRect = wrap.getBoundingClientRect()
+            const childRect = child.getBoundingClientRect()
+            const currentScale = polaroidScale
+
+            // "Natural" size before our CSS scale
+            const naturalW = childRect.width / currentScale
+            const naturalH = childRect.height / currentScale
+
+            // Safe area inside the container on phones
+            const horizontalMargin = 16
+            const targetW = Math.max(240, wrapRect.width - horizontalMargin * 2)
+            // keep height modest so the stack doesn't dominate the viewport
+            const targetH = Math.max(220, Math.min(vh * 0.42, 360))
+
+            const scaleW = targetW / naturalW
+            const scaleH = targetH / naturalH
+            const desired = Math.min(0.9, Math.max(0.62, Math.min(scaleW, scaleH)))
+
+            // Only apply when meaningfully different to avoid loops
+            if (Math.abs(desired - currentScale) > 0.01) {
+                setPolaroidScale(desired)
+                // After scale applies, measure again and nudge horizontally to remove any overflow.
+                requestAnimationFrame(() => {
+                    const rect = child.getBoundingClientRect()
+                    let shift = 0
+                    if (rect.right > wrapRect.right - horizontalMargin) {
+                        shift -= rect.right - (wrapRect.right - horizontalMargin)
+                    }
+                    if (rect.left < wrapRect.left + horizontalMargin) {
+                        shift += (wrapRect.left + horizontalMargin) - rect.left
+                    }
+                    setPolaroidX(Math.round(shift))
+                })
+            } else {
+                // even if scale is already good, still correct any overflow due to rotations/shadows
+                const rect = child.getBoundingClientRect()
+                let shift = 0
+                if (rect.right > wrapRect.right - horizontalMargin) {
+                    shift -= rect.right - (wrapRect.right - horizontalMargin)
+                }
+                if (rect.left < wrapRect.left + horizontalMargin) {
+                    shift += (wrapRect.left + horizontalMargin) - rect.left
+                }
+                setPolaroidX(Math.round(shift))
+            }
+        }
+
+        fitOnce()
+        const onResize = () => {
+            // Re-seed scale from viewport, then fit precisely
+            const base = Math.min(0.84, Math.max(0.68, window.innerWidth / 520))
+            setPolaroidScale(base)
+            requestAnimationFrame(fitOnce)
+        }
+        window.addEventListener('resize', onResize)
+        window.addEventListener('orientationchange', onResize)
+        return () => {
+            window.removeEventListener('resize', onResize)
+            window.removeEventListener('orientationchange', onResize)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMobile, vh])
+
+    // ---- Cursor waypoints (chat bubble never off-screen on phones) ----
     useEffect(() => {
         if (
             topLeftRef.current &&
@@ -90,7 +188,7 @@ export default function IntroductionPage() {
             setWaypoints([
                 {
                     element: topLeftRef.current,
-                    speed: 600,
+                    speed: SPEED,
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
@@ -102,7 +200,7 @@ export default function IntroductionPage() {
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/wave.png`,
                     wave: {
-                        waveSpeed: 100,
+                        waveSpeed: WAVE_SPEED,
                         waveDuration: 1500
                     },
                     chat: {
@@ -114,7 +212,7 @@ export default function IntroductionPage() {
                 },
                 {
                     element: textSectionRef.current,
-                    speed: 600,
+                    speed: SPEED,
                     anchor: 'top-center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
@@ -125,17 +223,16 @@ export default function IntroductionPage() {
                         waitAfterTyping: 1800
                     }
                 },
-
                 {
                     element: bottomRightRef.current,
-                    speed: 600,
+                    speed: SPEED,
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
                 },
                 {
                     element: bottomRightRef.current,
-                    speed: 600,
+                    speed: SPEED,
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/pointer-down.png`,
@@ -146,7 +243,7 @@ export default function IntroductionPage() {
                         waitAfterTyping: 1500
                     },
                     pointing: {
-                        pointingSpeed: 200,
+                        pointingSpeed: POINT_SPEED,
                         pointingDuration: 1500,
                         direction: 'down',
                         distance: 8
@@ -154,14 +251,15 @@ export default function IntroductionPage() {
                 },
                 {
                     element: bottomRightRef.current,
-                    speed: 600,
+                    speed: SPEED,
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
                 },
             ])
         }
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [SPEED, WAVE_SPEED, POINT_SPEED])
 
     /* --- Register search items --- */
     useEffect(() => {
@@ -186,6 +284,29 @@ export default function IntroductionPage() {
         }
     }, [registerItem, unregisterItem, registerGroupAnchor])
 
+    const textTop = isMobile ? 0 : -50
+
+    // --- MOBILE sticky anchors (safe inside viewport & above toolbar) ---
+    const noteW = isMobile ? 120 : 160
+    const leftMargin = isMobile ? 16 : 50
+    const bottomRow = isMobile ? Math.max(86, Math.round(vh * 0.12) + 24) : 0
+    const topRow = isMobile ? bottomRow + Math.round(noteW * 0.7) : 140
+    const rightPosLeft = isMobile
+        ? Math.min(vw - leftMargin - noteW, 180)
+        : 200
+
+    const sticky1Pos = isMobile
+        ? { bottom: topRow, left: leftMargin } // yellow (top-left)
+        : { bottom: 140, left: 50 }
+
+    const sticky2Pos = isMobile
+        ? { bottom: bottomRow, left: leftMargin } // pink (bottom-left)
+        : { bottom: 0, left: 10 }
+
+    const sticky3Pos = isMobile
+        ? { bottom: bottomRow, left: rightPosLeft } // white (bottom-right) — never off-screen
+        : { bottom: 20, left: 200 }
+
     return (
         <MainWrapper ref={sectionRef}>
             <div
@@ -201,39 +322,51 @@ export default function IntroductionPage() {
             />
 
             <ContentWrapper>
-            <PolaroidContainer ref={polaroidSectionRef}>
-                <PolaroidCollection />
-            </PolaroidContainer>
+                <PolaroidContainer
+                    ref={polaroidSectionRef}
+                    style={
+                        isMobile
+                            ? ({
+                                ['--polaroidScale' as any]: polaroidScale,
+                                ['--polaroidX' as any]: `${polaroidX}px`,
+                                ['--polaroidY' as any]: '-6px'
+                              } as React.CSSProperties)
+                            : undefined
+                    }
+                >
+                    <PolaroidCollection />
+                </PolaroidContainer>
 
-            <div
-                ref={textSectionRef}
-                style={{ position: 'relative', top: -50 }}
-            >
                 <div
-                    ref={bottomRightRef}
-                    style={{
-                        position: 'absolute',
-                        bottom: 20,
-                        right: 20,
-                        width: 1,
-                        height: 1,
-                        opacity: 0
-                    }}
-                />
-                <TextsWrapper>
-                    <SingleTextContainer>
-                        <SparklesImage
-                            src={`${process.env.PUBLIC_URL}/images/sparkles.png`}
-                            alt="sparkles"
-                        />
-                        Hi!
-                    </SingleTextContainer>
+                    ref={textSectionRef}
+                    style={{ position: 'relative', top: textTop }}
+                >
+                    <div
+                        ref={bottomRightRef}
+                        style={{
+                            position: 'absolute',
+                            bottom: 20,
+                            // push anchor farther left on phones so bubble text never bleeds
+                            right: isMobile ? Math.max(160, Math.round(vw * 0.28)) : 20,
+                            width: 1,
+                            height: 1,
+                            opacity: 0
+                        }}
+                    />
+                    <TextsWrapper>
+                        <SingleTextContainer>
+                            <SparklesImage
+                                src={`${process.env.PUBLIC_URL}/images/sparkles.png`}
+                                alt="sparkles"
+                            />
+                            Hi!
+                        </SingleTextContainer>
 
-                    <SingleTextContainer>
-                        I'm Shelby :)
-                    </SingleTextContainer>
-                </TextsWrapper>
-            </div>
+                        <SingleTextContainer>
+                            I'm Shelby :)
+                        </SingleTextContainer>
+                    </TextsWrapper>
+                </div>
             </ContentWrapper>
 
             {/* Sticky Notes Cluster */}
@@ -244,13 +377,11 @@ export default function IntroductionPage() {
                 onMouseUp={stickyMouseUp}
                 onMouseLeave={stickyMouseLeave}
             >
-                {/* Top Sticky */}
                 <StickyNote
                     onMouseDown={handleNoteMouseDown('note1')}
                     style={{
                         backgroundColor: '#FFE066',
-                        bottom: 140,
-                        left: 50,
+                        ...sticky1Pos,
                         zIndex: 3,
                         transform: `translate(${noteOffsets.note1.x}px, ${noteOffsets.note1.y}px)`,
                         cursor: dragInfoRef.current?.id === 'note1' ? 'grabbing' : 'grab'
@@ -259,13 +390,11 @@ export default function IntroductionPage() {
                     I'm a product designer in Austin Texas 🤠
                 </StickyNote>
 
-                {/* Bottom Left Sticky */}
                 <StickyNote
                     onMouseDown={handleNoteMouseDown('note2')}
                     style={{
                         backgroundColor: '#FF66FC',
-                        bottom: 0,
-                        left: 10,
+                        ...sticky2Pos,
                         zIndex: 1,
                         transform: `translate(${noteOffsets.note2.x}px, ${noteOffsets.note2.y}px)`,
                         cursor: dragInfoRef.current?.id === 'note2' ? 'grabbing' : 'grab'
@@ -274,13 +403,11 @@ export default function IntroductionPage() {
                     M.S. HCI @ Georgia Tech
                 </StickyNote>
 
-                {/* Bottom Right Sticky */}
                 <StickyNote
                     onMouseDown={handleNoteMouseDown('note3')}
                     style={{
                         backgroundColor: '#FFFFFF',
-                        bottom: 20,
-                        left: 200,
+                        ...sticky3Pos,
                         zIndex: 2,
                         transform: `translate(${noteOffsets.note3.x}px, ${noteOffsets.note3.y}px)`,
                         cursor: dragInfoRef.current?.id === 'note3' ? 'grabbing' : 'grab'
@@ -290,7 +417,7 @@ export default function IntroductionPage() {
                     <LogoRow>
                         <img
                             src={`${process.env.PUBLIC_URL}/images/intro/airforce.png`}
-                            alt="Air Force"
+                            alt="U.S. Air Force"
                             height={18}
                         />
                         <img
@@ -318,7 +445,7 @@ export default function IntroductionPage() {
                     endSide="bottom"
                     waypoints={waypoints}
                     start={true}
-                    offScreenSpeed={800}
+                    offScreenSpeed={Math.round(800 * norm)}
                 />
             )}
         </MainWrapper>
