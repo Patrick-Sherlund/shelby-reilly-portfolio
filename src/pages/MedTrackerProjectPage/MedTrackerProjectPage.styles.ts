@@ -48,32 +48,33 @@ export const ContentWrapper = styled('div')(({ theme }) => ({
     },
 }))
 
+
 export const BackButton = styled('button')(({ theme }) => ({
     display: 'inline-flex',
+     position: 'absolute',
+    top: 80,
+    left: 20,
+    zIndex: 1600,
     alignItems: 'center',
     gap: 8,
-    padding: '8px 16px',
-    borderRadius: 8,
+    padding: '8px 12px',
+        borderRadius: 8,
     backgroundColor:
         theme.palette.mode === 'light'
-            ? 'rgba(0, 0, 0, 0.05)'
-            : 'rgba(255, 255, 255, 0.08)',
+            ? 'rgba(255, 255, 255, 0.8)'
+            : 'rgba(50, 50, 50, 0.8)',
     color: theme.palette.text.primary,
-    border: `1px solid ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.15)'}`,
+    boxShadow:
+        theme.palette.mode === 'light'
+            ? '0 2px 5px rgba(0,0,0,0.2)'
+            : '0 2px 5px rgba(0,0,0,0.5)',
     cursor: 'pointer',
     fontSize: 14,
     fontWeight: 500,
     transition: 'all 0.3s ease',
     marginBottom: 32,
-
-    '&:hover': {
-        backgroundColor:
-            theme.palette.mode === 'light'
-                ? 'rgba(0, 0, 0, 0.08)'
-                : 'rgba(255, 255, 255, 0.12)',
-        transform: 'translateX(-4px)',
-    },
 }))
+
 
 export const HeroSection = styled('section')(({ theme }) => ({
     marginBottom: 60,
@@ -82,6 +83,7 @@ export const HeroSection = styled('section')(({ theme }) => ({
     alignItems: 'center',
     textAlign: 'center',
     gap: 12,
+    isolation: 'isolate',
 }))
 
 export const HeroLogo = styled('img')(() => ({
@@ -91,7 +93,6 @@ export const HeroLogo = styled('img')(() => ({
     filter: 'drop-shadow(0 20px 35px rgba(7, 10, 30, 0.45))',
 }))
 
-// New hero primitives (for orientation like the reference)
 export const HeroBadge = styled('div')(({ theme }) => ({
     fontSize: 12,
     fontWeight: 700,
@@ -128,6 +129,35 @@ export const HeroDevices = styled('img')(() => ({
     userSelect: 'none',
 }))
 
+/** RIGHT — glass card that holds meta + KPI chips + overview */
+export const HeroGlass = styled('div')(({ theme }) => ({
+    position: 'relative',
+    padding: 24,
+    borderRadius: 16,
+    background:
+        theme.palette.mode === 'light'
+            ? 'rgba(255,255,255,0.55)'
+            : 'rgba(18, 21, 28, 0.45)',
+    border: `1px solid ${theme.palette.mode === 'light' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.10)'}`,
+    boxShadow:
+        theme.palette.mode === 'light'
+            ? '0 10px 35px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.45)'
+            : '0 20px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06)',
+    backdropFilter: 'blur(12px)',
+    textAlign: 'left',
+    '&::after': {
+        content: '""',
+        position: 'absolute',
+        top: 10,
+        left: 18,
+        right: 18,
+        height: 2,
+        borderRadius: 999,
+        background: 'linear-gradient(90deg, #5EF0FF, #9C5DFF 50%, #FFB86B)',
+        opacity: 0.6,
+    }
+}))
+
 export const HeroMetaList = styled('dl')(({ theme }) => ({
     margin: 0,
     padding: 0,
@@ -157,37 +187,67 @@ export const HeroMetaVal = styled('dd')(({ theme }) => ({
     color: theme.palette.text.primary,
 }))
 
-export const HeroMeta = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: 48,
-    marginBottom: 32,
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-
+export const HeroKPIGrid = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    gap: 12,
+    marginTop: 18,
+    marginBottom: 4,
     [theme.breakpoints.down('sm')]: {
-        gap: 32,
+        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     },
 }))
 
-export const HeroMetaItem = styled('div')(() => ({
+export const KPIChip = styled('div')(({ theme }) => ({
+    padding: '12px 14px',
+    borderRadius: 14,
+    background:
+        theme.palette.mode === 'light'
+            ? 'rgba(0,0,0,0.04)'
+            : 'rgba(255,255,255,0.06)',
+    border: `1px solid ${theme.palette.mode === 'light' ? 'rgba(0,0,0,0.10)' : 'rgba(255,255,255,0.10)'}`,
     display: 'flex',
     flexDirection: 'column',
-    gap: 4,
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: 2,
+    transition: 'transform .2s ease, box-shadow .2s ease, background .2s ease',
+    '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: theme.palette.mode === 'light'
+            ? '0 12px 24px rgba(0,0,0,.12)'
+            : '0 16px 32px rgba(0,0,0,.35)',
+        background:
+            theme.palette.mode === 'light'
+                ? 'rgba(0,0,0,0.06)'
+                : 'rgba(255,255,255,0.08)',
+    }
 }))
 
-export const HeroMetaLabel = styled('span')(({ theme }) => ({
+export const KPIValue = styled('div')(() => ({
+    fontWeight: 800,
+    fontSize: 22,
+    lineHeight: 1.1,
+    background: 'linear-gradient(135deg, #6675FF 0%, #8B9EFF 100%)',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+}))
+
+export const KPILabel = styled('div')(({ theme }) => ({
     fontSize: 12,
-    fontWeight: 600,
+    fontWeight: 700,
+    letterSpacing: 0.6,
     textTransform: 'uppercase',
-    letterSpacing: 1,
     color: theme.palette.text.secondary,
+    opacity: 0.85
 }))
 
-export const HeroMetaValue = styled('span')(({ theme }) => ({
-    fontSize: 16,
-    fontWeight: 600,
-    color: theme.palette.text.primary,
+export const HeroProblemTitle = styled('h3')(({ theme }) => ({
+    margin: '12px 0 6px 0',
+    fontSize: 18,
+    lineHeight: 1.25,
+    fontWeight: 800,
+    color: theme.palette.text.primary
 }))
 
 export const HeroDescription = styled('p')(({ theme }) => ({
@@ -344,4 +404,93 @@ export const StatDescription = styled('p')(({ theme }) => ({
     lineHeight: 1.5,
     color: theme.palette.text.secondary,
     margin: 0,
+}))
+
+/* ===========================
+   PROCESS — “you’re here” UI
+   =========================== */
+
+export const StepPanel = styled('div')<{ $active?: boolean }>(
+  ({ theme, $active }) => ({
+    position: 'relative',
+    padding: '20px clamp(18px, 2.2vw, 24px) 22px',
+    borderRadius: 12,
+    border: '1px solid rgba(255,255,255,0.08)',
+    background:
+      'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+    backdropFilter: 'blur(2px)',
+    transition: 'transform .25s ease, box-shadow .25s ease, border-color .25s ease',
+    boxShadow: $active ? '0 14px 48px rgba(102,117,255,.25)' : 'none',
+    transform: $active ? 'translateY(-2px)' : 'translateY(0)',
+    borderColor: $active ? 'rgba(102,117,255,0.35)' : 'rgba(255,255,255,0.08)',
+
+    /* Left rail that glows when active */
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 10,
+      top: 12,
+      bottom: 12,
+      width: 3,
+      borderRadius: 999,
+      background: $active
+        ? 'linear-gradient(180deg, #5EF0FF, #9C5DFF 50%, #FFB86B)'
+        : 'linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05))',
+      opacity: $active ? 0.9 : 0.35,
+    },
+
+    /* Large watermark number in the corner */
+    '&::after': {
+      content: 'attr(data-step)',
+      position: 'absolute',
+      right: 14,
+      top: -6,
+      fontWeight: 900,
+      fontSize: '96px',
+      lineHeight: 1,
+      letterSpacing: '-2px',
+      color: theme.palette.mode === 'light'
+        ? 'rgba(0,0,0,0.05)'
+        : 'rgba(255,255,255,0.04)',
+      pointerEvents: 'none',
+      userSelect: 'none',
+    },
+
+    '& h3': {
+      margin: '4px 0 4px',
+      fontSize: 28,
+      lineHeight: 1.15,
+      fontWeight: 800,
+      color: theme.palette.text.primary,
+    },
+
+    '& .eyebrow': {
+      fontSize: 12,
+      fontWeight: 800,
+      letterSpacing: 0.7,
+      textTransform: 'uppercase',
+      color: theme.palette.text.secondary,
+      opacity: 0.85,
+    },
+  })
+)
+
+export const StepHeader = styled('div')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+  marginBottom: 6,
+}))
+
+export const StepBadge = styled('span')(({ theme }) => ({
+  display: 'inline-grid',
+  placeItems: 'center',
+  width: 26,
+  height: 26,
+  borderRadius: 999,
+  fontWeight: 900,
+  fontSize: 14,
+  color: theme.palette.mode === 'light' ? '#14171f' : '#0b0e14',
+  background: 'linear-gradient(135deg, #5EF0FF 0%, #9C5DFF 60%, #FFB86B 100%)',
+  boxShadow: '0 6px 16px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.35)',
 }))

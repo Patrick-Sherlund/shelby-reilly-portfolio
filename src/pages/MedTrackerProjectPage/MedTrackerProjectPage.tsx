@@ -4,7 +4,6 @@ import Konva from 'konva'
 import { Stage, Layer, Rect } from 'react-konva'
 import Box from '@mui/material/Box'
 import DelightfulToolbar from '../../components/DelightfulToolbar/DelightfulToolbar'
-import ThemeToggle from '../../components/ThemeToggle/ThemeToggle'
 import EmojiPicker from '../../components/EmojiPicker/EmojiPicker'
 import EmojiBrushOverlay from '../../components/EmojiBrushOverlay/EmojiBrushOverlay'
 import EmojiObject from '../../components/EmojiObject/EmojiObject'
@@ -28,9 +27,15 @@ import {
     HeroBadge,
     HeroGrid,
     HeroDevices,
+    HeroGlass,
     HeroMetaList,
     HeroMetaKey,
     HeroMetaVal,
+    HeroKPIGrid,
+    KPIChip,
+    KPIValue,
+    KPILabel,
+    HeroProblemTitle,
     HeroDescription,
     SectionDivider,
     Section,
@@ -44,7 +49,10 @@ import {
     StatCard,
     StatNumber,
     StatLabel,
-    StatDescription
+    StatDescription,
+    StepPanel,
+    StepHeader,
+    StepBadge
 } from './MedTrackerProjectPage.styles'
 import FloatingTopNav from "../../components/FloatingTopNav/FloatingTopNav";
 import medTrackerLogo from '../../assets/images/MedTracker-Logo.png'
@@ -333,11 +341,38 @@ export default function ProjectPage() {
         setStagePos({ x: 0, y: 0 })
     }
 
-    // Sticky Process Stepper state (used in Process section)
+    /** ============================
+     *  PROCESS: sticky + activation
+     *  ============================ */
     const [activeStep, setActiveStep] = useState<number>(0)
+
     const step1Ref = useRef<HTMLDivElement>(null)
     const step2Ref = useRef<HTMLDivElement>(null)
     const step3Ref = useRef<HTMLDivElement>(null)
+
+    const processRef = useRef<HTMLDivElement>(null)
+    const stepperAnchorRef = useRef<HTMLDivElement>(null)
+    const stepperInlineContentRef = useRef<HTMLDivElement>(null)
+
+    const [stepperHeight, setStepperHeight] = useState<number>(0)
+    const [isSticky, setIsSticky] = useState<boolean>(false)
+    const [overlayBox, setOverlayBox] = useState<{ left: number; width: number }>({ left: 0, width: 0 })
+    const stickyTop = 96
+
+    useLayoutEffect(() => {
+        const el = stepperInlineContentRef.current
+        if (!el) return
+        const measure = () => setStepperHeight(el.offsetHeight)
+        measure()
+        if (typeof ResizeObserver !== 'undefined') {
+            const ro = new ResizeObserver(measure)
+            ro.observe(el)
+            return () => ro.disconnect()
+        } else {
+            window.addEventListener('resize', measure)
+            return () => window.removeEventListener('resize', measure)
+        }
+    }, [])
 
     useEffect(() => {
         const mapIdToIndex: Record<string, number> = {
@@ -354,12 +389,41 @@ export default function ProjectPage() {
                     }
                 })
             },
-            { root: null, rootMargin: '-35% 0px -50% 0px', threshold: 0.25 }
+            { root: null, rootMargin: '-45% 0px -45% 0px', threshold: 0 }
         )
         const nodes = [step1Ref.current, step2Ref.current, step3Ref.current].filter(Boolean) as Element[]
         nodes.forEach((n) => observer.observe(n))
         return () => observer.disconnect()
     }, [])
+
+    useEffect(() => {
+        let raf = 0
+        const tick = () => {
+            const section = processRef.current
+            const anchor = stepperAnchorRef.current
+            const content = stepperInlineContentRef.current
+            if (section && anchor && content) {
+                const h = content.offsetHeight || 1
+                if (h !== stepperHeight) setStepperHeight(h)
+
+                const sectionRect = section.getBoundingClientRect()
+                const anchorRect = anchor.getBoundingClientRect()
+
+                const shouldStick = sectionRect.top <= stickyTop && sectionRect.bottom - h >= stickyTop
+                if (shouldStick !== isSticky) setIsSticky(shouldStick)
+
+                if (shouldStick) {
+                    if (overlayBox.left !== anchorRect.left || overlayBox.width !== anchorRect.width) {
+                        setOverlayBox({ left: anchorRect.left, width: anchorRect.width })
+                    }
+                }
+            }
+            raf = requestAnimationFrame(tick)
+        }
+        raf = requestAnimationFrame(tick)
+        return () => cancelAnimationFrame(raf)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stickyTop, stepperHeight, isSticky, overlayBox.left, overlayBox.width])
 
     const StepChip: React.FC<{ index: number; label: string; title: string }> = ({ index, label, title }) => {
         const isActive = activeStep === index
@@ -372,15 +436,15 @@ export default function ProjectPage() {
                     p: 1.5,
                     borderRadius: 2,
                     border: '1px solid',
-                    borderColor: isActive ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)',
+                    borderColor: isActive ? 'rgba(255,255,255,0.24)' : 'rgba(255,255,255,0.10)',
                     background: isActive
-                        ? 'linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))'
+                        ? 'linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))'
                         : 'transparent',
                     transition: 'all .25s ease',
                     transform: isActive ? 'scale(1.02)' : 'scale(1)',
                     cursor: 'pointer',
                     mb: 1.25,
-                    boxShadow: isActive ? '0 6px 24px rgba(0,0,0,0.25)' : 'none',
+                    boxShadow: isActive ? '0 8px 28px rgba(0,0,0,0.28)' : 'none',
                     '&:hover': { borderColor: 'rgba(255,255,255,0.22)' }
                 }}
                 onClick={() => {
@@ -390,15 +454,16 @@ export default function ProjectPage() {
                     anchor.scrollIntoView({ behavior: 'smooth', block: 'center' })
                 }}
             >
-                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <StepBadge aria-hidden>{index + 1}</StepBadge>
                     <Box
                         sx={{
                             fontFamily: 'ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial',
-                            fontWeight: 700,
-                            fontSize: 12,
-                            letterSpacing: 0.6,
+                            fontWeight: 800,
+                            fontSize: 13,
+                            letterSpacing: 0.8,
                             textTransform: 'uppercase',
-                            opacity: 0.8
+                            opacity: 0.9
                         }}
                     >
                         {label}
@@ -410,6 +475,35 @@ export default function ProjectPage() {
             </Box>
         )
     }
+
+    const StepperContent = (
+        <Box
+            ref={stepperInlineContentRef}
+            sx={{
+                position: 'relative',
+                pt: 1,
+                pb: 2,
+                px: 0,
+                '::before': {
+                    content: '""',
+                    position: 'absolute',
+                    left: { md: 12 },
+                    top: 0,
+                    bottom: 0,
+                    width: '2px',
+                    background: 'linear-gradient(180deg, #5EF0FF, #9C5DFF 45%, #FFB86B 80%)',
+                    opacity: 0.7,
+                    borderRadius: 999
+                }
+            }}
+        >
+            <Box sx={{ pl: { md: 4 } }}>
+                <StepChip index={0} label="Step one" title="Defining the user flows" />
+                <StepChip index={1} label="Step two" title="Data mapping" />
+                <StepChip index={2} label="Step three" title="UI design decisions" />
+            </Box>
+        </Box>
+    )
 
     return (
         <ZoomPanContext.Provider value={{ stageRef, stageScale, setStageScale, stagePos, setStagePos, clampStagePosition, zoomIn, zoomOut }}>
@@ -463,22 +557,20 @@ export default function ProjectPage() {
                     }}
                 >
                     <ContentWrapper ref={contentRef}>
-                        <BackButton data-ignore-stage onClick={handleBackClick}>← Back to Portfolio</BackButton>
 
-                        {/* HERO — orientation like the provided reference */}
+                        {/* HERO (no distortion on devices) */}
                         <HeroSection>
                             <HeroLogo src={medTrackerLogo} alt="Med Tracker logo" />
                             <HeroBadge>VMware by Broadcom</HeroBadge>
 
                             <HeroGrid>
-                                {/* Left: phones collage */}
+                                {/* Clean, static image */}
                                 <HeroDevices src={iphoneRefraction} alt="MedTracker iPhone screens" />
 
-                                {/* Right: meta and overview */}
-                                <Box sx={{ justifySelf: 'center' }}>
+                                <HeroGlass>
                                     <HeroMetaList>
                                         <HeroMetaKey>Project Type</HeroMetaKey>
-                                        <HeroMetaVal>Medical Inventory Tracking, 0–1</HeroMetaVal>
+                                        <HeroMetaVal>Medical Inventory Tracking • 0–1</HeroMetaVal>
 
                                         <HeroMetaKey>Timeline</HeroMetaKey>
                                         <HeroMetaVal>6 months</HeroMetaVal>
@@ -487,36 +579,39 @@ export default function ProjectPage() {
                                         <HeroMetaVal>6 Eng, 2 Design, 1 PM</HeroMetaVal>
 
                                         <HeroMetaKey>Impact</HeroMetaKey>
-                                        <HeroMetaVal>$4M saved annually · 11k+ work hours saved yearly</HeroMetaVal>
+                                        <HeroMetaVal>$4M saved annually • 11k+ hours saved</HeroMetaVal>
                                     </HeroMetaList>
 
-                                    {/* Problem Overview placed under the meta, right column */}
-                                    <Box sx={{ mt: 20 }}>
-                                        <Box
-                                            component="h3"
-                                            sx={{
-                                                m: 0,
-                                                mb: 1.25,
-                                                fontSize: 18,
-                                                fontWeight: 700,
-                                                textAlign: 'left'
-                                            }}
-                                        >
-                                            Problem Overview
-                                        </Box>
+                                    <HeroKPIGrid>
+                                        <KPIChip>
+                                            <KPIValue>$4M+</KPIValue>
+                                            <KPILabel>annual savings</KPILabel>
+                                        </KPIChip>
+                                        <KPIChip>
+                                            <KPIValue>11k+</KPIValue>
+                                            <KPILabel>hours / year</KPILabel>
+                                        </KPIChip>
+                                        <KPIChip>
+                                            <KPIValue>5&nbsp;min</KPIValue>
+                                            <KPILabel>MED box fulfillment</KPILabel>
+                                        </KPIChip>
+                                    </HeroKPIGrid>
+
+                                    <Box sx={{ mt: 2 }}>
+                                        <HeroProblemTitle>Problem Overview</HeroProblemTitle>
                                         <HeroDescription>
                                             “Limited tooling and fragmented workflows reduced visibility into <BoldText>$12M</BoldText> of on-hand
                                             medical inventory, introducing risk to supply accuracy and readiness.”
                                         </HeroDescription>
                                     </Box>
-                                </Box>
+                                </HeroGlass>
                             </HeroGrid>
                         </HeroSection>
 
                         <SectionDivider />
 
-                        {/* PROCESS — sticky stepper before Solution */}
-                        <Section id="process">
+                        {/* PROCESS — sticky timeline that detaches at the section bottom */}
+                        <Section id="process" ref={processRef}>
                             <SectionTitle>Process</SectionTitle>
                             <SectionContent>
                                 <Box
@@ -527,56 +622,29 @@ export default function ProjectPage() {
                                         alignItems: 'start'
                                     }}
                                 >
-                                    {/* LEFT: Sticky Steps */}
-                                    <Box
-                                        sx={{
-                                            position: { md: 'sticky' },
-                                            top: { md: 96 },
-                                            alignSelf: 'start',
-                                            pt: 1,
-                                            pb: 2,
-                                            '::before': {
-                                                content: '""',
-                                                position: 'absolute',
-                                                left: { md: 12 },
-                                                top: 0,
-                                                bottom: 0,
-                                                width: '2px',
-                                                background:
-                                                    'linear-gradient(180deg, #5EF0FF, #9C5DFF 45%, #FFB86B 80%)',
-                                                opacity: 0.7,
-                                                borderRadius: 999
-                                            }
-                                        }}
-                                    >
-                                        <Box sx={{ pl: { md: 4 } }}>
-                                            <StepChip index={0} label="Step one" title="Defining the user flows" />
-                                            <StepChip index={1} label="Step two" title="Data mapping" />
-                                            <StepChip index={2} label="Step three" title="UI design decisions" />
-                                        </Box>
+                                    {/* LEFT: inline anchor that preserves layout */}
+                                    <Box ref={stepperAnchorRef} sx={{ alignSelf: 'start', minHeight: stepperHeight || undefined }}>
+                                        {!isSticky && StepperContent}
+                                        {isSticky && <Box sx={{ height: stepperHeight }} />}
                                     </Box>
 
-                                    {/* RIGHT: Panels that control active state */}
+                                    {/* RIGHT: step panels */}
                                     <Box sx={{ display: 'grid', gap: 8 }}>
-                                        {/* STEP 1 PANEL */}
-                                        <Box
+                                        <StepPanel
                                             id="step_flows"
                                             ref={step1Ref}
-                                            sx={{
-                                                p: { xs: 2.5, md: 3 },
-                                                borderRadius: 3,
-                                                border: '1px solid rgba(255,255,255,0.08)',
-                                                background:
-                                                    'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
-                                                backdropFilter: 'blur(2px)'
-                                            }}
+                                            data-step="1"
+                                            $active={activeStep === 0}
+                                            aria-current={activeStep === 0 ? 'true' : undefined}
                                         >
-                                            <Box sx={{ fontSize: 12, fontWeight: 700, opacity: 0.8, letterSpacing: 0.6, textTransform: 'uppercase' }}>
-                                                Step one
-                                            </Box>
-                                            <Box sx={{ mt: 0.75, fontWeight: 800, fontSize: 28, lineHeight: 1.15 }}>
-                                                Defining the user flows
-                                            </Box>
+                                            <StepHeader>
+                                                <StepBadge aria-hidden>1</StepBadge>
+                                                <div>
+                                                    <div className="eyebrow">Step one</div>
+                                                    <h3>Defining the user flows</h3>
+                                                </div>
+                                            </StepHeader>
+
                                             <TextBlock>
                                                 We mapped the end-to-end tasks and decision points across roles to minimize hops and context switching.
                                                 The baseline contained 18 steps across in-processing, picking, packing, and disposition. We collapsed
@@ -596,27 +664,23 @@ export default function ProjectPage() {
                                                     <ListItem>Introduced readiness &amp; expiration shortcuts</ListItem>
                                                 </div>
                                             </TwoColumn>
-                                        </Box>
+                                        </StepPanel>
 
-                                        {/* STEP 2 PANEL */}
-                                        <Box
+                                        <StepPanel
                                             id="step_data"
                                             ref={step2Ref}
-                                            sx={{
-                                                p: { xs: 2.5, md: 3 },
-                                                borderRadius: 3,
-                                                border: '1px solid rgba(255,255,255,0.08)',
-                                                background:
-                                                    'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
-                                                backdropFilter: 'blur(2px)'
-                                            }}
+                                            data-step="2"
+                                            $active={activeStep === 1}
+                                            aria-current={activeStep === 1 ? 'true' : undefined}
                                         >
-                                            <Box sx={{ fontSize: 12, fontWeight: 700, opacity: 0.8, letterSpacing: 0.6, textTransform: 'uppercase' }}>
-                                                Step two
-                                            </Box>
-                                            <Box sx={{ mt: 0.75, fontWeight: 800, fontSize: 28, lineHeight: 1.15 }}>
-                                                Data mapping
-                                            </Box>
+                                            <StepHeader>
+                                                <StepBadge aria-hidden>2</StepBadge>
+                                                <div>
+                                                    <div className="eyebrow">Step two</div>
+                                                    <h3>Data mapping</h3>
+                                                </div>
+                                            </StepHeader>
+
                                             <TextBlock>
                                                 With engineering, we defined the schema that powers search, bulk updates, and expiration reporting.
                                                 Required vs. optional fields were clarified, and system-derived values (e.g., viability windows) were
@@ -636,27 +700,23 @@ export default function ProjectPage() {
                                                     <ListItem>Fast, conflict-free updates from mobile</ListItem>
                                                 </div>
                                             </TwoColumn>
-                                        </Box>
+                                        </StepPanel>
 
-                                        {/* STEP 3 PANEL */}
-                                        <Box
+                                        <StepPanel
                                             id="step_ui"
                                             ref={step3Ref}
-                                            sx={{
-                                                p: { xs: 2.5, md: 3 },
-                                                borderRadius: 3,
-                                                border: '1px solid rgba(255,255,255,0.08)',
-                                                background:
-                                                    'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
-                                                backdropFilter: 'blur(2px)'
-                                            }}
+                                            data-step="3"
+                                            $active={activeStep === 2}
+                                            aria-current={activeStep === 2 ? 'true' : undefined}
                                         >
-                                            <Box sx={{ fontSize: 12, fontWeight: 700, opacity: 0.8, letterSpacing: 0.6, textTransform: 'uppercase' }}>
-                                                Step three
-                                            </Box>
-                                            <Box sx={{ mt: 0.75, fontWeight: 800, fontSize: 28, lineHeight: 1.15 }}>
-                                                UI design decisions (UI/UX)
-                                            </Box>
+                                            <StepHeader>
+                                                <StepBadge aria-hidden>3</StepBadge>
+                                                <div>
+                                                    <div className="eyebrow">Step three</div>
+                                                    <h3>UI design decisions (UI/UX)</h3>
+                                                </div>
+                                            </StepHeader>
+
                                             <TextBlock>
                                                 We optimized the information architecture for scan-ability: prominent readiness and expiration signals,
                                                 clear set/lot hierarchy, and in-place editing. Mobile-first patterns and a familiar table-detail model
@@ -676,7 +736,7 @@ export default function ProjectPage() {
                                                     <p>Readiness bands (0–80 / 81–99 / 100%), expiration badges, disposition prompts.</p>
                                                 </div>
                                             </ThreeColumn>
-                                        </Box>
+                                        </StepPanel>
                                     </Box>
                                 </Box>
                             </SectionContent>
@@ -813,6 +873,23 @@ export default function ProjectPage() {
                     </ContentWrapper>
                 </BoardContent>
 
+                {/* Sticky overlay (outside transforms) — only while inside the section */}
+                {isSticky && (
+                    <Box
+                        data-ignore-stage
+                        sx={{
+                            position: 'fixed',
+                            top: stickyTop,
+                            left: overlayBox.left,
+                            width: overlayBox.width,
+                            zIndex: 4,
+                            pointerEvents: 'auto'
+                        }}
+                    >
+                        {StepperContent}
+                    </Box>
+                )}
+
                 <FloatingTopNav />
                 <ZoomControls
                     scale={stageScale}
@@ -821,6 +898,8 @@ export default function ProjectPage() {
                     onZoomOut={() => zoomOut(stageRef)}
                     onReset={resetView}
                 />
+                        <BackButton data-ignore-stage onClick={handleBackClick}>← Back to Portfolio</BackButton>
+
                 <DelightfulToolbar
                     activeTool={activeTool}
                     setActiveTool={handleToolChange}

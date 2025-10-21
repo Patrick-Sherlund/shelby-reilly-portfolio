@@ -60,7 +60,7 @@ export default function DelightfulToolbar({
                             }
                         }}
                     >
-                        <ToolImage
+                        <ToolImage isActive={activeTool === 'hand'}
                             sx={{width: 'auto', height: '50px'}}
                             src={`${process.env.PUBLIC_URL}/images/bar-cursor.png`}
                             alt="Cursor"
@@ -82,7 +82,7 @@ export default function DelightfulToolbar({
                             }
                         }}
                     >
-                        <ToolImage
+                        <ToolImage isActive={activeTool === 'commenting-cursor'}
                             src={`${process.env.PUBLIC_URL}/images/commenting-cursor-lg.png`}
                             alt="commenting-cursor"
                         />
@@ -103,7 +103,7 @@ export default function DelightfulToolbar({
                             }
                         }}
                     >
-                        <ToolImage
+                        <ToolImage isActive={activeTool === 'sticky'}
                             src={`${process.env.PUBLIC_URL}/images/sticky-notes.png`}
                             alt="Sticky Notes"
                         />
@@ -128,7 +128,7 @@ export default function DelightfulToolbar({
                             }
                         }}
                     >
-                        <ToolImage
+                        <ToolImage  isActive={activeTool === 'emoji'}
                             src={`${process.env.PUBLIC_URL}/images/stickers.png`}
                             alt="Stickers"
                         />
