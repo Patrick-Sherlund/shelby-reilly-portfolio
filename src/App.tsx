@@ -27,6 +27,8 @@ import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import { GlobalStyles } from '@mui/material'
 import SearchPalette from './components/SearchPalette/SearchPalette'
 import MedTrackerProjectPage from './pages/MedTrackerProjectPage/MedTrackerProjectPage'
+import { CursorSimulatorProvider, useCursorSimulator } from './context/CursorSimulatorContext'
+import { CursorSimulator } from './components/CursorSimulator/CursorSimulator'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -58,7 +60,7 @@ const PageWrapper = styled('div')<{
     transformOrigin: 'top left'
 }))
 
-export default function App() {
+function AppContent() {
     const stageRef = useRef<Konva.Stage>(null)
     const prevTouchRef = useRef<{
         touches: Touch[];
@@ -67,11 +69,17 @@ export default function App() {
         time: number;
     } | null>(null)
 
+    const { waypoints, startCursor } = useCursorSimulator()
+
     // --- Viewport-safe sizing for mobile toolbars / browser chrome ---
     const [viewport, setViewport] = useState<{w: number; h: number}>({
         w: window.innerWidth,
         h: window.innerHeight
     })
+
+    // Calculate normalized speed for cursor (same logic as IntroductionPage)
+    const diag = Math.hypot(viewport.w, viewport.h)
+    const norm = Math.min(1.0, Math.max(0.72, diag / 1450))
     useEffect(() => {
         const update = () => setViewport({ w: window.innerWidth, h: window.innerHeight })
         window.addEventListener('resize', update)
@@ -321,7 +329,6 @@ export default function App() {
                 </Layer>
             </Stage>
 
-            {/* NOTE: use viewport.h for page offsets to respect mobile browser chrome */}
             <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
                 <IntroductionPage />
             </PageWrapper>
@@ -339,7 +346,25 @@ export default function App() {
             <FastWaveCursor />
             <CommentingLayer activeTool={activeTool} />
             <SearchPalette />
+
+            {waypoints.length > 0 && startCursor && (
+                <CursorSimulator
+                    startSide="left"
+                    endSide="bottom"
+                    waypoints={waypoints}
+                    start={true}
+                    offScreenSpeed={Math.round(800 * norm)}
+                />
+            )}
         </AppContainer>
         </ZoomPanContext.Provider>
+    )
+}
+
+export default function App() {
+    return (
+        <CursorSimulatorProvider>
+            <AppContent />
+        </CursorSimulatorProvider>
     )
 }

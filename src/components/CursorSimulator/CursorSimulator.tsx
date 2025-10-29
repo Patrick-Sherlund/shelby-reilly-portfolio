@@ -139,7 +139,7 @@ function ChatBubble({
                 top: y + cursorHeight / 2 + 10,
                 transform: 'translate(0, -50%)',
                 pointerEvents: 'none',
-                zIndex: 999999999,
+                zIndex: 2147483647,
                 backgroundColor: bgColor,
                 border: `2px solid ${borderColor}`,
                 borderTopRightRadius: 24,
@@ -183,7 +183,7 @@ function NameLabel({
                 left: x + cursorWidth / 2 + 10,
                 top: y + offsetY,
                 pointerEvents: 'none',
-                zIndex: 999999999,
+                zIndex: 2147483647,
                 backgroundColor: bgColor,
                 border: '2px solid #5160e1ff',
                 color: '#fff',
@@ -522,7 +522,7 @@ export function CursorSimulator({
                     top: position.y + pointerOffset.y,
                     pointerEvents: 'none',
                     transform: `translate(-50%, -50%) rotate(${cursorRotation}deg)`,
-                    zIndex: 999999
+                    zIndex: 2147483647
                 }}
             />
             {typing && (

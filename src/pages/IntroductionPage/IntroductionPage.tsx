@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { CursorSimulator } from '../../components/CursorSimulator/CursorSimulator'
 import PolaroidCollection from '../../components/Polaroid/PolaroidCollection'
+import { useCursorSimulator } from '../../context/CursorSimulatorContext'
 import {
   MainWrapper,
   PolaroidContainer,
@@ -35,7 +35,9 @@ export default function IntroductionPage() {
   const polaroidSectionRef = useRef<HTMLDivElement>(null)
   const polaroidInnerRef = useRef<HTMLDivElement>(null)
 
-  const [waypoints, setWaypoints] = useState<any[]>([])
+  // New waypoint refs for cursor routes
+  const polaroidTopLeftRef = useRef<HTMLDivElement>(null)
+  const stickyNoteTargetRef = useRef<HTMLDivElement>(null)
 
   // sticky notes zoom/pan interaction
   const stickyRef = useRef<HTMLDivElement>(null)
@@ -62,6 +64,7 @@ export default function IntroductionPage() {
   } | null>(null)
 
   const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
+  const { setWaypoints: setCursorWaypoints, setStartCursor } = useCursorSimulator()
 
   const handleGlobalMouseMove = (e: MouseEvent) => {
     if (!dragInfoRef.current) return
@@ -184,14 +187,16 @@ export default function IntroductionPage() {
     if (
       topLeftRef.current &&
       textSectionRef.current &&
-      bottomRightRef.current
+      bottomRightRef.current &&
+      polaroidTopLeftRef.current &&
+      stickyNoteTargetRef.current
     ) {
       const chatTarget =
         isMobile && textChatLeftRef.current
           ? textChatLeftRef.current
           : textSectionRef.current
 
-      setWaypoints([
+      setCursorWaypoints([
         {
           element: topLeftRef.current,
           speed: SPEED,
@@ -207,13 +212,13 @@ export default function IntroductionPage() {
           cursor: `${process.env.PUBLIC_URL}/images/wave.png`,
           wave: {
             waveSpeed: WAVE_SPEED,
-            waveDuration: 1500
+            waveDuration: 1800
           },
           chat: {
             text: 'Hey there! 👋',
             typingDuration: 500,
             startTiming: 'before',
-            waitAfterTyping: 1200
+            waitAfterTyping: 1500
           }
         },
         {
@@ -224,17 +229,36 @@ export default function IntroductionPage() {
           cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
           chat: {
             text: 'Welcome to my Portfolio :D',
-            typingDuration: 500,
+            typingDuration: 800,
             startTiming: 'after',
-            waitAfterTyping: 1800
+            waitAfterTyping: 2500
           }
         },
         {
-          element: bottomRightRef.current,
+          element: polaroidTopLeftRef.current,
           speed: SPEED,
           anchor: 'center',
           pathStyle: 'straight',
-          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+          chat: {
+            text: 'These are some of my past projects :)',
+            typingDuration: 800,
+            startTiming: 'after',
+            waitAfterTyping: 3000
+          }
+        },
+        {
+          element: stickyNoteTargetRef.current,
+          speed: SPEED,
+          anchor: 'center',
+          pathStyle: 'straight',
+          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+          chat: {
+            text: 'I have a Master\'s in Human-Computer Interaction from Georgia Tech',
+            typingDuration: 800,
+            startTiming: 'after',
+            waitAfterTyping: 3400
+          }
         },
         {
           element: bottomRightRef.current,
@@ -243,10 +267,10 @@ export default function IntroductionPage() {
           pathStyle: 'straight',
           cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
           chat: {
-            text: 'Follow me!!',
-            typingDuration: 300,
+            text: 'Come check out my work!!',
+            typingDuration: 800,
             startTiming: 'after',
-            waitAfterTyping: 1500
+            waitAfterTyping: 3000
           }
         },
         {
@@ -257,8 +281,9 @@ export default function IntroductionPage() {
           cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
         }
       ])
+      setStartCursor(true)
     }
-  }, [SPEED, WAVE_SPEED, norm, isMobile])
+  }, [SPEED, WAVE_SPEED, norm, isMobile, setCursorWaypoints, setStartCursor])
 
   /* --- Register search items --- */
   useEffect(() => {
@@ -335,6 +360,20 @@ export default function IntroductionPage() {
             ref={polaroidInnerRef}
             className={isMobile ? 'mobile-compact-captions' : undefined}
           >
+            {/* Invisible waypoint for polaroid top-left cursor target */}
+            <div
+              ref={polaroidTopLeftRef}
+              style={{
+                position: 'absolute',
+                top: 40,
+                left: 180,
+                width: 1,
+                height: 1,
+                opacity: 0,
+                pointerEvents: 'none',
+                zIndex: 100
+              }}
+            />
             <PolaroidCollection />
           </PolaroidStage>
         </PolaroidContainer>
@@ -393,6 +432,20 @@ export default function IntroductionPage() {
         onMouseUp={stickyMouseUp}
         onMouseLeave={stickyMouseLeave}
       >
+        {/* Invisible waypoint for cursor to hover above the Georgia Tech sticky note */}
+        <div
+          ref={stickyNoteTargetRef}
+          style={{
+            position: 'absolute',
+            bottom: sticky2Pos.bottom + NOTE / 2 + 40,
+            left: sticky2Pos.left + NOTE / 2 + 20,
+            width: 1,
+            height: 1,
+            opacity: 0,
+            pointerEvents: 'none',
+            zIndex: 10
+          }}
+        />
         <StickyNote
           onMouseDown={handleNoteMouseDown('note1')}
           style={{
@@ -457,16 +510,6 @@ export default function IntroductionPage() {
           </LogoRow>
         </StickyNote>
       </StickyNotesWrapper>
-
-      {waypoints.length > 0 && (
-        <CursorSimulator
-          startSide="left"
-          endSide="bottom"
-          waypoints={waypoints}
-          start={true}
-          offScreenSpeed={Math.round(800 * norm)}
-        />
-      )}
     </MainWrapper>
   )
 }

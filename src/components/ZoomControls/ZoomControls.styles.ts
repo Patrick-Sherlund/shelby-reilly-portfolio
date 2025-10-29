@@ -9,7 +9,7 @@ export const ControlsWrapper = styled(Box)(({ theme }) => ({
   transform: 'translateX(-50%)',
   bottom: `calc(16px + env(safe-area-inset-bottom))`,
 
-  zIndex: 1600,
+  zIndex: 1000,
   display: 'flex',
   alignItems: 'center',
   gap: 6,
