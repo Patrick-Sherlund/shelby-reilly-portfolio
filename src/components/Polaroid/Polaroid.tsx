@@ -25,16 +25,25 @@ const PolaroidWrapper = styled('div')<{
   left,
   zIndex,
   transform: `rotate(${rotationDeg}deg)`,
+  transformOrigin: '50% 50%',
   backgroundColor: '#ffffff',
   padding: '10px 10px 10px 10px',
   boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
   display: 'inline-block',
   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  willChange: 'transform',
   '&:hover': {
     boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
-    transform: `rotate(${rotationDeg}deg) scale(1.02)`,
+    // straighten to zero when hovered
+    transform: 'rotate(0deg) scale(1.1)',
+    zIndex: 200,
     cursor: 'pointer',
-  }
+  },
+  '&:focus-visible': {
+    boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
+    transform: 'rotate(0deg) scale(1.02)',
+    outline: 'none',
+  },
 }));
 
 const PolaroidImage = styled('img')<{ aspectRatio: number }>(({ aspectRatio, theme }) => ({
@@ -78,7 +87,7 @@ export default function Polaroid({
   title,
   date,
   width = 200,
-  height = 180,
+  height = 180, // kept for API compatibility
   rotationDeg = 0,
   zIndex = 1,
   top = 0,
@@ -88,11 +97,12 @@ export default function Polaroid({
   const [aspectRatio, setAspectRatio] = useState(1);
 
   useEffect(() => {
-    // Load the image to get its natural dimensions
     const img = new Image();
     img.src = src;
     img.onload = () => {
-      setAspectRatio(img.naturalWidth / img.naturalHeight);
+      if (img.naturalHeight !== 0) {
+        setAspectRatio(img.naturalWidth / img.naturalHeight);
+      }
     };
   }, [src]);
 
@@ -103,16 +113,13 @@ export default function Polaroid({
       top={top}
       left={left}
       style={{ width }}
+      tabIndex={0}
     >
-      <PolaroidImage
-        src={src}
-        alt={alt}
-        aspectRatio={aspectRatio}
-      />
+      <PolaroidImage src={src} alt={alt} aspectRatio={aspectRatio} />
       <PolaroidCaption>
         <PolaroidTitle>{title}</PolaroidTitle>
         <PolaroidDate>{date}</PolaroidDate>
       </PolaroidCaption>
     </PolaroidWrapper>
   );
-} 
+}

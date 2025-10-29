@@ -15,9 +15,9 @@ export default function BattalionsScreen() {
 
   const battalions = useMemo(
     () => [
-      { name: 'IRB 1', progress: 80, color: '#FFCF27' },
-      { name: 'IRB 2', progress: 100, color: '#0EDC6D' },
-      { name: 'BSB 1', progress: 30, color: '#FF5247' },
+      { name: 'Set 1', progress: 80, color: '#FFCF27' },
+      { name: 'Set 2', progress: 100, color: '#0EDC6D' },
+      { name: 'Set 1', progress: 30, color: '#FF5247' },
     ],
     []
   )
@@ -31,7 +31,7 @@ export default function BattalionsScreen() {
   return (
     <>
       <Typography sx={{ fontFamily: FONT_FAMILY, fontWeight: 700, fontSize: 14, color: FONT_COLOR, mb: 1.5 }}>
-        Battalions
+        Sets
       </Typography>
       <TextField
         fullWidth

@@ -2,452 +2,471 @@ import React, { useRef, useEffect, useState } from 'react'
 import { CursorSimulator } from '../../components/CursorSimulator/CursorSimulator'
 import PolaroidCollection from '../../components/Polaroid/PolaroidCollection'
 import {
-    MainWrapper,
-    PolaroidContainer,
-    TextsWrapper,
-    SingleTextContainer,
-    SparklesImage,
-    StickyNotesWrapper,
-    StickyNote,
-    LogoRow,
-    ContentWrapper
+  MainWrapper,
+  PolaroidContainer,
+  PolaroidStage,
+  TextsWrapper,
+  SingleTextContainer,
+  SparklesImage,
+  StickyNotesWrapper,
+  StickyNote,
+  LogoRow,
+  ContentWrapper
 } from './IntroductionPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import { useZoomPanContext } from '../../context/ZoomPanContext'
 import { useSearchContext } from '../../context/SearchContext'
 
+// >>> MOBILE CHAT OFFSET (adjust this) <<<
+const MOBILE_CHAT_SHIFT_X = -40 // px to the LEFT for the "Welcome..." chat
+
 export default function IntroductionPage() {
-    const sectionRef = useRef<HTMLDivElement>(null)
-    const topLeftRef = useRef<HTMLDivElement>(null)
-    const textSectionRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const topLeftRef = useRef<HTMLDivElement>(null)
+  const textSectionRef = useRef<HTMLDivElement>(null)
 
-    // Chat waypoint — we push it left on phones so chat bubbles never bleed off-screen.
-    const bottomRightRef = useRef<HTMLDivElement>(null)
+  // Invisible mobile-only chat anchor (shifted left)
+  const textChatLeftRef = useRef<HTMLDivElement>(null)
 
-    // Polaroid container (we measure & fit it on mobile so nothing overflows)
-    const polaroidSectionRef = useRef<HTMLDivElement>(null)
+  // Chat waypoint — we push it left on phones so chat bubbles never bleed off-screen.
+  const bottomRightRef = useRef<HTMLDivElement>(null)
 
-    const [waypoints, setWaypoints] = useState<any[]>([])
+  // Polaroid container + inner stage (for precise fit on mobile)
+  const polaroidSectionRef = useRef<HTMLDivElement>(null)
+  const polaroidInnerRef = useRef<HTMLDivElement>(null)
 
-    // sticky notes zoom/pan interaction
-    const stickyRef = useRef<HTMLDivElement>(null)
-    const {
-        handleMouseDown: stickyMouseDown,
-        handleMouseMove: stickyMouseMove,
-        handleMouseUp: stickyMouseUp,
-        handleMouseLeave: stickyMouseLeave
-    } = useZoomPanInteraction(stickyRef)
+  const [waypoints, setWaypoints] = useState<any[]>([])
 
-    // ---- DRAGGABLE STICKY NOTES ----
-    const { stageScale } = useZoomPanContext()
-    const [noteOffsets, setNoteOffsets] = useState<Record<string, { x: number; y: number }>>({
-        note1: { x: 0, y: 0 },
-        note2: { x: 0, y: 0 },
-        note3: { x: 0, y: 0 }
+  // sticky notes zoom/pan interaction
+  const stickyRef = useRef<HTMLDivElement>(null)
+  const {
+    handleMouseDown: stickyMouseDown,
+    handleMouseMove: stickyMouseMove,
+    handleMouseUp: stickyMouseUp,
+    handleMouseLeave: stickyMouseLeave
+  } = useZoomPanInteraction(stickyRef)
+
+  // ---- DRAGGABLE STICKY NOTES ----
+  const { stageScale } = useZoomPanContext()
+  const [noteOffsets, setNoteOffsets] = useState<Record<string, { x: number; y: number }>>({
+    note1: { x: 0, y: 0 },
+    note2: { x: 0, y: 0 },
+    note3: { x: 0, y: 0 }
+  })
+  const dragInfoRef = useRef<{
+    id: string
+    startX: number
+    startY: number
+    initialX: number
+    initialY: number
+  } | null>(null)
+
+  const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
+
+  const handleGlobalMouseMove = (e: MouseEvent) => {
+    if (!dragInfoRef.current) return
+    const { id, startX, startY, initialX, initialY } = dragInfoRef.current
+    const dx = (e.clientX - startX) / stageScale
+    const dy = (e.clientY - startY) / stageScale
+    setNoteOffsets((prev) => ({
+      ...prev,
+      [id]: { x: initialX + dx, y: initialY + dy }
+    }))
+  }
+
+  const endDrag = () => {
+    dragInfoRef.current = null
+    window.removeEventListener('mousemove', handleGlobalMouseMove)
+    window.removeEventListener('mouseup', endDrag)
+  }
+
+  const handleNoteMouseDown = (id: string) => (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (e.button !== 0) return // left button only
+    dragInfoRef.current = {
+      id,
+      startX: e.clientX,
+      startY: e.clientY,
+      initialX: noteOffsets[id].x,
+      initialY: noteOffsets[id].y
+    }
+    window.addEventListener('mousemove', handleGlobalMouseMove)
+    window.addEventListener('mouseup', endDrag)
+  }
+
+  // --- responsive runtime flags ---
+  const isClient = typeof window !== 'undefined'
+  const vw = isClient ? window.innerWidth : 1200
+  const vh = isClient ? window.innerHeight : 800
+  const isMobile = vw < 900
+
+  // CursorSimulator normalization by viewport size
+  const diag = Math.hypot(vw, vh)
+  const norm = Math.min(1.0, Math.max(0.72, diag / 1450))
+  const SPEED = Math.round(600 * norm)
+  const WAVE_SPEED = Math.round(100 * norm)
+  const POINT_SPEED = Math.round(200 * norm)
+
+  // ---- MOBILE POLAROID FITTING (scaled to 50% of previous size) ----
+  const [polaroidX, setPolaroidX] = useState<number>(0)
+  const [polaroidScale, setPolaroidScale] = useState<number>(() =>
+    isMobile ? Math.min(0.84, Math.max(0.62, vw / 560)) * 0.5 : 1
+  )
+
+  useEffect(() => {
+    if (!isMobile || !polaroidSectionRef.current || !polaroidInnerRef.current) return
+
+    const fitOnce = () => {
+      const wrap = polaroidSectionRef.current!
+      const child = polaroidInnerRef.current!
+
+      const wrapRect = wrap.getBoundingClientRect()
+      const childRect = child.getBoundingClientRect()
+      const currentScale = polaroidScale
+
+      // Natural (unscaled) size
+      const naturalW = childRect.width / currentScale
+      const naturalH = childRect.height / currentScale
+
+      // Fit within the visible frame with internal padding
+      const marginX = 20
+      const marginY = 20
+      const targetW = Math.max(240, wrapRect.width - marginX * 2)
+      const targetH = Math.max(180, wrapRect.height - marginY * 2)
+
+      const scaleW = targetW / naturalW
+      const scaleH = targetH / naturalH
+      const desired = Math.min(0.95, Math.max(0.58, Math.min(scaleW, scaleH))) * 0.5
+
+      const applyCenterClamp = () => {
+        const rect = child.getBoundingClientRect()
+        // Center horizontally then clamp
+        const wrapCenter = (wrapRect.left + wrapRect.right) / 2
+        const childCenter = (rect.left + rect.right) / 2
+        let shift = Math.round(wrapCenter - childCenter)
+
+        const leftAfter = rect.left + shift
+        const rightAfter = rect.right + shift
+        if (leftAfter < wrapRect.left + marginX) {
+          shift += (wrapRect.left + marginX) - leftAfter
+        }
+        if (rightAfter > wrapRect.right - marginX) {
+          shift -= rightAfter - (wrapRect.right - marginX)
+        }
+        setPolaroidX(shift)
+      }
+
+      if (Math.abs(desired - currentScale) > 0.01) {
+        setPolaroidScale(desired)
+        requestAnimationFrame(applyCenterClamp)
+      } else {
+        applyCenterClamp()
+      }
+    }
+
+    fitOnce()
+    const onResize = () => {
+      const base = Math.min(0.84, Math.max(0.62, window.innerWidth / 560)) * 0.5
+      setPolaroidScale(base)
+      requestAnimationFrame(fitOnce)
+    }
+    window.addEventListener('resize', onResize)
+    window.addEventListener('orientationchange', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('orientationchange', onResize)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile])
+
+  // ---- Cursor waypoints ----
+  useEffect(() => {
+    if (
+      topLeftRef.current &&
+      textSectionRef.current &&
+      bottomRightRef.current
+    ) {
+      const chatTarget =
+        isMobile && textChatLeftRef.current
+          ? textChatLeftRef.current
+          : textSectionRef.current
+
+      setWaypoints([
+        {
+          element: topLeftRef.current,
+          speed: SPEED,
+          anchor: 'center',
+          pathStyle: 'straight',
+          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+        },
+        {
+          element: topLeftRef.current,
+          speed: 0,
+          anchor: 'center',
+          pathStyle: 'straight',
+          cursor: `${process.env.PUBLIC_URL}/images/wave.png`,
+          wave: {
+            waveSpeed: WAVE_SPEED,
+            waveDuration: 1500
+          },
+          chat: {
+            text: 'Hey there! 👋',
+            typingDuration: 500,
+            startTiming: 'before',
+            waitAfterTyping: 1200
+          }
+        },
+        {
+          element: chatTarget,
+          speed: SPEED,
+          anchor: 'top-center',
+          pathStyle: 'straight',
+          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+          chat: {
+            text: 'Welcome to my Portfolio :D',
+            typingDuration: 500,
+            startTiming: 'after',
+            waitAfterTyping: 1800
+          }
+        },
+        {
+          element: bottomRightRef.current,
+          speed: SPEED,
+          anchor: 'center',
+          pathStyle: 'straight',
+          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+        },
+        {
+          element: bottomRightRef.current,
+          speed: SPEED,
+          anchor: 'center',
+          pathStyle: 'straight',
+          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+          chat: {
+            text: 'Follow me!!',
+            typingDuration: 300,
+            startTiming: 'after',
+            waitAfterTyping: 1500
+          }
+        },
+        {
+          element: bottomRightRef.current,
+          speed: SPEED,
+          anchor: 'center',
+          pathStyle: 'straight',
+          cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+        }
+      ])
+    }
+  }, [SPEED, WAVE_SPEED, norm, isMobile])
+
+  /* --- Register search items --- */
+  useEffect(() => {
+    const items: { id: string; ref: React.RefObject<HTMLElement> }[] = [
+      { id: 'intro-polaroids', ref: polaroidSectionRef as React.RefObject<HTMLElement> },
+      { id: 'intro-text', ref: textSectionRef as React.RefObject<HTMLElement> },
+      { id: 'intro-sticky', ref: stickyRef as React.RefObject<HTMLElement> }
+    ]
+
+    if (sectionRef.current) {
+      registerGroupAnchor('Home', sectionRef.current, 0)
+    }
+
+    items.forEach((it) => {
+      if (it.ref.current) {
+        registerItem({ id: it.id, element: it.ref.current })
+      }
     })
-    const dragInfoRef = useRef<{
-        id: string
-        startX: number
-        startY: number
-        initialX: number
-        initialY: number
-    } | null>(null)
 
-    const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
-
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-        if (!dragInfoRef.current) return
-        const { id, startX, startY, initialX, initialY } = dragInfoRef.current
-        const dx = (e.clientX - startX) / stageScale
-        const dy = (e.clientY - startY) / stageScale
-        setNoteOffsets((prev) => ({
-            ...prev,
-            [id]: { x: initialX + dx, y: initialY + dy }
-        }))
+    return () => {
+      items.forEach((it) => unregisterItem(it.id))
     }
+  }, [registerItem, unregisterItem, registerGroupAnchor])
 
-    const endDrag = () => {
-        dragInfoRef.current = null
-        window.removeEventListener('mousemove', handleGlobalMouseMove)
-        window.removeEventListener('mouseup', endDrag)
-    }
+  const textTop = isMobile ? 0 : -50
 
-    const handleNoteMouseDown = (id: string) => (e: React.MouseEvent) => {
-        e.stopPropagation()
-        if (e.button !== 0) return // left button only
-        dragInfoRef.current = {
-            id,
-            startX: e.clientX,
-            startY: e.clientY,
-            initialX: noteOffsets[id].x,
-            initialY: noteOffsets[id].y
-        }
-        window.addEventListener('mousemove', handleGlobalMouseMove)
-        window.addEventListener('mouseup', endDrag)
-    }
+  // --- MOBILE sticky cluster (unchanged here) ---
+  const NOTE = isMobile ? 104 : 160
+  const DX = isMobile ? Math.round(NOTE * 0.10) : 10
+  const DY = isMobile ? Math.round(NOTE * 0.16) : 20
 
-    // --- responsive runtime flags ---
-    const isClient = typeof window !== 'undefined'
-    const vw = isClient ? window.innerWidth : 1200
-    const vh = isClient ? window.innerHeight : 800
-    const isMobile = vw < 900
+  const sticky1Pos = isMobile
+    ? { bottom: NOTE + DY, left: 40 }
+    : { bottom: 140, left: 50 }
 
-    // CursorSimulator normalization by viewport size (keeps motion consistent)
-    const diag = Math.hypot(vw, vh)
-    const norm = Math.min(1.0, Math.max(0.72, diag / 1450))
-    const SPEED = Math.round(600 * norm)
-    const WAVE_SPEED = Math.round(100 * norm)
-    const POINT_SPEED = Math.round(200 * norm)
+  const sticky2Pos = isMobile
+    ? { bottom: 8, left: DX }
+    : { bottom: 0, left: 10 }
 
-    // ---- MOBILE POLAROID FITTING (guarantees all 3 stay inside the blue frame) ----
-    const [polaroidX, setPolaroidX] = useState<number>(0)
-    const [polaroidScale, setPolaroidScale] = useState<number>(() =>
-        isMobile ? Math.min(0.84, Math.max(0.68, vw / 520)) : 1
-    )
+  const sticky3Pos = isMobile
+    ? { bottom: Math.round(DY * 0.75) + 8, left: NOTE + DX + 14 }
+    : { bottom: 20, left: 200 }
 
-    // Fit logic: compute a scale that keeps the inner composition inside safe bounds,
-    // then micro-nudge horizontally so nothing clips either edge.
-    useEffect(() => {
-        if (!isMobile || !polaroidSectionRef.current) return
 
-        const fitOnce = () => {
-            const wrap = polaroidSectionRef.current!
-            const child = wrap.firstElementChild as HTMLElement | null
-            if (!child) return
+  return (
+    <MainWrapper ref={sectionRef}>
+      <div
+        ref={topLeftRef}
+        style={{
+          position: 'absolute',
+          top: 60,
+          left: 60,
+          width: 1,
+          height: 1,
+          opacity: 0,
+          pointerEvents: 'none', // must not intercept scroll
+        }}
+      />
 
-            const wrapRect = wrap.getBoundingClientRect()
-            const childRect = child.getBoundingClientRect()
-            const currentScale = polaroidScale
+      <ContentWrapper>
+        <PolaroidContainer
+          ref={polaroidSectionRef}
+          style={
+            isMobile
+              ? ({
+                ['--polaroidScale' as any]: polaroidScale,
+                ['--polaroidX' as any]: `${polaroidX}px`,
+                ['--polaroidY' as any]: '-16px'
+              } as React.CSSProperties)
+              : undefined
+          }
+        >
+          <PolaroidStage
+            ref={polaroidInnerRef}
+            className={isMobile ? 'mobile-compact-captions' : undefined}
+          >
+            <PolaroidCollection />
+          </PolaroidStage>
+        </PolaroidContainer>
 
-            // "Natural" size before our CSS scale
-            const naturalW = childRect.width / currentScale
-            const naturalH = childRect.height / currentScale
+        <div
+          ref={textSectionRef}
+          style={{ position: 'relative', top: textTop }}
+        >
+          {/* Invisible waypoint shifted LEFT on mobile for the "Welcome..." chat */}
+          <div
+            ref={textChatLeftRef}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: isMobile ? -MOBILE_CHAT_SHIFT_X : 0,
+              width: 1,
+              height: 1,
+              opacity: 0,
+              pointerEvents: 'none', // must not intercept scroll
+            }}
+          />
 
-            // Safe area inside the container on phones
-            const horizontalMargin = 16
-            const targetW = Math.max(240, wrapRect.width - horizontalMargin * 2)
-            // keep height modest so the stack doesn't dominate the viewport
-            const targetH = Math.max(220, Math.min(vh * 0.42, 360))
+          <div
+            ref={bottomRightRef}
+            style={{
+              position: 'absolute',
+              bottom: 20,
+              right: isMobile ? Math.max(160, Math.round(vw * 0.28)) : 20,
+              width: 1,
+              height: 1,
+              opacity: 0,
+              pointerEvents: 'none', // must not intercept scroll
+            }}
+          />
+          <TextsWrapper>
+            <SingleTextContainer>
+              <SparklesImage
+                src={`${process.env.PUBLIC_URL}/images/sparkles.png`}
+                alt="sparkles"
+              />
+              Hi!
+            </SingleTextContainer>
 
-            const scaleW = targetW / naturalW
-            const scaleH = targetH / naturalH
-            const desired = Math.min(0.9, Math.max(0.62, Math.min(scaleW, scaleH)))
+            <SingleTextContainer>
+              I'm Shelby :)
+            </SingleTextContainer>
+          </TextsWrapper>
+        </div>
+      </ContentWrapper>
 
-            // Only apply when meaningfully different to avoid loops
-            if (Math.abs(desired - currentScale) > 0.01) {
-                setPolaroidScale(desired)
-                // After scale applies, measure again and nudge horizontally to remove any overflow.
-                requestAnimationFrame(() => {
-                    const rect = child.getBoundingClientRect()
-                    let shift = 0
-                    if (rect.right > wrapRect.right - horizontalMargin) {
-                        shift -= rect.right - (wrapRect.right - horizontalMargin)
-                    }
-                    if (rect.left < wrapRect.left + horizontalMargin) {
-                        shift += (wrapRect.left + horizontalMargin) - rect.left
-                    }
-                    setPolaroidX(Math.round(shift))
-                })
-            } else {
-                // even if scale is already good, still correct any overflow due to rotations/shadows
-                const rect = child.getBoundingClientRect()
-                let shift = 0
-                if (rect.right > wrapRect.right - horizontalMargin) {
-                    shift -= rect.right - (wrapRect.right - horizontalMargin)
-                }
-                if (rect.left < wrapRect.left + horizontalMargin) {
-                    shift += (wrapRect.left + horizontalMargin) - rect.left
-                }
-                setPolaroidX(Math.round(shift))
-            }
-        }
+      {/* Sticky Notes Cluster */}
+      <StickyNotesWrapper
+        ref={stickyRef}
+        onMouseDown={stickyMouseDown}
+        onMouseMove={stickyMouseMove}
+        onMouseUp={stickyMouseUp}
+        onMouseLeave={stickyMouseLeave}
+      >
+        <StickyNote
+          onMouseDown={handleNoteMouseDown('note1')}
+          style={{
+            backgroundColor: '#FFE066',
+            width: NOTE, height: NOTE,
+            ...sticky1Pos,
+            zIndex: 3,
+            transform: `translate(${noteOffsets.note1.x}px, ${noteOffsets.note1.y}px)`,
+            cursor: dragInfoRef.current?.id === 'note1' ? 'grabbing' : 'grab'
+          }}
+        >
+          I'm a product designer in Austin Texas 🤠
+        </StickyNote>
 
-        fitOnce()
-        const onResize = () => {
-            // Re-seed scale from viewport, then fit precisely
-            const base = Math.min(0.84, Math.max(0.68, window.innerWidth / 520))
-            setPolaroidScale(base)
-            requestAnimationFrame(fitOnce)
-        }
-        window.addEventListener('resize', onResize)
-        window.addEventListener('orientationchange', onResize)
-        return () => {
-            window.removeEventListener('resize', onResize)
-            window.removeEventListener('orientationchange', onResize)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isMobile, vh])
+        <StickyNote
+          onMouseDown={handleNoteMouseDown('note2')}
+          style={{
+            backgroundColor: '#FF66FC',
+            width: NOTE, height: NOTE,
+            ...sticky2Pos,
+            zIndex: 1,
+            transform: `translate(${noteOffsets.note2.x}px, ${noteOffsets.note2.y}px)`,
+            cursor: dragInfoRef.current?.id === 'note2' ? 'grabbing' : 'grab'
+          }}
+        >
+          M.S. HCI @ Georgia Tech
+        </StickyNote>
 
-    // ---- Cursor waypoints (chat bubble never off-screen on phones) ----
-    useEffect(() => {
-        if (
-            topLeftRef.current &&
-            textSectionRef.current &&
-            bottomRightRef.current
-        ) {
-            setWaypoints([
-                {
-                    element: topLeftRef.current,
-                    speed: SPEED,
-                    anchor: 'center',
-                    pathStyle: 'straight',
-                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
-                },
-                {
-                    element: topLeftRef.current,
-                    speed: 0,
-                    anchor: 'center',
-                    pathStyle: 'straight',
-                    cursor: `${process.env.PUBLIC_URL}/images/wave.png`,
-                    wave: {
-                        waveSpeed: WAVE_SPEED,
-                        waveDuration: 1500
-                    },
-                    chat: {
-                        text: 'Hey there! 👋',
-                        typingDuration: 500,
-                        startTiming: 'before',
-                        waitAfterTyping: 1200
-                    }
-                },
-                {
-                    element: textSectionRef.current,
-                    speed: SPEED,
-                    anchor: 'top-center',
-                    pathStyle: 'straight',
-                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
-                    chat: {
-                        text: 'Welcome to my Portfolio :D',
-                        typingDuration: 500,
-                        startTiming: 'after',
-                        waitAfterTyping: 1800
-                    }
-                },
-                {
-                    element: bottomRightRef.current,
-                    speed: SPEED,
-                    anchor: 'center',
-                    pathStyle: 'straight',
-                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
-                },
-                {
-                    element: bottomRightRef.current,
-                    speed: SPEED,
-                    anchor: 'center',
-                    pathStyle: 'straight',
-                    cursor: `${process.env.PUBLIC_URL}/images/pointer-down.png`,
-                    chat: {
-                        text: 'Follow me!!',
-                        typingDuration: 300,
-                        startTiming: 'after',
-                        waitAfterTyping: 1500
-                    },
-                    pointing: {
-                        pointingSpeed: POINT_SPEED,
-                        pointingDuration: 1500,
-                        direction: 'down',
-                        distance: 8
-                    }
-                },
-                {
-                    element: bottomRightRef.current,
-                    speed: SPEED,
-                    anchor: 'center',
-                    pathStyle: 'straight',
-                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
-                },
-            ])
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [SPEED, WAVE_SPEED, POINT_SPEED])
-
-    /* --- Register search items --- */
-    useEffect(() => {
-        const items: { id: string; ref: React.RefObject<HTMLElement> }[] = [
-            { id: 'intro-polaroids', ref: polaroidSectionRef as React.RefObject<HTMLElement> },
-            { id: 'intro-text', ref: textSectionRef as React.RefObject<HTMLElement> },
-            { id: 'intro-sticky', ref: stickyRef as React.RefObject<HTMLElement> }
-        ]
-
-        if (sectionRef.current) {
-            registerGroupAnchor('Home', sectionRef.current, 0)
-        }
-
-        items.forEach((it) => {
-            if (it.ref.current) {
-                registerItem({ id: it.id, element: it.ref.current })
-            }
-        })
-
-        return () => {
-            items.forEach((it) => unregisterItem(it.id))
-        }
-    }, [registerItem, unregisterItem, registerGroupAnchor])
-
-    const textTop = isMobile ? 0 : -50
-
-    // --- MOBILE sticky anchors (safe inside viewport & above toolbar) ---
-    const noteW = isMobile ? 120 : 160
-    const leftMargin = isMobile ? 16 : 50
-    const bottomRow = isMobile ? Math.max(86, Math.round(vh * 0.12) + 24) : 0
-    const topRow = isMobile ? bottomRow + Math.round(noteW * 0.7) : 140
-    const rightPosLeft = isMobile
-        ? Math.min(vw - leftMargin - noteW, 180)
-        : 200
-
-    const sticky1Pos = isMobile
-        ? { bottom: topRow, left: leftMargin } // yellow (top-left)
-        : { bottom: 140, left: 50 }
-
-    const sticky2Pos = isMobile
-        ? { bottom: bottomRow, left: leftMargin } // pink (bottom-left)
-        : { bottom: 0, left: 10 }
-
-    const sticky3Pos = isMobile
-        ? { bottom: bottomRow, left: rightPosLeft } // white (bottom-right) — never off-screen
-        : { bottom: 20, left: 200 }
-
-    return (
-        <MainWrapper ref={sectionRef}>
-            <div
-                ref={topLeftRef}
-                style={{
-                    position: 'absolute',
-                    top: 60,
-                    left: 60,
-                    width: 1,
-                    height: 1,
-                    opacity: 0
-                }}
+        <StickyNote
+          onMouseDown={handleNoteMouseDown('note3')}
+          style={{
+            backgroundColor: '#FFFFFF',
+            width: NOTE, height: NOTE,
+            ...sticky3Pos,
+            zIndex: 2,
+            transform: `translate(${noteOffsets.note3.x}px, ${noteOffsets.note3.y}px)`,
+            cursor: dragInfoRef.current?.id === 'note3' ? 'grabbing' : 'grab'
+          }}
+        >
+          Previously:
+          <LogoRow>
+            <img
+              src={`${process.env.PUBLIC_URL}/images/intro/airforce.png`}
+              alt="U.S. Air Force"
+              height={18}
             />
+            <img
+              src={`${process.env.PUBLIC_URL}/images/intro/jamba.png`}
+              alt="Jamba"
+              height={20}
+            />
+            <img
+              src={`${process.env.PUBLIC_URL}/images/intro/vmware.png`}
+              alt="VMware"
+              height={20}
+            />
+            <img
+              src={`${process.env.PUBLIC_URL}/images/intro/google.png`}
+              alt="Google"
+              height={20}
+            />
+          </LogoRow>
+        </StickyNote>
+      </StickyNotesWrapper>
 
-            <ContentWrapper>
-                <PolaroidContainer
-                    ref={polaroidSectionRef}
-                    style={
-                        isMobile
-                            ? ({
-                                ['--polaroidScale' as any]: polaroidScale,
-                                ['--polaroidX' as any]: `${polaroidX}px`,
-                                ['--polaroidY' as any]: '-6px'
-                              } as React.CSSProperties)
-                            : undefined
-                    }
-                >
-                    <PolaroidCollection />
-                </PolaroidContainer>
-
-                <div
-                    ref={textSectionRef}
-                    style={{ position: 'relative', top: textTop }}
-                >
-                    <div
-                        ref={bottomRightRef}
-                        style={{
-                            position: 'absolute',
-                            bottom: 20,
-                            // push anchor farther left on phones so bubble text never bleeds
-                            right: isMobile ? Math.max(160, Math.round(vw * 0.28)) : 20,
-                            width: 1,
-                            height: 1,
-                            opacity: 0
-                        }}
-                    />
-                    <TextsWrapper>
-                        <SingleTextContainer>
-                            <SparklesImage
-                                src={`${process.env.PUBLIC_URL}/images/sparkles.png`}
-                                alt="sparkles"
-                            />
-                            Hi!
-                        </SingleTextContainer>
-
-                        <SingleTextContainer>
-                            I'm Shelby :)
-                        </SingleTextContainer>
-                    </TextsWrapper>
-                </div>
-            </ContentWrapper>
-
-            {/* Sticky Notes Cluster */}
-            <StickyNotesWrapper
-                ref={stickyRef}
-                onMouseDown={stickyMouseDown}
-                onMouseMove={stickyMouseMove}
-                onMouseUp={stickyMouseUp}
-                onMouseLeave={stickyMouseLeave}
-            >
-                <StickyNote
-                    onMouseDown={handleNoteMouseDown('note1')}
-                    style={{
-                        backgroundColor: '#FFE066',
-                        ...sticky1Pos,
-                        zIndex: 3,
-                        transform: `translate(${noteOffsets.note1.x}px, ${noteOffsets.note1.y}px)`,
-                        cursor: dragInfoRef.current?.id === 'note1' ? 'grabbing' : 'grab'
-                    }}
-                >
-                    I'm a product designer in Austin Texas 🤠
-                </StickyNote>
-
-                <StickyNote
-                    onMouseDown={handleNoteMouseDown('note2')}
-                    style={{
-                        backgroundColor: '#FF66FC',
-                        ...sticky2Pos,
-                        zIndex: 1,
-                        transform: `translate(${noteOffsets.note2.x}px, ${noteOffsets.note2.y}px)`,
-                        cursor: dragInfoRef.current?.id === 'note2' ? 'grabbing' : 'grab'
-                    }}
-                >
-                    M.S. HCI @ Georgia Tech
-                </StickyNote>
-
-                <StickyNote
-                    onMouseDown={handleNoteMouseDown('note3')}
-                    style={{
-                        backgroundColor: '#FFFFFF',
-                        ...sticky3Pos,
-                        zIndex: 2,
-                        transform: `translate(${noteOffsets.note3.x}px, ${noteOffsets.note3.y}px)`,
-                        cursor: dragInfoRef.current?.id === 'note3' ? 'grabbing' : 'grab'
-                    }}
-                >
-                    Previously:
-                    <LogoRow>
-                        <img
-                            src={`${process.env.PUBLIC_URL}/images/intro/airforce.png`}
-                            alt="U.S. Air Force"
-                            height={18}
-                        />
-                        <img
-                            src={`${process.env.PUBLIC_URL}/images/intro/jamba.png`}
-                            alt="Jamba"
-                            height={20}
-                        />
-                        <img
-                            src={`${process.env.PUBLIC_URL}/images/intro/vmware.png`}
-                            alt="VMware"
-                            height={20}
-                        />
-                        <img
-                            src={`${process.env.PUBLIC_URL}/images/intro/google.png`}
-                            alt="Google"
-                            height={20}
-                        />
-                    </LogoRow>
-                </StickyNote>
-            </StickyNotesWrapper>
-
-            {waypoints.length > 0 && (
-                <CursorSimulator
-                    startSide="left"
-                    endSide="bottom"
-                    waypoints={waypoints}
-                    start={true}
-                    offScreenSpeed={Math.round(800 * norm)}
-                />
-            )}
-        </MainWrapper>
-    )
+      {waypoints.length > 0 && (
+        <CursorSimulator
+          startSide="left"
+          endSide="bottom"
+          waypoints={waypoints}
+          start={true}
+          offScreenSpeed={Math.round(800 * norm)}
+        />
+      )}
+    </MainWrapper>
+  )
 }

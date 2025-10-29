@@ -1,130 +1,161 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react'
 import yaml from 'js-yaml'
 
 export interface SearchItem {
-    id: string
-    label: string
-    keywords: string[]
-    group: string
-    element?: HTMLElement | null
+  id: string
+  label: string
+  keywords: string[]
+  group: string
+  element?: HTMLElement | null
 }
 
 interface SearchContextValue {
-    /** Whether the search palette is currently open */
-    open: boolean
-    openSearch: () => void
-    closeSearch: () => void
-    registerItem: (partial: { id: string; element: HTMLElement | null }) => void
-    unregisterItem: (id: string) => void
-    registerGroupAnchor: (group: string, element: HTMLElement, pageIndex: number) => void
-    getGroupAnchor: (group: string) => { element: HTMLElement; pageIndex: number } | undefined
-    items: SearchItem[]
+  open: boolean
+  openSearch: () => void
+  closeSearch: () => void
+  registerItem: (partial: { id: string; element: HTMLElement | null }) => void
+  unregisterItem: (id: string) => void
+  registerGroupAnchor: (group: string, element: HTMLElement, pageIndex: number) => void
+  getGroupAnchor: (group: string) => { element: HTMLElement; pageIndex: number } | undefined
+  items: SearchItem[]
 }
 
 const SearchContext = createContext<SearchContextValue | undefined>(undefined)
 
 export function useSearchContext(): SearchContextValue {
-    const ctx = useContext(SearchContext)
-    if (!ctx) {
-        throw new Error('useSearchContext must be used within a SearchProvider')
-    }
-    return ctx
+  const ctx = useContext(SearchContext)
+  if (!ctx) throw new Error('useSearchContext must be used within a SearchProvider')
+  return ctx
 }
 
 export function SearchProvider({ children }: { children: ReactNode }) {
-    const [open, setOpen] = useState(false)
-    const [items, setItems] = useState<SearchItem[]>([])
-    const pendingRef = useRef<{ id: string; element: HTMLElement | null }[]>([])
-    const groupAnchorsRef = useRef<Record<string, { element: HTMLElement; pageIndex: number }>>({})
+  const [open, setOpen] = useState(false)
+  const [items, setItems] = useState<SearchItem[]>([])
+  const pendingRef = useRef<{ id: string; element: HTMLElement | null }[]>([])
+  const groupAnchorsRef = useRef<Record<string, { element: HTMLElement; pageIndex: number }>>({})
+  const configRef = useRef<{ [id: string]: { label: string; keywords: string[]; group: string } }>({})
 
-    // Store config map id -> metadata
-    const configRef = useRef<{ [id: string]: { label: string; keywords: string[]; group: string } }>({})
-
-    // Load YAML config once from public folder
-    useEffect(() => {
-        fetch(`${process.env.PUBLIC_URL}/searchConfig.yml`)
-            .then((res) => res.text())
-            .then((text) => {
-                const data: any = yaml.load(text)
-                const map: { [id: string]: { label: string; keywords: string[]; group: string } } = {}
-                if (data && typeof data === 'object' && 'groups' in data) {
-                    const groupsObj = (data as any).groups
-                    Object.keys(groupsObj).forEach((groupName) => {
-                        groupsObj[groupName].forEach((item: any) => {
-                            map[item.id] = {
-                                label: item.label,
-                                keywords: item.keywords || [],
-                                group: groupName
-                            }
-                        })
-                    })
-                }
-                configRef.current = map
-
-                // process any pending registrations
-                if (pendingRef.current.length > 0) {
-                    pendingRef.current.forEach((p) => registerItem(p))
-                    pendingRef.current = []
-                }
+  // load YAML once
+  useEffect(() => {
+    let mounted = true
+    fetch(`${process.env.PUBLIC_URL}/searchConfig.yml`)
+      .then((res) => res.text())
+      .then((text) => {
+        if (!mounted) return
+        const data: any = yaml.load(text)
+        const map: { [id: string]: { label: string; keywords: string[]; group: string } } = {}
+        if (data && typeof data === 'object' && 'groups' in data) {
+          const groupsObj = (data as any).groups
+          Object.keys(groupsObj).forEach((groupName) => {
+            groupsObj[groupName].forEach((item: any) => {
+              map[item.id] = {
+                label: item.label,
+                keywords: item.keywords || [],
+                group: groupName,
+              }
             })
-            .catch((err) => console.error('Failed to load searchConfig.yml', err))
-    }, [])
-
-    // helper functions
-    const openSearch = () => setOpen(true)
-    const closeSearch = () => setOpen(false)
-
-    const registerItem = (partial: { id: string; element: HTMLElement | null }) => {
-        const meta = configRef.current[partial.id]
-        if (!meta) {
-            // config might not be loaded yet, stash for later
-            pendingRef.current.push(partial)
-            return
+          })
         }
-        const item: SearchItem = { ...meta, id: partial.id, element: partial.element }
-        setItems((prev) => {
-            // Avoid duplicates by id
-            const existsIdx = prev.findIndex((it) => it.id === item.id)
-            if (existsIdx !== -1) {
-                // update element reference
-                const copy = [...prev]
-                copy[existsIdx] = item
-                return copy
+        configRef.current = map
+
+        // process any pending registrations
+        if (pendingRef.current.length > 0) {
+          pendingRef.current.forEach((p) => {
+            const meta = configRef.current[p.id]
+            if (meta) {
+              setItems((prev) => {
+                const existsIdx = prev.findIndex((it) => it.id === p.id)
+                const nextItem: SearchItem = { ...meta, id: p.id, element: p.element }
+                if (existsIdx !== -1) {
+                  const copy = [...prev]
+                  copy[existsIdx] = nextItem
+                  return copy
+                }
+                return [...prev, nextItem]
+              })
             }
-            return [...prev, item]
-        })
-    }
-
-    const unregisterItem = (id: string) => {
-        setItems((prev) => prev.filter((it) => it.id !== id))
-    }
-
-    const registerGroupAnchor = (group: string, element: HTMLElement, pageIndex: number) => {
-        groupAnchorsRef.current[group] = { element, pageIndex }
-    }
-
-    const getGroupAnchor = (group: string) => groupAnchorsRef.current[group]
-
-    // Handle global keyboard shortcut
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'p') {
-                e.preventDefault()
-                openSearch()
-            } else if (open && e.key === 'Escape') {
-                e.preventDefault()
-                closeSearch()
-            }
+          })
+          pendingRef.current = []
         }
-        window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [open])
+      })
+      .catch((err) => console.error('Failed to load searchConfig.yml', err))
+    return () => { mounted = false }
+  }, [])
 
-    return (
-        <SearchContext.Provider
-            value={{ open, openSearch, closeSearch, registerItem, unregisterItem, registerGroupAnchor, getGroupAnchor, items }}
-        >
-            {children}
-        </SearchContext.Provider>
-    )
-} 
+  // stable callbacks
+  const openSearch = useCallback(() => setOpen(true), [])
+  const closeSearch = useCallback(() => setOpen(false), [])
+
+  const registerItem = useCallback((partial: { id: string; element: HTMLElement | null }) => {
+    const meta = configRef.current[partial.id]
+    if (!meta) {
+      pendingRef.current.push(partial)
+      return
+    }
+    const item: SearchItem = { ...meta, id: partial.id, element: partial.element }
+    setItems((prev) => {
+      const existsIdx = prev.findIndex((it) => it.id === item.id)
+      if (existsIdx !== -1) {
+        const copy = [...prev]
+        copy[existsIdx] = item
+        return copy
+      }
+      return [...prev, item]
+    })
+  }, [])
+
+  const unregisterItem = useCallback((id: string) => {
+    setItems((prev) => {
+      const next = prev.filter((it) => it.id !== id)
+      return next.length === prev.length ? prev : next
+    })
+  }, [])
+
+  const registerGroupAnchor = useCallback((group: string, element: HTMLElement, pageIndex: number) => {
+    groupAnchorsRef.current[group] = { element, pageIndex }
+  }, [])
+
+  const getGroupAnchor = useCallback((group: string) => {
+    return groupAnchorsRef.current[group]
+  }, [])
+
+  // keyboard shortcut (stable functions are safe to include)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'p') {
+        e.preventDefault()
+        openSearch()
+      } else if (open && e.key === 'Escape') {
+        e.preventDefault()
+        closeSearch()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [open, openSearch, closeSearch])
+
+  const value = useMemo(
+    () => ({
+      open,
+      openSearch,
+      closeSearch,
+      registerItem,
+      unregisterItem,
+      registerGroupAnchor,
+      getGroupAnchor,
+      items,
+    }),
+    [open, items, openSearch, closeSearch, registerItem, unregisterItem, registerGroupAnchor, getGroupAnchor]
+  )
+
+  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
+}

@@ -1,4 +1,3 @@
-// FloatingTopNav.tsx
 import React, { useEffect, useRef, useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -38,33 +37,47 @@ const PROFILES = [
 ]
 
 /* ------------------ DESKTOP BAR (unchanged visuals) ------------------ */
-const FloatingNavBarContainer = styled(Paper)<{ open: boolean }>(({ theme, open }) => ({
-  position: 'fixed',
-  top: 24,
-  right: 24,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-start',
-  padding: `4px 12px 4px ${open ? 12 : 92}px`, // space for absolute avatars
-  borderRadius: 12,
-  zIndex: 999,
-  boxShadow:
-    theme.palette.mode === 'light'
-      ? '0 6px 24px rgba(0,0,0,0.18)'
-      : '0 10px 30px rgba(0,0,0,0.6)',
-  background:
-    theme.palette.mode === 'light'
-      ? 'linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.6))'
-      : 'linear-gradient(180deg, rgba(18,18,18,.78), rgba(18,18,18,.66))',
-  backdropFilter: 'blur(10px)',
-  overflow: 'visible',
-  transition: 'padding 0.45s ease-in-out',
-  [theme.breakpoints.down('sm')]: {
-    padding: '8px 10px',
-    right: 16,
-    top: 16
-  }
-}))
+const FloatingNavBarContainer = styled(Paper)<{ open: boolean; $mobileOpen: boolean }>(
+  ({ theme, open, $mobileOpen }) => ({
+    position: 'fixed',
+    top: 24,
+    right: 24,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: `4px 12px 4px ${open ? 12 : 92}px`, // space for absolute avatars
+    borderRadius: 12,
+    zIndex: 999,
+    boxShadow:
+      theme.palette.mode === 'light'
+        ? '0 6px 24px rgba(0,0,0,0.18)'
+        : '0 10px 30px rgba(0,0,0,0.6)',
+    background:
+      theme.palette.mode === 'light'
+        ? 'linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.6))'
+        : 'linear-gradient(180deg, rgba(18,18,18,.78), rgba(18,18,18,.66))',
+    backdropFilter: 'blur(10px)',
+    overflow: 'visible',
+    transition: 'padding 0.45s ease-in-out, background .25s ease, box-shadow .25s ease, backdrop-filter .25s ease',
+    [theme.breakpoints.down('sm')]: {
+      padding: '8px 10px',
+      right: 16,
+      top: 16,
+      // MOBILE: when menu is CLOSED, no background outside the circle
+      background: $mobileOpen
+        ? (theme.palette.mode === 'light'
+            ? 'linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.6))'
+            : 'linear-gradient(180deg, rgba(18,18,18,.78), rgba(18,18,18,.66))')
+        : 'transparent',
+      boxShadow: $mobileOpen
+        ? (theme.palette.mode === 'light'
+            ? '0 6px 24px rgba(0,0,0,0.18)'
+            : '0 10px 30px rgba(0,0,0,0.6)')
+        : 'none',
+      backdropFilter: $mobileOpen ? 'blur(10px)' : 'none'
+    }
+  })
+)
 
 // Absolute overlapping avatars (desktop)
 const AvatarsContainer = styled(motion.div)<{ open: boolean }>(({ open, theme }) => ({
@@ -138,8 +151,8 @@ const ProfileTooltip = styled(({ className, ...props }: TooltipProps) => (
 }))
 
 /* ------------------ MOBILE: modern compact header + drawer ------------------ */
-// replace your MobileCompact definition
-const MobileCompact = styled('div')(({ theme }) => ({
+// Now reactive to menu state so closed = transparent container outside the circle
+const MobileCompact = styled('div')<{ open: boolean }>(({ theme, open }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -147,17 +160,15 @@ const MobileCompact = styled('div')(({ theme }) => ({
   height: 56,
   padding: 6,
   borderRadius: 28,
-  background:
-    theme.palette.mode === 'light'
-      ? 'rgba(255,255,255,0.78)'
-      : 'rgba(18,18,18,0.82)',
-  backdropFilter: 'blur(10px)',
-  boxShadow:
-    theme.palette.mode === 'light'
-      ? '0 12px 28px rgba(0,0,0,0.18)'
-      : '0 18px 40px rgba(0,0,0,0.6)'
+  // Only show a subtle pill background if menu is open; otherwise transparent
+  background: open
+    ? (theme.palette.mode === 'light' ? 'rgba(255,255,255,0.78)' : 'rgba(18,18,18,0.82)')
+    : 'transparent',
+  backdropFilter: open ? 'blur(10px)' : 'none',
+  boxShadow: open
+    ? (theme.palette.mode === 'light' ? '0 12px 28px rgba(0,0,0,0.18)' : '0 18px 40px rgba(0,0,0,0.6)')
+    : 'none'
 }))
-
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -214,7 +225,13 @@ export default function FloatingTopNav() {
 
   return (
     <>
-      <FloatingNavBarContainer ref={barRef} data-ignore-stage open={openProfiles} elevation={0}>
+      <FloatingNavBarContainer
+        ref={barRef}
+        data-ignore-stage
+        open={openProfiles}
+        $mobileOpen={isMobile ? menuOpen : false}
+        elevation={0}
+      >
         {/* ===== DESKTOP (unchanged) ===== */}
         {!isMobile && (
           <>
@@ -279,35 +296,32 @@ export default function FloatingTopNav() {
           </>
         )}
 
-        {/* ===== MOBILE compact header (polished) ===== */}
-        {/* ===== MOBILE compact header (no avatar; larger hamburger) ===== */}
-{isMobile && (
-  <MobileCompact>
-    <IconButton
-      onClick={toggleMenu}
-      aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-      sx={{
-        width: 52,
-        height: 52,
-        borderRadius: '50%',
-        border: `1.5px solid ${isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.18)'}`,
-        background:
-          isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18)',
-      }}
-    >
-      {menuOpen ? (
-        <CloseRoundedIcon sx={{ fontSize: 28 }} />
-      ) : (
-        <MenuRoundedIcon sx={{ fontSize: 28 }} />
-      )}
-    </IconButton>
-  </MobileCompact>
-)}
-
+        {/* ===== MOBILE compact header (no background when closed) ===== */}
+        {isMobile && (
+          <MobileCompact open={menuOpen}>
+            <IconButton
+              onClick={toggleMenu}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              sx={{
+                width: 52,
+                height: 52,
+                borderRadius: '50%',
+                border: `1.5px solid ${isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.18)'}`,
+                background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18)'
+              }}
+            >
+              {menuOpen ? (
+                <CloseRoundedIcon sx={{ fontSize: 28 }} />
+              ) : (
+                <MenuRoundedIcon sx={{ fontSize: 28 }} />
+              )}
+            </IconButton>
+          </MobileCompact>
+        )}
       </FloatingNavBarContainer>
 
-      {/* ===== MOBILE Drawer (sexy, sensible) ===== */}
+      {/* ===== MOBILE Drawer ===== */}
       <Drawer
         anchor="right"
         open={isMobile && menuOpen}
@@ -328,35 +342,34 @@ export default function FloatingTopNav() {
 
           {/* Profiles */}
           <List sx={{ py: 0 }}>
-  {PROFILES.map((p, idx) => {
-    const isShelby = idx === 0 // only first profile gets a resume action
-    return (
-      <ListItem key={p.src} disablePadding>
-        <ListItemButton>
-          <ListItemIcon>
-            <Avatar src={p.src} sx={{ width: 28, height: 28 }} />
-          </ListItemIcon>
-          <ListItemText
-            primary={p.name}
-            primaryTypographyProps={{ fontWeight: 800 }}
-          />
-          {isShelby && (
-            <IconButton
-              size="small"
-              aria-label={`${p.name} resume`}
-              edge="end"
-              href="#"
-            >
-              <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />
-              <ChevronRightRoundedIcon sx={{ fontSize: 18, ml: .25 }} />
-            </IconButton>
-          )}
-        </ListItemButton>
-      </ListItem>
-    )
-  })}
-</List>
-
+            {PROFILES.map((p, idx) => {
+              const isShelby = idx === 0 // only first profile gets a resume action
+              return (
+                <ListItem key={p.src} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <Avatar src={p.src} sx={{ width: 28, height: 28 }} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={p.name}
+                      primaryTypographyProps={{ fontWeight: 800 }}
+                    />
+                    {isShelby && (
+                      <IconButton
+                        size="small"
+                        aria-label={`${p.name} resume`}
+                        edge="end"
+                        href="#"
+                      >
+                        <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />
+                        <ChevronRightRoundedIcon sx={{ fontSize: 18, ml: .25 }} />
+                      </IconButton>
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              )
+            })}
+          </List>
 
           <Divider sx={{ my: 0.5 }} />
 

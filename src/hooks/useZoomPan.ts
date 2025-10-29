@@ -1,9 +1,7 @@
 import { useState, useCallback, RefObject } from 'react'
 import Konva from 'konva'
 
-const DEFAULT_BOARD_HEIGHT = typeof window !== 'undefined' ? window.innerHeight * 4 : 4000
-
-export function useZoomPan(boardHeight: number = DEFAULT_BOARD_HEIGHT) {
+export function useZoomPan() {
     const [stageScale, setStageScale] = useState(1)
     const [stagePos, setStagePos] = useState({ x: 0, y: 0 })
 
@@ -14,13 +12,11 @@ export function useZoomPan(boardHeight: number = DEFAULT_BOARD_HEIGHT) {
     }, [])
 
     const clampStagePosition = useCallback((y: number) => {
-        if (typeof window === 'undefined') return y
-        const effectiveBoardHeight = Math.max(boardHeight, window.innerHeight)
-        const minY = Math.min(0, window.innerHeight - effectiveBoardHeight * stageScale)
+        const minY = -2 * window.innerHeight * stageScale
         if (y < minY) return minY
         if (y > 0) return 0
         return y
-    }, [stageScale, boardHeight])
+    }, [stageScale])
 
     const zoomStageToPoint = useCallback(
         (stageRef: RefObject<Konva.Stage>, deltaY: number, pointerPosition: { x: number; y: number }) => {

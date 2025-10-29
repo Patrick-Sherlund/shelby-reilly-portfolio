@@ -118,8 +118,8 @@ function ChatBubble({
                         text,
                         x,
                         y,
-                        bgColor = '#2E90FA',
-                        borderColor = '#1570EF',
+                        bgColor = '#6675FF',
+                        borderColor = '#5160e1ff',
                         cursorWidth,
                         cursorHeight
                     }: {
@@ -165,7 +165,7 @@ function NameLabel({
     cursorWidth,
     cursorHeight,
     typing,
-    bgColor = '#2E90FA'
+    bgColor = '#6675FF'
 }: {
     x: number
     y: number
@@ -185,6 +185,7 @@ function NameLabel({
                 pointerEvents: 'none',
                 zIndex: 999999999,
                 backgroundColor: bgColor,
+                border: '2px solid #5160e1ff',
                 color: '#fff',
                 fontSize: 12,
                 fontWeight: 600,
@@ -541,7 +542,7 @@ export function CursorSimulator({
                 cursorWidth={cursorSize.width}
                 cursorHeight={cursorSize.height}
                 typing={typing}
-                bgColor={waypoints[index]?.chat?.bgColor || '#2E90FA'}
+                bgColor={waypoints[index]?.chat?.bgColor || '#6675FF'}
             />
         </>
     )
