@@ -15,7 +15,7 @@ export const CarouselContainer = styled('div')<CarouselContainerProps>(({ $heigh
     position: 'relative',
     width: '100%',
     height: typeof $height === 'number' ? `${$height}px` : $height,
-    overflow: 'hidden',
+    overflow: 'hidden', // Hide overflow to enable wrapping effect
     cursor: $isDragging ? 'grabbing' : 'grab',
     userSelect: 'none',
     display: 'flex',

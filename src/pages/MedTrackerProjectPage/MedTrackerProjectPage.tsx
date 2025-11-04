@@ -444,7 +444,7 @@ export default function ProjectPage() {
                         <Box sx={{ marginY: 6, width: '100%', display: 'flex', justifyContent: 'center' }}>
                             <IPhoneCarousel
                                 images={[iphone1, iphone2, iphone3, iphone4, iphone5]}
-                                height={600}
+                                height={700}
                             />
                         </Box>
                     </HeroSection>

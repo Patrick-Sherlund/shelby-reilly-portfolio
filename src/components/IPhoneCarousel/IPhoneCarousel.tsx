@@ -58,7 +58,7 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
         const middleImageIndex = images.length
         const initialPosition = middleImageIndex * itemWidth - centerX + itemWidth / 2
 
-        setScrollPosition(initialPosition)
+        setScrollPosition(initialPosition +10)
     }, [images.length, itemWidth])
 
     // Handle wheel scroll for HORIZONTAL scrolling ONLY
@@ -208,14 +208,13 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
         >
             <CarouselTrack ref={trackRef}>
                 {extendedImages.map((imgSrc, index) => {
-                    // Calculate which iPhone is at the center based on scroll position
                     const containerWidth = containerRef.current?.offsetWidth || 1400
                     const centerX = containerWidth / 2
 
-                    // Find the center iPhone index (the one closest to center of viewport)
+                    // Find the center iPhone index
                     const centerIndex = Math.round((scrollPosition + centerX - itemWidth / 2) / itemWidth)
 
-                    // Only render 5 iPhones: center, ±1, ±2
+                    // Only render iPhones within range (center ±2)
                     const distanceFromCenter = Math.abs(index - centerIndex)
                     if (distanceFromCenter > 2) {
                         return null
@@ -223,17 +222,45 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
 
                     const height = getHeight(index)
                     const zIndex = getZIndex(index)
+                    const actualWidth = height * ASPECT_RATIO
 
-                    // Calculate position for this iPhone
+                    // Calculate the base position for this iPhone
                     const xPosition = index * itemWidth - scrollPosition
 
-                    return (
+                    // Determine all positions where this iPhone should be rendered
+                    // to create the wrapping effect
+                    const renderPositions: number[] = []
+
+                    // Always include the primary position
+                    renderPositions.push(xPosition)
+
+                    // Check if iPhone is partially cut off on the left edge
+                    // If part of it is off-screen to the left, render the wrapped version on the right
+                    const leftEdge = xPosition
+                    const rightEdge = xPosition + actualWidth
+
+                    if (leftEdge < 0 && rightEdge > 0) {
+                        // Part of this iPhone is cut off on the left
+                        // Render it wrapped to the right side
+                        const singleSetWidth = images.length * itemWidth
+                        renderPositions.push(xPosition + singleSetWidth)
+                    }
+
+                    // Check if iPhone is partially cut off on the right edge
+                    if (leftEdge < containerWidth && rightEdge > containerWidth) {
+                        // Part of this iPhone is cut off on the right
+                        // Render it wrapped to the left side
+                        const singleSetWidth = images.length * itemWidth
+                        renderPositions.push(xPosition - singleSetWidth)
+                    }
+
+                    return renderPositions.map((position, posIdx) => (
                         <IPhoneWrapper
-                            key={`iphone-${index}`}
+                            key={`iphone-${index}-${posIdx}`}
                             $height={height}
                             $zIndex={zIndex}
                             style={{
-                                transform: `translate(${xPosition}px, -50%)`
+                                transform: `translate(${position}px, -50%)`
                             }}
                         >
                             <IPhoneImage
@@ -242,7 +269,7 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
                                 draggable={false}
                             />
                         </IPhoneWrapper>
-                    )
+                    ))
                 })}
             </CarouselTrack>
         </CarouselContainer>
