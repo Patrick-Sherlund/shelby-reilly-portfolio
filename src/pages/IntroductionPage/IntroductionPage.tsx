@@ -16,8 +16,9 @@ import {
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import { useZoomPanContext } from '../../context/ZoomPanContext'
 import { useSearchContext } from '../../context/SearchContext'
+import GemDraw from '../../components/SVG/GemDraw'
+import { Typography } from '@mui/material'
 
-// >>> MOBILE CHAT OFFSET (adjust this) <<<
 const MOBILE_CHAT_SHIFT_X = -40 // px to the LEFT for the "Welcome..." chat
 
 export default function IntroductionPage() {
@@ -410,10 +411,17 @@ export default function IntroductionPage() {
           />
           <TextsWrapper>
             <SingleTextContainer>
-              <SparklesImage
-                src={`${process.env.PUBLIC_URL}/images/sparkles.png`}
-                alt="sparkles"
-              />
+              <SparklesImage as="div">
+                <GemDraw
+                  width={160}
+                  height={172}
+                  stroke="#FFFFFF"
+                  strokeWidth={6}
+                  duration={0.3}
+                  stagger={0.3}
+                  trigger="mount"
+                />
+              </SparklesImage>
               Hi!
             </SingleTextContainer>
 
@@ -472,6 +480,7 @@ export default function IntroductionPage() {
           }}
         >
           M.S. HCI @ Georgia Tech
+          <Typography sx={{fontSize: 24}}>🐝</Typography>
         </StickyNote>
 
         <StickyNote

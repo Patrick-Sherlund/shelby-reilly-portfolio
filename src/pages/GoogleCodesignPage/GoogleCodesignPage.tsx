@@ -13,7 +13,6 @@ import {
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 
 export default function GoogleCodesignPage() {
-    // Refs for interaction areas
     const demoRef = useRef<HTMLDivElement>(null)
     const descRef = useRef<HTMLDivElement>(null)
 
@@ -22,15 +21,12 @@ export default function GoogleCodesignPage() {
 
     return (
         <MainWrapper>
-            {/* Top-left logo */}
             <LogoImage
                 src={`${process.env.PUBLIC_URL}/images/google-logo.png`}
                 alt="Google Logo"
             />
 
-            {/* Middle section */}
             <MidSection>
-                {/* Left – Web app / Figma prototype */}
                 <DemoWrapper
                     ref={demoRef}
                     onMouseDown={demoInteraction.handleMouseDown}
@@ -39,7 +35,6 @@ export default function GoogleCodesignPage() {
                     onMouseLeave={demoInteraction.handleMouseLeave}
                 >
                     <DemoPlaceholder>
-                        {/* Embedded Figma prototype */}
                         <iframe
                             title="Google Codesign Prototype"
                             src={`https://www.figma.com/embed?embed_host=share&scaling=scale-down&content-scaling=fixed&url=${encodeURIComponent('https://www.figma.com/proto/9GkFUccLaG4OcDgoqlzeUy?node-id=1605-6829&t=WufZgx0NQqJRKphg-6')}`}
@@ -48,8 +43,6 @@ export default function GoogleCodesignPage() {
                         />
                     </DemoPlaceholder>
                 </DemoWrapper>
-
-                {/* Right – Description */}
                 <DescriptionWrapper
                     ref={descRef}
                     onMouseDown={descInteraction.handleMouseDown}

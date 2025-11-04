@@ -35,7 +35,7 @@ const SelectionBox = styled('div')(() => ({
   top: 0, left: 0, right: 0, bottom: 0,
   border: '2px solid #6675FF',
   borderRadius: '6px',
-  backgroundColor: 'rgba(23, 154, 255, 0.05)',
+  backgroundColor: '#6675FF26',
   zIndex: 0,
   transformOrigin: 'bottom right',
   transform: 'scale(0)',

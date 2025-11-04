@@ -20,10 +20,9 @@
   },
   "include": [
     "src",
-    "src/types/svg.d.ts",
+    "src/types/images.d.ts",
     "src/third-party/types/react-player.d.ts",
     "src/third-party/types/videojs.d.ts",
-    "src/third-party/types/svg.d.ts",
     "node_modules/@types/node/buffer.d.ts",
     "node_modules/@types/node/buffer.d.ts",
     "src/**/*"
