@@ -13,7 +13,6 @@ import {
     HeroBannerWrapper,
     HeroBannerRight,
     HeroBanner,
-    HeroImage,
     HeroContent,
     HeroBadge,
     HeroGrid,
@@ -52,13 +51,17 @@ import inventoryImg from '../../assets/images/Inventory.png'
 import setsImg from '../../assets/images/Sets.png'
 import defineUserFlowsImg from '../../assets/images/define-user-flows.png'
 import uiDesignDecisionsImg from '../../assets/images/ui-design-decisions.png'
-import medTrackerHeroImage from '../../assets/images/medtracker-iphone-layout.png'
-import medTrackerHeroImageMobile from '../../assets/images/medtracker-iphone-layout-mobile.png'
 import medTrackerHeroBanner from '../../assets/images/med-tracker-hero-banner.png'
 import researchPic1 from '../../assets/images/research-pic-1.png'
 import researchPic2 from '../../assets/images/research-pic-2.png'
 import researchPic3 from '../../assets/images/research-pic-3.png'
 import researchPic4 from '../../assets/images/research-pic-4.png'
+import iphone1 from '../../assets/images/iphone_1.png'
+import iphone2 from '../../assets/images/iphone_2.png'
+import iphone3 from '../../assets/images/iphone_3.png'
+import iphone4 from '../../assets/images/iphone_4.png'
+import iphone5 from '../../assets/images/iphone_5.png'
+import IPhoneCarousel from '../../components/IPhoneCarousel/IPhoneCarousel'
 
 export default function ProjectPage() {
     /* ----------------------------- DESIGN: state/refs ----------------------------- */
@@ -439,19 +442,9 @@ export default function ProjectPage() {
                         </HeroContent>
 
                         <Box sx={{ marginY: 6, width: '100%', display: 'flex', justifyContent: 'center' }}>
-                            <HeroImage
-                                src={medTrackerHeroImage}
-                                alt="hero image"
-                                sx={{
-                                    display: { xs: 'none', md: 'block' }
-                                }}
-                            />
-                            <HeroImage
-                                src={medTrackerHeroImageMobile}
-                                alt="hero image mobile"
-                                sx={{
-                                    display: { xs: 'block', md: 'none' }
-                                }}
+                            <IPhoneCarousel
+                                images={[iphone1, iphone2, iphone3, iphone4, iphone5]}
+                                height={600}
                             />
                         </Box>
                     </HeroSection>
