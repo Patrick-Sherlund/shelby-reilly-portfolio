@@ -4,7 +4,7 @@ import {
     LogoImage,
     MidSection,
     DemoWrapper,
-    DemoPlaceholder,
+    DemoVideo,
     DescriptionWrapper,
     Title,
     LineText,
@@ -48,7 +48,7 @@ export default function ProjectBishopPage() {
                     </div>
                 </DescriptionWrapper>
 
-                {/* Right – Web app placeholder */}
+                {/* Right – Web app demo video */}
                 <DemoWrapper
                     ref={demoRef}
                     onMouseDown={demoInteraction.handleMouseDown}
@@ -56,9 +56,16 @@ export default function ProjectBishopPage() {
                     onMouseUp={demoInteraction.handleMouseUp}
                     onMouseLeave={demoInteraction.handleMouseLeave}
                 >
-                    <DemoPlaceholder>
-                        Web App Demo Here
-                    </DemoPlaceholder>
+                    <DemoVideo
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        disablePictureInPicture
+                        controlsList="nodownload nofullscreen noremoteplayback"
+                    >
+                        <source src={`${process.env.PUBLIC_URL}/videos/bishop_demo.mp4`} type="video/mp4" />
+                    </DemoVideo>
                 </DemoWrapper>
             </MidSection>
         </MainWrapper>

@@ -39,7 +39,7 @@ export const IPhoneWrapper = styled('div')<IPhoneWrapperProps>(({ $height, $zInd
     pointerEvents: 'none',
     zIndex: $zIndex,
     top: '50%',
-    left: 0,
+    left: -50,
     willChange: 'transform, height'
     // No transition - instant height changes for smoothness
 }))

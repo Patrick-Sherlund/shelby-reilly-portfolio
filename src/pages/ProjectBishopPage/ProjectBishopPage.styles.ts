@@ -24,7 +24,7 @@ export const LogoImage = styled('img')(() => ({
 }))
 
 // Container for the two middle sections (left text, right demo)
-export const MidSection = styled('div')(() => ({
+export const MidSection = styled('div')(({ theme }) => ({
     width: '100%',
     height: 'auto',
     display: 'flex',
@@ -35,32 +35,48 @@ export const MidSection = styled('div')(() => ({
     boxSizing: 'border-box',
     gap: '4vw',
     pointerEvents: 'none',
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+        padding: '16px',
+        gap: '24px',
+    },
 }))
 
 // Demo (placeholder) wrapper on the right
-export const DemoWrapper = styled('div')(() => ({
+export const DemoWrapper = styled('div')(({ theme }) => ({
     width: '60%',
     display: 'flex',
-    justifyContent: 'flex-end', // right align within section
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     pointerEvents: 'auto',
+    marginTop: '-80px', // Move video up to center it vertically
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+        justifyContent: 'center',
+        marginTop: '0',
+    },
 }))
 
-// Placeholder for the web-app UI
-export const DemoPlaceholder = styled('div')(() => ({
-    width: '100%',
-    maxWidth: '800px',
-    aspectRatio: '16/9',
-    backgroundColor: '#1E1E1E',
-    border: '4px solid #FFFFFF',
+// Video element for the web-app demo
+export const DemoVideo = styled('video')(({ theme }) => ({
+    width: 'auto',
+    height: '520px',
+    border: '1px solid #303030ff',
     borderRadius: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#FFFFFF',
-    fontFamily: 'Futura, sans-serif',
-    fontSize: '24px',
+    objectFit: 'contain',
     userSelect: 'none',
+    pointerEvents: 'none',
+    display: 'block',
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+        height: 'auto',
+        maxWidth: '100%',
+    },
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+        height: 'auto',
+        maxWidth: '100%',
+    },
 }))
 
 // Description column on the left
@@ -77,27 +93,44 @@ export const DescriptionWrapper = styled('div')(({ theme }) => ({
     color: theme.palette.text.primary,
     textAlign: 'left',
     pointerEvents: 'auto',
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+        alignItems: 'center',
+        textAlign: 'center',
+    },
 }))
 
 // Title style
-export const Title = styled('h2')(() => ({
+export const Title = styled('h2')(({ theme }) => ({
     margin: 0,
     fontFamily: 'Futura, sans-serif',
     fontWeight: 500,
     fontSize: '64px',
     color: '#AD66FF', // Accent color for Project Bishop
+    [theme.breakpoints.down('md')]: {
+        fontSize: '48px',
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '36px',
+    },
 }))
 
 // Individual line under the title
-export const LineText = styled('div')(() => ({
+export const LineText = styled('div')(({ theme }) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '32px',
     color: '#FFFFFF',
+    [theme.breakpoints.down('md')]: {
+        fontSize: '24px',
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '20px',
+    },
 }))
 
 // Button with drop shadow effect
-export const CaseStudyButton = styled('button')(() => ({
+export const CaseStudyButton = styled('button')(({ theme }) => ({
     position: 'relative',
     display: 'inline-block',
     cursor: 'pointer',
@@ -123,6 +156,26 @@ export const CaseStudyButton = styled('button')(() => ({
         backgroundColor: '#AD66FF',
         border: '8px solid #A9A9A9',
         zIndex: -1,
+    },
+    [theme.breakpoints.down('md')]: {
+        fontSize: '24px',
+        padding: '6px 12px',
+        border: '6px solid #FFFFFF',
+        '&::after': {
+            border: '6px solid #A9A9A9',
+            top: '10px',
+            left: '10px',
+        },
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '20px',
+        padding: '4px 8px',
+        border: '4px solid #FFFFFF',
+        '&::after': {
+            border: '4px solid #A9A9A9',
+            top: '8px',
+            left: '8px',
+        },
     },
 })) 
 
