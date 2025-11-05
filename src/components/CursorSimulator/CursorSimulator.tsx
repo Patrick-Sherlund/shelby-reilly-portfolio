@@ -95,13 +95,13 @@ function getOffscreenPosition(side: Side) {
     return {x: window.innerWidth / 2, y: window.innerHeight + 50}
 }
 
-function getAnchorPosition(rect: DOMRect, anchor: Anchor) {
-    const sx = window.scrollX
-    const sy = window.scrollY
-    const left = rect.left + sx
-    const right = rect.right + sx
-    const top = rect.top + sy
-    const bottom = rect.bottom + sy
+function getAnchorPosition(rect: DOMRect, anchor: Anchor, stageYOffset: number = 0) {
+    // rect gives us viewport coordinates
+    // We need to subtract stageYOffset to get the position in "stage space"
+    const left = rect.left
+    const right = rect.right
+    const top = rect.top - stageYOffset
+    const bottom = rect.bottom - stageYOffset
     const cx = left + rect.width / 2
     const cy = top + rect.height / 2
     if (anchor === 'top-left') return {x: left, y: top}
@@ -462,7 +462,8 @@ export function CursorSimulator({
         const w = waypoints[i]
         if (!w) return
         const rect = w.element.getBoundingClientRect()
-        const anchorPos = getAnchorPosition(rect, w.anchor || 'center')
+        // Pass stagePos.y to get correct position accounting for scroll offset
+        const anchorPos = getAnchorPosition(rect, w.anchor || 'center', stagePos.y)
         const stPos = {x: position.x, y: position.y}
         const distVal = distance(stPos, anchorPos)
         const speedVal = w.speed || 150
