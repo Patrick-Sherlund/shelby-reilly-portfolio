@@ -134,7 +134,7 @@ function ChatBubble({
     return (
         <div
             style={{
-                position: 'absolute',
+                position: 'fixed',
                 left: x + cursorWidth / 2 + 10,
                 top: y + cursorHeight / 2 + 10,
                 transform: 'translate(0, -50%)',
@@ -179,7 +179,7 @@ function NameLabel({
     return (
         <div
             style={{
-                position: 'absolute',
+                position: 'fixed',
                 left: x + cursorWidth / 2 + 10,
                 top: y + offsetY,
                 pointerEvents: 'none',
@@ -511,15 +511,19 @@ export function CursorSimulator({
 
     if (!visible) return null
 
+    // Adjust position for current scroll
+    const viewportX = position.x - window.scrollX
+    const viewportY = position.y - window.scrollY
+
     return (
         <>
             <img
                 src={waypointCursor || ''}
                 alt=""
                 style={{
-                    position: 'absolute',
-                    left: position.x + pointerOffset.x,
-                    top: position.y + pointerOffset.y,
+                    position: 'fixed',
+                    left: viewportX + pointerOffset.x,
+                    top: viewportY + pointerOffset.y,
                     pointerEvents: 'none',
                     transform: `translate(-50%, -50%) rotate(${cursorRotation}deg)`,
                     zIndex: 2147483647
@@ -528,8 +532,8 @@ export function CursorSimulator({
             {typing && (
                 <ChatBubble
                     text={chatText}
-                    x={position.x}
-                    y={position.y}
+                    x={viewportX}
+                    y={viewportY}
                     bgColor={waypoints[index]?.chat?.bgColor}
                     borderColor={waypoints[index]?.chat?.borderColor}
                     cursorWidth={cursorSize.width}
@@ -537,8 +541,8 @@ export function CursorSimulator({
                 />
             )}
             <NameLabel
-                x={position.x}
-                y={position.y}
+                x={viewportX}
+                y={viewportY}
                 cursorWidth={cursorSize.width}
                 cursorHeight={cursorSize.height}
                 typing={typing}
