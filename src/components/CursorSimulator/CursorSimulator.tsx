@@ -1,4 +1,5 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
+import { useZoomPanContext } from '../../context/ZoomPanContext'
 
 export type Side = 'left' | 'right' | 'top' | 'bottom'
 export type Anchor =
@@ -134,7 +135,7 @@ function ChatBubble({
     return (
         <div
             style={{
-                position: 'fixed',
+                position: 'absolute',
                 left: x + cursorWidth / 2 + 10,
                 top: y + cursorHeight / 2 + 10,
                 transform: 'translate(0, -50%)',
@@ -179,7 +180,7 @@ function NameLabel({
     return (
         <div
             style={{
-                position: 'fixed',
+                position: 'absolute',
                 left: x + cursorWidth / 2 + 10,
                 top: y + offsetY,
                 pointerEvents: 'none',
@@ -208,6 +209,7 @@ export function CursorSimulator({
                                     onComplete,
                                     offScreenSpeed
                                 }: CursorSimulatorProps) {
+    const { stagePos } = useZoomPanContext()
     const [position, setPosition] = useState(() => getOffscreenPosition(startSide))
     const [visible, setVisible] = useState(false)
     const [index, setIndex] = useState(0)
@@ -511,9 +513,9 @@ export function CursorSimulator({
 
     if (!visible) return null
 
-    // Adjust position for current scroll
-    const viewportX = position.x - window.scrollX
-    const viewportY = position.y - window.scrollY
+    // Apply the stage Y offset to the cursor position
+    // stagePos.y is positive when scrolled down, so we add it to move cursor up
+    const adjustedY = position.y + stagePos.y
 
     return (
         <>
@@ -521,9 +523,9 @@ export function CursorSimulator({
                 src={waypointCursor || ''}
                 alt=""
                 style={{
-                    position: 'fixed',
-                    left: viewportX + pointerOffset.x,
-                    top: viewportY + pointerOffset.y,
+                    position: 'absolute',
+                    left: position.x + pointerOffset.x,
+                    top: adjustedY + pointerOffset.y,
                     pointerEvents: 'none',
                     transform: `translate(-50%, -50%) rotate(${cursorRotation}deg)`,
                     zIndex: 2147483647
@@ -532,8 +534,8 @@ export function CursorSimulator({
             {typing && (
                 <ChatBubble
                     text={chatText}
-                    x={viewportX}
-                    y={viewportY}
+                    x={position.x}
+                    y={adjustedY}
                     bgColor={waypoints[index]?.chat?.bgColor}
                     borderColor={waypoints[index]?.chat?.borderColor}
                     cursorWidth={cursorSize.width}
@@ -541,8 +543,8 @@ export function CursorSimulator({
                 />
             )}
             <NameLabel
-                x={viewportX}
-                y={viewportY}
+                x={position.x}
+                y={adjustedY}
                 cursorWidth={cursorSize.width}
                 cursorHeight={cursorSize.height}
                 typing={typing}
