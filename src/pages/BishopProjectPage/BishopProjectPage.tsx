@@ -365,8 +365,6 @@ export default function BishopProjectPage() {
                         </DesignCarouselWrapper>
                     </DesignSection>
 
-                    <SectionDivider />
-
                     {/* DATA → DESIGN */}
                     <DataDesignSection>
                         <DataDesignTitle>Data → Design</DataDesignTitle>
@@ -392,8 +390,6 @@ export default function BishopProjectPage() {
                             </DataDesignImageWrapper>
                         </DataDesignContent>
                     </DataDesignSection>
-
-                    <SectionDivider />
 
                     {/* DESIGN DECISIONS */}
                     <DesignDecisionsSection>
