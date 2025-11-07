@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles'
-import {css} from "@emotion/react";
-import {SxProps} from "@mui/material";
+import { css } from "@emotion/react";
+import { SxProps } from "@mui/material";
 
 // Full-page wrapper similar to IntroductionPage and MedTrackerPage
 export const MainWrapper = styled('div')(() => ({
@@ -14,13 +14,30 @@ export const MainWrapper = styled('div')(() => ({
     marginTop: '24px',
 }))
 
-// Top-left logo
-export const LogoImage = styled('img')(() => ({
-    height: 'clamp(30px, 5vw, 60px)',
-    width: 'auto',
+// Container for CTRL+Y logo and demo section
+export const DemoSection = styled('div')(({ theme }) => ({
+    width: '50%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: '16px',
+    marginTop: '-80px',
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+        marginTop: '0',
+        alignItems: 'center',
+    },
+}))
+
+// CTRL+Y logo
+export const CtrlYBadge = styled('div')(() => ({
     pointerEvents: 'auto',
-    alignSelf: 'flex-start',
-    margin: '68px 32px 32px 60px',
+}))
+
+export const CtrlYLogoImage = styled('img')(() => ({
+    height: 'clamp(40px, 5vw, 70px)',
+    width: 'auto',
+    userSelect: 'none',
 }))
 
 // Container for the two middle sections (left text, right demo)
@@ -44,17 +61,14 @@ export const MidSection = styled('div')(({ theme }) => ({
 
 // Demo (placeholder) wrapper on the right
 export const DemoWrapper = styled('div')(({ theme }) => ({
-    width: '55%',
+    width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
     pointerEvents: 'auto',
-    marginTop: '-80px', // Move video up to center it vertically
     position: 'relative', // For absolute positioning of children
     [theme.breakpoints.down('md')]: {
-        width: '100%',
         justifyContent: 'center',
-        marginTop: '0',
     },
 }))
 
@@ -107,7 +121,61 @@ export const DescriptionWrapper = styled('div')(({ theme }) => ({
     },
 }))
 
-// Title style
+// Project Bishop small logo (replaces title)
+export const ProjectBishopLogo = styled('img')(({ theme }) => ({
+    height: '80px',
+    width: 'auto',
+    userSelect: 'none',
+    margin: 0,
+    marginBottom: '24px',
+    [theme.breakpoints.up('md')]: {
+        height: '88px',
+    },
+}))
+
+// Descriptive paragraph (using LineText styling)
+export const DescriptiveParagraph = styled('div')(({ theme }) => ({
+    fontFamily: 'Futura, sans-serif',
+    fontWeight: 400,
+    fontSize: '28px',
+    color: '#FFFFFF',
+    [theme.breakpoints.down('md')]: {
+        fontSize: '24px',
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '20px',
+    },
+}))
+
+// Role text (using LineText styling)
+export const RoleText = styled('div')(({ theme }) => ({
+    fontFamily: 'Futura, sans-serif',
+    fontWeight: 400,
+    fontSize: '28px',
+    color: '#ADADAD',
+    [theme.breakpoints.down('md')]: {
+        fontSize: '24px',
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '20px',
+    },
+}))
+
+// Dates text (using LineText styling)
+export const DatesText = styled('div')(({ theme }) => ({
+    fontFamily: 'Futura, sans-serif',
+    fontWeight: 400,
+    fontSize: '28px',
+    color: '#ADADAD',
+    [theme.breakpoints.down('md')]: {
+        fontSize: '24px',
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '20px',
+    },
+}))
+
+// Title style (keeping for backwards compatibility)
 export const Title = styled('h2')(({ theme }) => ({
     margin: 0,
     fontFamily: 'Futura, sans-serif',
@@ -136,7 +204,59 @@ export const LineText = styled('div')(({ theme }) => ({
     },
 }))
 
-// Button with drop shadow effect
+// Learn More button (using original styling)
+export const LearnMoreButton = styled('button')(({ theme }) => ({
+    position: 'relative',
+    display: 'inline-block',
+    cursor: 'pointer',
+    backgroundColor: '#91B6FF',
+    color: '#FFFFFF',
+    fontFamily: 'Futura, sans-serif',
+    fontWeight: 700,
+    fontSize: '32px',
+    minWidth: '360px',
+    padding: '8px 16px',
+    border: '8px solid #FFFFFF',
+    boxSizing: 'border-box',
+    outline: 'none',
+    pointerEvents: 'auto',
+    marginTop: '24px',
+    // Drop shadow rectangle via ::after
+    '&::after': {
+        content: '"Learn More"',
+        position: 'absolute',
+        top: '14px',
+        left: '14px',
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
+        backgroundColor: '#AD66FF',
+        border: '8px solid #A9A9A9',
+        zIndex: -1,
+    },
+    [theme.breakpoints.down('md')]: {
+        fontSize: '24px',
+        padding: '6px 12px',
+        border: '6px solid #FFFFFF',
+        '&::after': {
+            border: '6px solid #A9A9A9',
+            top: '10px',
+            left: '10px',
+        },
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '20px',
+        padding: '4px 8px',
+        border: '4px solid #FFFFFF',
+        '&::after': {
+            border: '4px solid #A9A9A9',
+            top: '8px',
+            left: '8px',
+        },
+    },
+}))
+
+// Button with drop shadow effect (keeping for backwards compatibility)
 export const CaseStudyButton = styled('button')(({ theme }) => ({
     position: 'relative',
     display: 'inline-block',
@@ -184,7 +304,7 @@ export const CaseStudyButton = styled('button')(({ theme }) => ({
             left: '8px',
         },
     },
-})) 
+}))
 
 export const stackContainer: SxProps = {
     display: "flex",

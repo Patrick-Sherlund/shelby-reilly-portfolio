@@ -9,7 +9,7 @@ import {
   LineText,
   CaseStudyButton,
   CornerSketch,
-SubLineText,
+  SubLineText,
   // Mobile-only styles
   MobileSection,
   MobileHeader,
@@ -33,6 +33,7 @@ import { useSearchContext } from '../../context/SearchContext'
 import mainMobile from '../../assets/images/main-mobile.png'
 import movedMobile from '../../assets/images/moved-mobile.png'
 import bulkMobile from '../../assets/images/bulk-mobile.png'
+import medTrackerLogo from '../../assets/images/medtracker-logo-small.png'
 
 export default function MedTrackerPage() {
   const theme = useTheme()
@@ -131,7 +132,7 @@ export default function MedTrackerPage() {
         }
         if (locked === 'x') {
           // Block Konva from seeing horizontal drags entirely
-          ;(e as any).stopImmediatePropagation?.()
+          ; (e as any).stopImmediatePropagation?.()
           e.stopPropagation()
           e.preventDefault() // prevent Konva panning; page won’t scroll sideways anyway
         }
@@ -154,7 +155,7 @@ export default function MedTrackerPage() {
           locked = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y'
         }
         if (locked === 'x') {
-          ;(e as any).stopImmediatePropagation?.()
+          ; (e as any).stopImmediatePropagation?.()
           e.stopPropagation()
           e.preventDefault()
         }
@@ -205,10 +206,10 @@ export default function MedTrackerPage() {
             <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: '246px' }}>
               <IphoneOutline initialTab={0} />
             </Box>
-            <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: '246px', transform:'translateY(-20%)' }}>
+            <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: '246px', transform: 'translateY(-20%)' }}>
               <IphoneOutline initialTab={1} />
             </Box>
-            <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto', transform:'translateY(0%)' }}>
+            <Box sx={{ height: 'clamp(240px, 32vw, 360px)', width: 'auto', transform: 'translateY(0%)' }}>
               <IphoneOutline initialTab={2} />
             </Box>
           </ImagesWrapper>
@@ -220,7 +221,9 @@ export default function MedTrackerPage() {
             onMouseUp={descInteraction.handleMouseUp}
             onMouseLeave={descInteraction.handleMouseLeave}
           >
-            <Title>MedTracker</Title>
+            <Title>
+
+            </Title>
             <LineText>Streamlined medical inventory process saving {'>'} 11k hours annually</LineText>
             <SubLineText>Senior Product Designer</SubLineText>
             <SubLineText>2024 - 2025</SubLineText>
