@@ -433,8 +433,8 @@ export const DesignSubtitle = styled('div')(({ theme }) => ({
   background: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
   border: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)',
   borderRadius: 16,
-  padding: '24px 32px',
-  maxWidth: 600,
+  padding: '32px',
+  maxWidth: '88%',
   margin: '0 auto 60px auto'
 }))
 
