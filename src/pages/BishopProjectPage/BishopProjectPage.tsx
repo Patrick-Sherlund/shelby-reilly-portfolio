@@ -164,11 +164,11 @@ export default function BishopProjectPage() {
                             <HeroLogo src={bishopLogo} alt="Bishop logo" />
 
                             <Box sx={{ marginTop: '3rem' }}>
-                                <Typography sx={{fontSize: '1.25rem', textAlign: "center" }}>
+                                <Typography sx={{ fontSize: '1.25rem', textAlign: "center" }}>
                                     AI-powered drone search & rescue platform
                                 </Typography>
 
-                                <Typography sx={{fontSize: '1.25rem', textAlign: "center" }}>
+                                <Typography sx={{ fontSize: '1.25rem', textAlign: "center" }}>
                                     designed for speed, safety, and hope.
                                 </Typography>
                             </Box>
@@ -367,10 +367,11 @@ export default function BishopProjectPage() {
 
                     {/* DATA → DESIGN */}
                     <DataDesignSection>
-                        <DataDesignTitle>Data → Design</DataDesignTitle>
-                        <DataDesignSubtitle>
-                            Clarifying data and actions needed in the interface for the best user experience. Designing the interface based on that.
-                        </DataDesignSubtitle>
+
+                        <DesignSubtitle>
+                            Data → Design
+                            <DesignSubtitleText>Clarifying data and actions needed in the interface for the best user experience. Designing the interface based on that.</DesignSubtitleText>
+                        </DesignSubtitle>
 
                         <DataDesignContent>
                             <DataDesignImageWrapper>
@@ -393,11 +394,12 @@ export default function BishopProjectPage() {
 
                     {/* DESIGN DECISIONS */}
                     <DesignDecisionsSection>
-                        <DesignDecisionsTitle>Design Decisions</DesignDecisionsTitle>
-                        <DesignDecisionsSubtitle>
-                            Decisions and values that led my UI/UX design
-                        </DesignDecisionsSubtitle>
+                        
 
+                        <DesignSubtitle>
+                            Design Decisions
+                            <DesignSubtitleText>Decisions and values that led my UI/UX design</DesignSubtitleText>
+                        </DesignSubtitle>
                         <DesignDecisionsContent>
                             <DesignDecisionsImageWrapper>
                                 <DesignDecisionsImage
