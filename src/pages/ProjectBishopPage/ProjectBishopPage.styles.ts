@@ -44,12 +44,13 @@ export const MidSection = styled('div')(({ theme }) => ({
 
 // Demo (placeholder) wrapper on the right
 export const DemoWrapper = styled('div')(({ theme }) => ({
-    width: '60%',
+    width: '55%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
     pointerEvents: 'auto',
     marginTop: '-80px', // Move video up to center it vertically
+    position: 'relative', // For absolute positioning of children
     [theme.breakpoints.down('md')]: {
         width: '100%',
         justifyContent: 'center',
@@ -57,26 +58,32 @@ export const DemoWrapper = styled('div')(({ theme }) => ({
     },
 }))
 
+// iPad background image
+export const IpadImage = styled('img')(() => ({
+    width: '100%',
+    height: 'auto',
+    display: 'block',
+    userSelect: 'none',
+    pointerEvents: 'none',
+    position: 'relative',
+    zIndex: 1,
+}))
+
 // Video element for the web-app demo
-export const DemoVideo = styled('video')(({ theme }) => ({
-    width: 'auto',
-    height: '520px',
-    border: '1px solid #303030ff',
+export const DemoVideo = styled('video')(() => ({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 'calc(100% / 1.09)',
+    height: 'auto',
+    border: '1px solid #1f1f1fff',
     borderRadius: '8px',
     objectFit: 'contain',
     userSelect: 'none',
     pointerEvents: 'none',
     display: 'block',
-    [theme.breakpoints.down('md')]: {
-        width: '100%',
-        height: 'auto',
-        maxWidth: '100%',
-    },
-    [theme.breakpoints.down('sm')]: {
-        width: '100%',
-        height: 'auto',
-        maxWidth: '100%',
-    },
+    zIndex: 2,
 }))
 
 // Description column on the left

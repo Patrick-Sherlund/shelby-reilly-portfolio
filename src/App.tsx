@@ -26,6 +26,7 @@ import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import { GlobalStyles } from '@mui/material'
 import SearchPalette from './components/SearchPalette/SearchPalette'
 import MedTrackerProjectPage from './pages/MedTrackerProjectPage/MedTrackerProjectPage'
+import BishopProjectPage from './pages/BishopProjectPage/BishopProjectPage'
 import { CursorSimulatorProvider, useCursorSimulator } from './context/CursorSimulatorContext'
 import { CursorSimulator } from './components/CursorSimulator/CursorSimulator'
 
@@ -205,6 +206,10 @@ function AppContent() {
 
     if (currentRoute === '#/medtracker-project') {
         return <MedTrackerProjectPage />
+    }
+
+    if (currentRoute === '#/bishop-project') {
+        return <BishopProjectPage />
     }
 
     return (

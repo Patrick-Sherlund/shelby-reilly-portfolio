@@ -83,8 +83,16 @@ export const Title = styled('h2')(() => ({
 export const LineText = styled('div')(() => ({
   fontFamily: 'Futura, sans-serif',
   fontWeight: 400,
-  fontSize: '32px',
+  fontSize: '28px',
   color: '#FFFFFF',
+}))
+
+
+export const SubLineText = styled('div')(() => ({
+  fontFamily: 'Futura, sans-serif',
+  fontWeight: 400,
+  fontSize: '28px',
+  color: '#ADADAD',
 }))
 
 export const CaseStudyButton = styled('button')(() => ({

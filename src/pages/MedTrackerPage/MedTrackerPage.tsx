@@ -9,7 +9,7 @@ import {
   LineText,
   CaseStudyButton,
   CornerSketch,
-
+SubLineText,
   // Mobile-only styles
   MobileSection,
   MobileHeader,
@@ -221,9 +221,9 @@ export default function MedTrackerPage() {
             onMouseLeave={descInteraction.handleMouseLeave}
           >
             <Title>MedTracker</Title>
-            <LineText>2024</LineText>
-            <LineText>UX Designer</LineText>
-            <LineText>Hardware Engineer</LineText>
+            <LineText>Streamlined medical inventory process saving {'>'} 11k hours annually</LineText>
+            <SubLineText>Senior Product Designer</SubLineText>
+            <SubLineText>2024 - 2025</SubLineText>
             <div style={{ marginTop: '32px' }}>
               <CaseStudyButton onClick={handleCaseStudyClick}>
                 READ CASE STUDY

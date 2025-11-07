@@ -4,6 +4,7 @@ import {
     LogoImage,
     MidSection,
     DemoWrapper,
+    IpadImage,
     DemoVideo,
     DescriptionWrapper,
     Title,
@@ -11,6 +12,7 @@ import {
     CaseStudyButton
 } from './ProjectBishopPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
+import ipad from '../../assets/images/tablet.png';
 
 export default function ProjectBishopPage() {
     // Refs for interaction areas
@@ -44,7 +46,9 @@ export default function ProjectBishopPage() {
                     <LineText>Frontend Engineer</LineText>
 
                     <div style={{ marginTop: '32px' }}>
-                        <CaseStudyButton>READ CASE STUDY</CaseStudyButton>
+                        <CaseStudyButton onClick={() => { window.location.hash = '#/bishop-project' }}>
+                            READ CASE STUDY
+                        </CaseStudyButton>
                     </div>
                 </DescriptionWrapper>
 
@@ -56,6 +60,10 @@ export default function ProjectBishopPage() {
                     onMouseUp={demoInteraction.handleMouseUp}
                     onMouseLeave={demoInteraction.handleMouseLeave}
                 >
+                    <IpadImage
+                        src={ipad}
+                        alt="iPad frame"
+                    />
                     <DemoVideo
                         autoPlay
                         loop

@@ -88,22 +88,53 @@ function calcBezierPoint(
     return {x: px, y: py}
 }
 
-function getOffscreenPosition(side: Side) {
-    if (side === 'left') return {x: -50, y: window.innerHeight / 2}
-    if (side === 'right') return {x: window.innerWidth + 50, y: window.innerHeight / 2}
-    if (side === 'top') return {x: window.innerWidth / 2, y: -50}
-    return {x: window.innerWidth / 2, y: window.innerHeight + 50}
+function getOffscreenPosition(
+    side: Side,
+    stageXOffset: number = 0,
+    stageYOffset: number = 0,
+    scale: number = 1
+) {
+    // Convert viewport coordinates to stage space
+    // Formula: (viewportCoord - stageOffset) / scale
+    let viewportX = 0
+    let viewportY = 0
+
+    if (side === 'left') {
+        viewportX = -50
+        viewportY = window.innerHeight / 2
+    } else if (side === 'right') {
+        viewportX = window.innerWidth + 50
+        viewportY = window.innerHeight / 2
+    } else if (side === 'top') {
+        viewportX = window.innerWidth / 2
+        viewportY = -50
+    } else {
+        viewportX = window.innerWidth / 2
+        viewportY = window.innerHeight + 50
+    }
+
+    return {
+        x: (viewportX - stageXOffset) / scale,
+        y: (viewportY - stageYOffset) / scale
+    }
 }
 
-function getAnchorPosition(rect: DOMRect, anchor: Anchor, stageYOffset: number = 0) {
-    // rect gives us viewport coordinates
-    // We need to subtract stageYOffset to get the position in "stage space"
-    const left = rect.left
-    const right = rect.right
-    const top = rect.top - stageYOffset
-    const bottom = rect.bottom - stageYOffset
-    const cx = left + rect.width / 2
-    const cy = top + rect.height / 2
+function getAnchorPosition(
+    rect: DOMRect,
+    anchor: Anchor,
+    stageYOffset: number = 0,
+    stageXOffset: number = 0,
+    scale: number = 1
+) {
+    // rect gives us viewport coordinates (already scaled by the stage)
+    // We need to convert back to "stage space" (unscaled coordinates)
+    // Formula: (viewportCoord - stageOffset) / scale
+    const left = (rect.left - stageXOffset) / scale
+    const right = (rect.right - stageXOffset) / scale
+    const top = (rect.top - stageYOffset) / scale
+    const bottom = (rect.bottom - stageYOffset) / scale
+    const cx = left + (rect.width / scale) / 2
+    const cy = top + (rect.height / scale) / 2
     if (anchor === 'top-left') return {x: left, y: top}
     if (anchor === 'top-right') return {x: right, y: top}
     if (anchor === 'bottom-left') return {x: left, y: bottom}
@@ -209,7 +240,7 @@ export function CursorSimulator({
                                     onComplete,
                                     offScreenSpeed
                                 }: CursorSimulatorProps) {
-    const { stagePos } = useZoomPanContext()
+    const { stagePos, stageScale } = useZoomPanContext()
     const [position, setPosition] = useState(() => getOffscreenPosition(startSide))
     const [visible, setVisible] = useState(false)
     const [index, setIndex] = useState(0)
@@ -318,10 +349,10 @@ export function CursorSimulator({
         if (!initialized && waypoints.length) {
             setInitialized(true)
             setVisible(true)
-            setPosition(getOffscreenPosition(startSide))
+            setPosition(getOffscreenPosition(startSide, stagePos.x, stagePos.y, stageScale))
             setIndex(0)
         }
-    }, [start, waypoints, startSide, initialized])
+    }, [start, waypoints, startSide, initialized, stagePos.x, stagePos.y, stageScale])
 
     useEffect(() => {
         if (!visible || index > waypoints.length) return
@@ -462,8 +493,8 @@ export function CursorSimulator({
         const w = waypoints[i]
         if (!w) return
         const rect = w.element.getBoundingClientRect()
-        // Pass stagePos.y to get correct position accounting for scroll offset
-        const anchorPos = getAnchorPosition(rect, w.anchor || 'center', stagePos.y)
+        // Pass stagePos and stageScale to get correct position accounting for zoom/pan
+        const anchorPos = getAnchorPosition(rect, w.anchor || 'center', stagePos.y, stagePos.x, stageScale)
         const stPos = {x: position.x, y: position.y}
         const distVal = distance(stPos, anchorPos)
         const speedVal = w.speed || 150
@@ -492,7 +523,7 @@ export function CursorSimulator({
 
     function leaveOffscreen() {
         const stPos = {x: position.x, y: position.y}
-        const offPos = getOffscreenPosition(endSide!)
+        const offPos = getOffscreenPosition(endSide!, stagePos.x, stagePos.y, stageScale)
         const distVal = distance(stPos, offPos)
         const speedForOffscreen = offScreenSpeed || 150
         const dur = (distVal / speedForOffscreen) * 1000
@@ -514,9 +545,10 @@ export function CursorSimulator({
 
     if (!visible) return null
 
-    // Apply the stage Y offset to the cursor position
-    // stagePos.y is positive when scrolled down, so we add it to move cursor up
-    const adjustedY = position.y + stagePos.y
+    // Apply the stage position and scale to convert from stage space to viewport coordinates
+    // Formula: viewportCoord = (stageCoord * scale) + stageOffset
+    const adjustedX = (position.x * stageScale) + stagePos.x
+    const adjustedY = (position.y * stageScale) + stagePos.y
 
     return (
         <>
@@ -525,7 +557,7 @@ export function CursorSimulator({
                 alt=""
                 style={{
                     position: 'absolute',
-                    left: position.x + pointerOffset.x,
+                    left: adjustedX + pointerOffset.x,
                     top: adjustedY + pointerOffset.y,
                     pointerEvents: 'none',
                     transform: `translate(-50%, -50%) rotate(${cursorRotation}deg)`,
@@ -535,7 +567,7 @@ export function CursorSimulator({
             {typing && (
                 <ChatBubble
                     text={chatText}
-                    x={position.x}
+                    x={adjustedX}
                     y={adjustedY}
                     bgColor={waypoints[index]?.chat?.bgColor}
                     borderColor={waypoints[index]?.chat?.borderColor}
@@ -544,7 +576,7 @@ export function CursorSimulator({
                 />
             )}
             <NameLabel
-                x={position.x}
+                x={adjustedX}
                 y={adjustedY}
                 cursorWidth={cursorSize.width}
                 cursorHeight={cursorSize.height}
