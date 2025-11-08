@@ -24,7 +24,8 @@ export const BoardContent = styled('div')(() => ({
   display: 'flex',
   justifyContent: 'center',
   paddingBottom: 240,
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+
 }))
 
 export const ContentWrapper = styled('div')(({ theme }) => ({

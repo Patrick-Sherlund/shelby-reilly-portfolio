@@ -15,6 +15,7 @@ import {
   MobileHeader,
   MobileTitle,
   MobileMeta,
+  MedTrackerLogo,
   CarouselShell,
   CarouselTrack,
   Slide,
@@ -221,9 +222,12 @@ export default function MedTrackerPage() {
             onMouseUp={descInteraction.handleMouseUp}
             onMouseLeave={descInteraction.handleMouseLeave}
           >
-            <Title>
-
-            </Title>
+                                <MedTrackerLogo
+                        src={medTrackerLogo}
+                        alt="Project Bishop"
+                        draggable={false}
+                        data-testid="pb-logo-small"
+                    />
             <LineText>Streamlined medical inventory process saving {'>'} 11k hours annually</LineText>
             <SubLineText>Senior Product Designer</SubLineText>
             <SubLineText>2024 - 2025</SubLineText>

@@ -11,7 +11,7 @@ export const MainWrapper = styled('div')(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginTop: '24px',
+    marginTop: '154px',
 }))
 
 // Container for CTRL+Y logo and demo section

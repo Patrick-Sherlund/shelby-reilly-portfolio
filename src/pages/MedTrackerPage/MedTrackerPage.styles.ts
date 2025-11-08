@@ -8,8 +8,21 @@ export const MainWrapper = styled('div')(() => ({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-start',
-  marginTop: '24px',
+  marginTop: '75px',
 }))
+
+
+export const MedTrackerLogo = styled('img')(({ theme }) => ({
+    height: '80px',
+    width: 'auto',
+    userSelect: 'none',
+    margin: 0,
+    marginBottom: '24px',
+    [theme.breakpoints.up('md')]: {
+        height: '88px',
+    },
+}))
+
 
 export const LogoImage = styled('img')(({ theme }) => ({
   height: 'clamp(30px, 5vw, 60px)',

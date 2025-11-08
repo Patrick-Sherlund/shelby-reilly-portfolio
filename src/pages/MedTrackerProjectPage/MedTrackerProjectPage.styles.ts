@@ -136,6 +136,7 @@ export const HeroBannerRight = styled('div')(() => ({
   pointerEvents: 'none',
   zIndex: 1
 }))
+
 export const HeroBanner = styled('img')(() => ({
   display: 'block',
   width: '100%',

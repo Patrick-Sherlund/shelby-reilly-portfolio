@@ -9,7 +9,6 @@ export const MainWrapper = styled('div')(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginTop: '24px',
 }))
 
 // Top-left logo
@@ -18,7 +17,7 @@ export const LogoImage = styled('img')(() => ({
     width: 'auto',
     pointerEvents: 'auto',
     alignSelf: 'flex-start',
-    margin: '68px 32px 32px 60px',
+    margin: '68px 32px 0px 60px',
 }))
 
 // Container for the two middle sections (left demo, right text)
