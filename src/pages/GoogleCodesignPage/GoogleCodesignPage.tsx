@@ -56,7 +56,9 @@ export default function GoogleCodesignPage() {
                     <LineText>Frontend Engineer</LineText>
 
                     <div style={{ marginTop: '32px' }}>
-                        <CaseStudyButton>READ CASE STUDY</CaseStudyButton>
+                        <CaseStudyButton onClick={() => window.location.hash = 'googlecodesignproject'}>
+                            READ CASE STUDY
+                        </CaseStudyButton>
                     </div>
                 </DescriptionWrapper>
             </MidSection>

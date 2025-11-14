@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles'
 import { css } from "@emotion/react";
 import { SxProps } from "@mui/material";
 
-// Full-page wrapper similar to IntroductionPage and MedTrackerPage
 export const MainWrapper = styled('div')(() => ({
     width: '100%',
     height: '100%',
@@ -14,7 +13,6 @@ export const MainWrapper = styled('div')(() => ({
     marginTop: '154px',
 }))
 
-// Container for CTRL+Y logo and demo section
 export const DemoSection = styled('div')(({ theme }) => ({
     width: '50%',
     display: 'flex',
@@ -29,7 +27,6 @@ export const DemoSection = styled('div')(({ theme }) => ({
     },
 }))
 
-// CTRL+Y logo
 export const CtrlYBadge = styled('div')(() => ({
     pointerEvents: 'auto',
 }))
