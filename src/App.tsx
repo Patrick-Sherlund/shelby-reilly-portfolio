@@ -213,7 +213,7 @@ function AppContent() {
         return <BishopProjectPage />
     }
 
-    if (currentRoute === '#googlecodesignproject') {
+    if (currentRoute === '#/googlecodesign-project') {
         return <GoogleCodesignProjectPage />
     }
 
