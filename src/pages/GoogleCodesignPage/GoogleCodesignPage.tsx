@@ -19,6 +19,8 @@ export default function GoogleCodesignPage() {
     const demoInteraction = useZoomPanInteraction(demoRef)
     const descInteraction = useZoomPanInteraction(descRef)
 
+    const handleCaseStudyClick = () => { window.location.hash = '#/googlecodesign-project' }
+
     return (
         <MainWrapper>
             <LogoImage
@@ -56,7 +58,7 @@ export default function GoogleCodesignPage() {
                     <LineText>Frontend Engineer</LineText>
 
                     <div style={{ marginTop: '32px' }}>
-                        <CaseStudyButton onClick={() => window.location.hash = '#/googlecodesign-project'}>
+                        <CaseStudyButton onClick={handleCaseStudyClick}>
                             READ CASE STUDY
                         </CaseStudyButton>
                     </div>
