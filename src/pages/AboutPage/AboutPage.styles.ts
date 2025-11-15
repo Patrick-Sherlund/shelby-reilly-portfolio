@@ -21,8 +21,13 @@ export const ContentWrapper = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   width: '100%',
+  maxWidth: 1700,
+  margin: '0 auto',
+  padding: '0 84px',
+  boxSizing: 'border-box',
   [theme.breakpoints.down('md')]: {
-    width: '100%'
+    width: '100%',
+    padding: '0 20px'
   }
 }))
 
@@ -60,22 +65,28 @@ export const MainContentArea = styled('div')<{ isMobile: boolean }>(({ isMobile 
   justifyContent: 'center',
   gap: isMobile ? 24 : 40,
   width: '100%',
-  maxWidth: 1400,
-  margin: '0 auto',
-  padding: isMobile ? '280px 20px 40px' : '320px 40px 40px 40px',
+  maxWidth: '100%',
+  margin: 0,
+  padding: isMobile ? '280px 0 40px' : '320px 0 40px',
   position: 'relative'
 }))
 
 export const PresentationSection = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
   position: 'relative',
   flex: '0 0 auto',
-  width: isMobile ? '100%' : 400
+  width: isMobile ? '100%' : 500
 }))
 
-export const TextContentSection = styled('div')(() => ({
+export const TextContentSection = styled('div')(({ theme }) => ({
   flex: 1,
   position: 'relative',
-  maxWidth: 680
+  maxWidth: 900,
+  [theme.breakpoints.down('lg')]: {
+    maxWidth: 780
+  },
+  [theme.breakpoints.down('md')]: {
+    maxWidth: '100%'
+  }
 }))
 
 export const AboutTextCard = styled('div')(({ theme }) => ({
@@ -152,16 +163,16 @@ export const BottomSection = styled('div')<{ isMobile: boolean }>(({ isMobile })
   justifyContent: 'center',
   gap: isMobile ? 32 : 60,
   width: '100%',
-  maxWidth: 1400,
-  margin: '0 auto',
-  padding: isMobile ? '80px 20px 40px' : '100px 40px 60px 40px',
+  maxWidth: '100%',
+  margin: 0,
+  padding: isMobile ? '80px 0 40px' : '100px 0 60px',
   position: 'relative'
 }))
 
 export const HobbiesContentSection = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
   position: 'relative',
   flex: 1,
-  maxWidth: isMobile ? '100%' : 600
+  maxWidth: isMobile ? '100%' : 900
 }))
 
 export const HobbiesTitle = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
@@ -196,7 +207,7 @@ export const PolaroidSection = styled('div')<{ isMobile: boolean }>(({ isMobile 
   flex: '0 0 auto',
   marginTop: isMobile ? 0 : 40,
   height: isMobile ? 'auto' : 280,
-  width: isMobile ? '100%' : 480
+  width: isMobile ? '100%' : 520
 }))
 
 // Image Components
