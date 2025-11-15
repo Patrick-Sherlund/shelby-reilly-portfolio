@@ -240,10 +240,11 @@ export default function FloatingTopNav() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { mode } = useThemeMode()
 
-  // Check if we're on a project page
+  // Check if we're on a project page or about page
   const isProjectPage = window.location.hash.includes('bishop-project') ||
                         window.location.hash.includes('codesign-project') ||
-                        window.location.hash.includes('medtracker-project')
+                        window.location.hash.includes('medtracker-project') ||
+                        window.location.hash.includes('about')
 
   // Force dark mode on project pages, otherwise use theme mode
   const isDark = isProjectPage ? true : mode === 'dark'
@@ -332,12 +333,19 @@ export default function FloatingTopNav() {
                   </MenuItemRow>
                 </Box>
 
-                <MenuItemRow>
-                  <InfoOutlinedIcon sx={{ fontSize: 22, color: '#fff' }} />
-                  <Box sx={{ color: '#fff', fontWeight: 500, fontSize: 14 }}>
-                    About
-                  </Box>
-                </MenuItemRow>
+                <Box
+                  component="a"
+                  href="#/about"
+                  sx={{ textDecoration: 'none', color: 'inherit' }}
+                  onClick={() => setOpenProfiles(false)}
+                >
+                  <MenuItemRow>
+                    <InfoOutlinedIcon sx={{ fontSize: 22, color: '#fff' }} />
+                    <Box sx={{ color: '#fff', fontWeight: 500, fontSize: 14 }}>
+                      About
+                    </Box>
+                  </MenuItemRow>
+                </Box>
               </ProfileDropdown>
             )}
 
