@@ -47,17 +47,36 @@ export const DemoWrapper = styled('div')(() => ({
 export const DemoPlaceholder = styled('div')(() => ({
     width: '100%',
     maxWidth: '900px',
-    aspectRatio: '16/9',
-    backgroundColor: '#1E1E1E',
-    border: '4px solid #FFFFFF',
-    borderRadius: '8px',
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
-    color: '#FFFFFF',
-    fontFamily: 'Futura, sans-serif',
-    fontSize: '24px',
+    alignItems: 'center',
+    position: 'relative',
     userSelect: 'none',
+}))
+
+export const MacBookImage = styled('img')(() => ({
+    width: '100%',
+    height: 'auto',
+    display: 'block',
+    userSelect: 'none',
+    pointerEvents: 'none',
+    position: 'relative',
+    zIndex: 1
+}))
+
+export const DemoVideo = styled('video')(() => ({
+    position: 'absolute',
+    top: '12%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '75%',
+    height: 'auto',
+    borderRadius: '4px',
+    objectFit: 'cover',
+    userSelect: 'none',
+    pointerEvents: 'none',
+    display: 'block',
+    zIndex: 2
 }))
 
 // Description column on the right

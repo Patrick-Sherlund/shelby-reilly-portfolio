@@ -5,6 +5,8 @@ import {
     MidSection,
     DemoWrapper,
     DemoPlaceholder,
+    MacBookImage,
+    DemoVideo,
     DescriptionWrapper,
     Title,
     LineText,
@@ -12,6 +14,7 @@ import {
     CaseStudyButton
 } from './GoogleCodesignPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
+import macbook from "../../assets/images/macbook.png"
 
 export default function GoogleCodesignPage() {
     const demoRef = useRef<HTMLDivElement>(null)
@@ -38,12 +41,20 @@ export default function GoogleCodesignPage() {
                     onMouseLeave={demoInteraction.handleMouseLeave}
                 >
                     <DemoPlaceholder>
-                        <iframe
-                            title="Google Codesign Prototype"
-                            src={`https://www.figma.com/embed?embed_host=share&scaling=scale-down&content-scaling=fixed&url=${encodeURIComponent('https://www.figma.com/proto/9GkFUccLaG4OcDgoqlzeUy?node-id=1605-6829&t=WufZgx0NQqJRKphg-6')}`}
-                            style={{ width: '100%', height: '100%', border: 'none' }}
-                            allowFullScreen
+                        <MacBookImage
+                            src={macbook}
+                            alt="MacBook Pro"
                         />
+                        <DemoVideo
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            disablePictureInPicture
+                            controlsList="nodownload nofullscreen noremoteplayback"
+                        >
+                            <source src={`${process.env.PUBLIC_URL}/videos/codesign_demo.mp4`} type="video/mp4" />
+                        </DemoVideo>
                     </DemoPlaceholder>
                 </DemoWrapper>
                 <DescriptionWrapper
