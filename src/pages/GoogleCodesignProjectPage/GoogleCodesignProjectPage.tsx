@@ -137,31 +137,41 @@ import { useRef, useEffect, useState } from 'react'
 
 export default function GoogleCodesignProjectPage() {
     const handleBackClick = () => { window.location.hash = '' }
-    const prototypeBannerRef = useRef<HTMLDivElement>(null)
-    const [isPrototypeBannerVisible, setIsPrototypeBannerVisible] = useState(false)
+    const [visiblePrototypes, setVisiblePrototypes] = useState<Set<number>>(new Set())
+    const prototypeRefs = useRef<(HTMLImageElement | null)[]>([])
 
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting && !isPrototypeBannerVisible) {
-                        setIsPrototypeBannerVisible(true)
+                    if (entry.isIntersecting) {
+                        const index = prototypeRefs.current.indexOf(entry.target as HTMLImageElement)
+                        if (index !== -1) {
+                            setVisiblePrototypes((prev) => new Set([...prev, index]))
+                        }
                     }
                 })
             },
-            { threshold: 0.4 } // Trigger when 20% of the section is visible
+            {
+                threshold: 0.1,
+                rootMargin: '0px 0px -10% 0px'
+            }
         )
 
-        if (prototypeBannerRef.current) {
-            observer.observe(prototypeBannerRef.current)
-        }
+        prototypeRefs.current.forEach((ref) => {
+            if (ref) {
+                observer.observe(ref)
+            }
+        })
 
         return () => {
-            if (prototypeBannerRef.current) {
-                observer.unobserve(prototypeBannerRef.current)
-            }
+            prototypeRefs.current.forEach((ref) => {
+                if (ref) {
+                    observer.unobserve(ref)
+                }
+            })
         }
-    }, [isPrototypeBannerVisible])
+    }, [])
 
     return (
         <ProjectPageContainer>
@@ -557,11 +567,12 @@ export default function GoogleCodesignProjectPage() {
                         </DesignSubsectionBox>
                     </DesignSectionContainer>
 
-                    <PrototypeBannerSection ref={prototypeBannerRef}>
+                    <PrototypeBannerSection>
                         <PrototypeBannerContainer>
                             <PrototypeBannerBg src={prototypeBg} alt="Prototype Background" />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[0] = el)}
                                 src={prototype1}
                                 alt="Prototype 1"
                                 $top="4%"
@@ -569,10 +580,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="30%"
                                 $zIndex={2}
                                 $delay={0.05}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(0)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[1] = el)}
                                 src={prototype2}
                                 alt="Prototype 2"
                                 $top="37%"
@@ -580,10 +592,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="28%"
                                 $zIndex={3}
                                 $delay={0.1}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(1)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[2] = el)}
                                 src={prototype3}
                                 alt="Prototype 3"
                                 $top="69%"
@@ -591,10 +604,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="32%"
                                 $zIndex={4}
                                 $delay={0.15}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(2)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[3] = el)}
                                 src={prototype4}
                                 alt="Prototype 4"
                                 $top="25%"
@@ -602,10 +616,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="25%"
                                 $zIndex={5}
                                 $delay={0.2}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(3)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[4] = el)}
                                 src={prototype5}
                                 alt="Prototype 5"
                                 $top="47%"
@@ -613,10 +628,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="38%"
                                 $zIndex={1}
                                 $delay={0.25}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(4)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[5] = el)}
                                 src={prototype6}
                                 alt="Prototype 6"
                                 $top="75%"
@@ -624,10 +640,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="12%"
                                 $zIndex={7}
                                 $delay={0.3}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(5)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[6] = el)}
                                 src={prototype7}
                                 alt="Prototype 7"
                                 $top="3%"
@@ -635,10 +652,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="14%"
                                 $zIndex={8}
                                 $delay={0.35}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(6)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[7] = el)}
                                 src={prototype8}
                                 alt="Prototype 8"
                                 $top="3%"
@@ -646,10 +664,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="20%"
                                 $zIndex={9}
                                 $delay={0.4}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(7)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[8] = el)}
                                 src={prototype9}
                                 alt="Prototype 9"
                                 $top="32%"
@@ -657,10 +676,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="30%"
                                 $zIndex={10}
                                 $delay={0.45}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(8)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[9] = el)}
                                 src={prototype10}
                                 alt="Prototype 10"
                                 $top="77%"
@@ -668,10 +688,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="18%"
                                 $zIndex={11}
                                 $delay={0.5}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(9)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[10] = el)}
                                 src={prototype11}
                                 alt="Prototype 11"
                                 $top="26%"
@@ -679,10 +700,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="10%"
                                 $zIndex={12}
                                 $delay={0.55}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(10)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[11] = el)}
                                 src={prototype12}
                                 alt="Prototype 12"
                                 $top="8%"
@@ -690,10 +712,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="16%"
                                 $zIndex={13}
                                 $delay={0.6}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(11)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[12] = el)}
                                 src={prototype13}
                                 alt="Prototype 13"
                                 $top="60%"
@@ -701,10 +724,11 @@ export default function GoogleCodesignProjectPage() {
                                 $width="10%"
                                 $zIndex={14}
                                 $delay={0.65}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(12)}
                             />
 
                             <PrototypeOverlay
+                                ref={(el) => (prototypeRefs.current[13] = el)}
                                 src={prototype14}
                                 alt="Prototype 14"
                                 $top="73%"
@@ -712,7 +736,7 @@ export default function GoogleCodesignProjectPage() {
                                 $width="12%"
                                 $zIndex={15}
                                 $delay={0.7}
-                                $isVisible={isPrototypeBannerVisible}
+                                $isVisible={visiblePrototypes.has(13)}
                             />
                         </PrototypeBannerContainer>
                     </PrototypeBannerSection>
