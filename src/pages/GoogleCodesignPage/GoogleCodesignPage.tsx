@@ -8,6 +8,7 @@ import {
     DescriptionWrapper,
     Title,
     LineText,
+    SubLineText,
     CaseStudyButton
 } from './GoogleCodesignPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
@@ -52,10 +53,10 @@ export default function GoogleCodesignPage() {
                     onMouseUp={descInteraction.handleMouseUp}
                     onMouseLeave={descInteraction.handleMouseLeave}
                 >
-                    <Title>Google Codesign</Title>
-                    <LineText>2024</LineText>
-                    <LineText>UX Designer</LineText>
-                    <LineText>Frontend Engineer</LineText>
+                    <Title>Codesign</Title>
+                    <LineText>Web Component-based Prototyping Tool bridging the gap between design and engineering</LineText>
+                    <SubLineText>UX Designer</SubLineText>
+                    <SubLineText>2021</SubLineText>
 
                     <div style={{ marginTop: '32px' }}>
                         <CaseStudyButton onClick={handleCaseStudyClick}>

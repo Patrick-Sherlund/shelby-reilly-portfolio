@@ -26,7 +26,7 @@ export const BoardContent = styled('div')(() => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  paddingBottom: 240,
+  paddingBottom: 60,
   boxSizing: 'border-box',
 
 }))
@@ -37,10 +37,10 @@ export const ContentWrapper = styled('div')(({ theme }) => ({
   width: '100%',
   maxWidth: 1420,
   margin: '0 auto',
-  padding: '40px 32px 120px 32px',
+  padding: '40px 32px 40px 32px',
   boxSizing: 'border-box',
-  [theme.breakpoints.down('md')]: { padding: '32px 24px 120px 24px' },
-  [theme.breakpoints.down('sm')]: { padding: '24px 16px 120px 16px' },
+  [theme.breakpoints.down('md')]: { padding: '32px 24px 40px 24px' },
+  [theme.breakpoints.down('sm')]: { padding: '24px 16px 40px 16px' },
 }))
 
 export const BackButton = styled('button')(() => ({
@@ -129,7 +129,7 @@ export const HeroBanner = styled('img')(() => ({
   height: 'auto',
   // Prevent stretching, maintain aspect ratio
   objectFit: 'cover',
-  objectPosition: 'center',
+  objectPosition: 'top',
   // Fixed height based on typical banner proportions
   maxHeight: '540px',
   margin: 0,
@@ -1380,7 +1380,7 @@ export const IdeationSquiggle = styled('img')(() => ({
 export const IdeationTitleText = styled('h2')(() => ({
   fontSize: '36px',
   fontWeight: 700,
-  color: '#7054ED',
+  color: '#5B8DEE',
   margin: 0,
   fontFamily: "'Google Sans', 'Roboto', sans-serif",
   letterSpacing: '0.01em'
@@ -1541,7 +1541,7 @@ export const DesignSquiggle = styled('img')(() => ({
 export const DesignTitleText = styled('h2')(() => ({
   fontSize: '48px',
   fontWeight: 700,
-  color: '#107BFF',
+  color: '#5B8DEE',
   margin: 0,
   fontFamily: "'Google Sans', 'Roboto', sans-serif",
   letterSpacing: '-0.5px'
@@ -1703,5 +1703,401 @@ export const PrototypeOverlay = styled('img')<{
       opacity: 1,
       transform: `translateY(0) scale(1) ${$transform || ''}`,
     }
+  }
+}))
+
+/* ---- Evaluation Section ---- */
+export const EvaluationSectionContainer = styled('section')(() => ({
+  width: '100%',
+  maxWidth: '1200px',
+  margin: '120px auto 80px auto',
+  padding: '0 32px',
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '60px'
+}))
+
+export const EvaluationHeader = styled('div')(() => ({
+  display: 'grid',
+  gridTemplateColumns: 'auto 1fr',
+  gap: '60px',
+  alignItems: 'start',
+  marginBottom: '0'
+}))
+
+export const EvaluationTitleWrapper = styled('div')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px'
+}))
+
+export const EvaluationSquiggle = styled('img')(() => ({
+  width: '32px',
+  height: 'auto',
+  display: 'block',
+  userSelect: 'none',
+  WebkitUserDrag: 'none'
+}))
+
+export const EvaluationTitleText = styled('h2')(() => ({
+  fontSize: '36px',
+  fontWeight: 700,
+  color: '#5B8DEE',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  letterSpacing: '0.01em'
+}))
+
+export const EvaluationContent = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '24px',
+  width: '100%'
+}))
+
+export const EvaluationParagraph = styled('p')(() => ({
+  fontSize: '16px',
+  lineHeight: '26px',
+  color: '#000000',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const EvaluationFlowsGrid = styled('div')(() => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(4, 1fr)',
+  gap: '20px',
+  marginTop: '40px',
+  marginBottom: '40px',
+  '@media (max-width: 1000px)': {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '16px'
+  },
+  '@media (max-width: 600px)': {
+    gridTemplateColumns: '1fr',
+    gap: '12px'
+  }
+}))
+
+export const FlowCard = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px'
+}))
+
+export const FlowButton = styled('div')(() => ({
+  backgroundColor: '#5B8DEE',
+  color: '#FFFFFF',
+  padding: '12px 20px',
+  borderRadius: '4px',
+  fontSize: '14px',
+  fontWeight: 500,
+  textAlign: 'center',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const FlowMetrics = styled('div')(() => ({
+  backgroundColor: '#FFFFFF',
+  border: '2px solid #5B8DEE',
+  borderRadius: '8px',
+  padding: '20px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  minHeight: '200px'
+}))
+
+export const MetricItem = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px'
+}))
+
+export const MetricLabel = styled('div')(() => ({
+  fontSize: '13px',
+  fontWeight: 700,
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const MetricDescription = styled('div')(() => ({
+  fontSize: '12px',
+  lineHeight: '18px',
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const EvaluationResultsSection = styled('div')(() => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '60px',
+  marginTop: '40px',
+  '@media (max-width: 900px)': {
+    gridTemplateColumns: '1fr',
+    gap: '40px'
+  }
+}))
+
+export const ResultsColumn = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '32px'
+}))
+
+export const ResultsTitle = styled('h3')(() => ({
+  fontSize: '18px',
+  fontWeight: 700,
+  color: '#5B8DEE',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const ResultsList = styled('div')(() => ({
+  display: 'grid',
+  gridTemplateColumns: 'auto auto',
+  columnGap: '24px',
+  rowGap: '12px',
+  alignItems: 'baseline',
+  width: 'fit-content'
+}))
+
+export const ResultItem = styled('div')(() => ({
+  display: 'contents',
+  
+}))
+
+export const ResultItemTitle = styled('div')(() => ({
+  fontSize: '15px',
+  fontWeight: 600,
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const ResultItemScore = styled('div')(() => ({
+  fontSize: '14px',
+  color: '#6ECCA9',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 600,
+  whiteSpace: 'nowrap'
+}))
+
+export const ResultsText = styled('p')(() => ({
+  fontSize: '15px',
+  lineHeight: '24px',
+  color: '#000000',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const EvaluationExampleSection = styled('div')(() => ({
+  marginTop: '40px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '24px'
+}))
+
+export const ExampleTitle = styled('h3')(() => ({
+  fontSize: '18px',
+  fontWeight: 700,
+  color: '#000000',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const ExampleText = styled('p')(() => ({
+  fontSize: '15px',
+  lineHeight: '24px',
+  color: '#000000',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const ExampleLink = styled('a')(() => ({
+  color: '#5B8DEE',
+  textDecoration: 'underline',
+  fontWeight: 500,
+  '&:hover': {
+    opacity: 0.8
+  }
+}))
+
+export const ExampleImageBox = styled('div')(() => ({
+  marginTop: '16px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px'
+}))
+
+export const ExampleImageLabel = styled('div')(() => ({
+  fontSize: '15px',
+  fontWeight: 600,
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const ExampleImageSubtext = styled('div')(() => ({
+  fontSize: '14px',
+  lineHeight: '22px',
+  color: '#666666',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const EvaluationImage = styled('img')(() => ({
+  width: '100%',
+  height: 'auto',
+  display: 'block',
+  borderRadius: '8px',
+  marginTop: '16px',
+  userSelect: 'none',
+  WebkitUserDrag: 'none'
+}))
+
+/* ---- Conclusion Section ---- */
+export const ConclusionSectionContainer = styled('section')(() => ({
+  width: '100%',
+  maxWidth: '1200px',
+  margin: '80px auto 120px auto',
+  padding: '0 32px',
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '60px'
+}))
+
+export const ConclusionHeader = styled('div')(() => ({
+  display: 'grid',
+  gridTemplateColumns: 'auto 1fr',
+  gap: '60px',
+  alignItems: 'start',
+  marginBottom: '0'
+}))
+
+export const ConclusionTitleWrapper = styled('div')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px'
+}))
+
+export const ConclusionSquiggle = styled('img')(() => ({
+  width: '32px',
+  height: 'auto',
+  display: 'block',
+  userSelect: 'none',
+  WebkitUserDrag: 'none'
+}))
+
+export const ConclusionTitleText = styled('h2')(() => ({
+  fontSize: '36px',
+  fontWeight: 700,
+  color: '#5B8DEE',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  letterSpacing: '0.01em'
+}))
+
+export const ConclusionContent = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '32px',
+  width: '100%'
+}))
+
+export const ConclusionSubsection = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px'
+}))
+
+export const ConclusionSubtitle = styled('h3')(() => ({
+  fontSize: '18px',
+  fontWeight: 700,
+  color: '#000000',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const ConclusionParagraph = styled('p')(() => ({
+  fontSize: '16px',
+  lineHeight: '26px',
+  color: '#000000',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const ConclusionList = styled('ol')(() => ({
+  margin: 0,
+  paddingLeft: '20px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px'
+}))
+
+export const ConclusionListItem = styled('li')(() => ({
+  fontSize: '16px',
+  lineHeight: '26px',
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const ConclusionBannerWrapper = styled('div')(() => ({
+  width: '100vw',
+  marginLeft: 'calc(-50vw + 50%)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '32px',
+  marginTop: '60px',
+  marginBottom: '60px'
+}))
+
+export const ConclusionBanner = styled('img')(() => ({
+  width: '100%',
+  height: 'auto',
+  display: 'block',
+  userSelect: 'none',
+  WebkitUserDrag: 'none'
+}))
+
+export const ConclusionButtonsContainer = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px',
+  width: '100%',
+  maxWidth: '400px',
+  alignItems: 'center'
+}))
+
+export const ConclusionButton = styled('a')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  padding: '16px 32px',
+  fontSize: '16px',
+  fontWeight: 600,
+  color: '#5B8DEE',
+  backgroundColor: '#FFFFFF',
+  border: '2px solid #5B8DEE',
+  borderRadius: '999px',
+  textDecoration: 'none',
+  transition: 'all 0.3s ease',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: '#5B8DEE',
+    color: '#FFFFFF',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(91, 141, 238, 0.3)'
+  },
+  '&:active': {
+    transform: 'translateY(0)'
   }
 }))

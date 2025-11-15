@@ -33,9 +33,9 @@ const growFromCorner = keyframes`
 const SelectionBox = styled('div')(() => ({
   position: 'absolute',
   top: 0, left: 0, right: 0, bottom: 0,
-  border: '2px solid #6675FF',
+  border: '2px solid #5263FF',
   borderRadius: '6px',
-  backgroundColor: '#6675FF26',
+  backgroundColor: '#5263FF26',
   zIndex: 0,
   transformOrigin: 'bottom right',
   transform: 'scale(0)',
@@ -54,7 +54,7 @@ const SelectionDot = styled('div')<{ position: string }>(({ position }) => {
     width: 12,
     height: 12,
     backgroundColor: 'white',
-    border: '1px solid #6675FF',
+    border: '1px solid #5263FF',
     borderRadius: 0,
     ...pos[position],
   };

@@ -95,6 +95,44 @@ import {
     PrototypeBannerContainer,
     PrototypeBannerBg,
     PrototypeOverlay,
+    EvaluationSectionContainer,
+    EvaluationHeader,
+    EvaluationTitleWrapper,
+    EvaluationSquiggle,
+    EvaluationTitleText,
+    EvaluationContent,
+    EvaluationParagraph,
+    EvaluationResultsSection,
+    ResultsColumn,
+    ResultsTitle,
+    ResultsList,
+    ResultItem,
+    ResultItemTitle,
+    ResultItemScore,
+    ResultsText,
+    EvaluationExampleSection,
+    ExampleTitle,
+    ExampleText,
+    ExampleLink,
+    ExampleImageBox,
+    ExampleImageLabel,
+    ExampleImageSubtext,
+    EvaluationImage,
+    ConclusionSectionContainer,
+    ConclusionHeader,
+    ConclusionTitleWrapper,
+    ConclusionSquiggle,
+    ConclusionTitleText,
+    ConclusionContent,
+    ConclusionSubsection,
+    ConclusionSubtitle,
+    ConclusionParagraph,
+    ConclusionList,
+    ConclusionListItem,
+    ConclusionBannerWrapper,
+    ConclusionBanner,
+    ConclusionButtonsContainer,
+    ConclusionButton,
 } from './GoogleCodesignProjectPage.styles'
 
 import codesignLogo from '../../assets/images/codesign-logo.png'
@@ -117,6 +155,10 @@ import greenSquiggle from '../../assets/images/green_squigle.svg'
 import designWireframes from '../../assets/images/codesign-design-wireframes.png'
 import designMockups from '../../assets/images/codesign-design-mockups.png'
 import designPrototypes from '../../assets/images/codesign-design-prototypes.png'
+import blueSquiggle from '../../assets/images/blue-squiggle.svg'
+import evaluationImage1 from '../../assets/images/codesign-evaluation-1.png'
+import evaluationImage2 from '../../assets/images/codesign-evaluation-2.png'
+import conclusionBanner from '../../assets/images/codesign-conclusion-banner.png'
 import prototypeBg from '../../assets/images/codesign-prototype/codesign-prototype-bg.png'
 import prototype1 from '../../assets/images/codesign-prototype/codesign-prototype-1.png'
 import prototype2 from '../../assets/images/codesign-prototype/codesign-prototype-2.png'
@@ -451,7 +493,7 @@ export default function GoogleCodesignProjectPage() {
                             </SprintOutcomeText>
 
                             <SprintOutcomeExample>
-                                Example 👀 📸
+                                Example 👀 ➡️
                             </SprintOutcomeExample>
 
                             <SprintOutcomeImageWrapper>
@@ -501,7 +543,7 @@ export default function GoogleCodesignProjectPage() {
                                     <DesignSubsectionText>Flow 2: Codesign Marketplace Search</DesignSubsectionText>
                                 </DesignSubsectionRow>
                                 <div>
-                                    <DesignSubsectionLabel>📸 Example</DesignSubsectionLabel>
+                                    <DesignSubsectionLabel>⬅️ Example</DesignSubsectionLabel>
                                     <DesignSubsectionList>
                                         <div>Overlay of marketplace search</div>
                                         <div>Attribute based filtering</div>
@@ -524,7 +566,7 @@ export default function GoogleCodesignProjectPage() {
                                     <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search, Component Publishing, and Component Updates)</DesignSubsectionText>
                                 </DesignSubsectionRow>
                                 <div>
-                                    <DesignSubsectionLabel>Example 📸</DesignSubsectionLabel>
+                                    <DesignSubsectionLabel>Example ➡️</DesignSubsectionLabel>
                                     <DesignSubsectionList>
                                         <div>Publish Flow</div>
                                         <div>Interactive Component</div>
@@ -554,7 +596,7 @@ export default function GoogleCodesignProjectPage() {
                                     <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search, Component Publishing, and Component Updates)</DesignSubsectionText>
                                 </DesignSubsectionRow>
                                 <div>
-                                    <DesignSubsectionLabel>📸 Example</DesignSubsectionLabel>
+                                    <DesignSubsectionLabel>⬅️ Example</DesignSubsectionLabel>
                                     <DesignSubsectionList>
                                         <div>Marketplace Search Flow</div>
                                         <div>Most Used</div>
@@ -740,6 +782,144 @@ export default function GoogleCodesignProjectPage() {
                             />
                         </PrototypeBannerContainer>
                     </PrototypeBannerSection>
+
+                    {/* EVALUATION */}
+                    <EvaluationSectionContainer>
+                        <EvaluationHeader>
+                            <EvaluationTitleWrapper>
+                                <EvaluationSquiggle src={blueSquiggle} alt="" />
+                                <EvaluationTitleText>EVALUATION</EvaluationTitleText>
+                            </EvaluationTitleWrapper>
+
+                            <EvaluationContent>
+                                <EvaluationParagraph>
+                                    After identifying the user needs of clarity, discoverability, and predictability in our initial testing, then building out the 4 flows to account for those needs, it is now time to test out the prototypes.
+                                </EvaluationParagraph>
+
+                                <EvaluationParagraph>
+                                    We ran two rounds of testing with 19 users in total.
+                                </EvaluationParagraph>
+
+                                <EvaluationParagraph>
+                                    For the 4 flows, we laid out the metrics we will use to measure success. ⬇️
+                                </EvaluationParagraph>
+                            </EvaluationContent>
+                        </EvaluationHeader>
+
+                        <EvaluationImage src={evaluationImage1} alt="Codesign Marketplace evaluation flows" />
+
+                        <EvaluationResultsSection>
+                            <ResultsColumn>
+                                <ResultsTitle>Findings</ResultsTitle>
+                                <ResultsList>
+                                    <ResultItem>
+                                        <ResultItemTitle>Project Templates</ResultItemTitle>
+                                        <ResultItemScore>4.6/5</ResultItemScore>
+                                    </ResultItem>
+                                    <ResultItem>
+                                        <ResultItemTitle>Codesign Marketplace</ResultItemTitle>
+                                        <ResultItemScore>4.4/5 & 4.9/5</ResultItemScore>
+                                    </ResultItem>
+                                    <ResultItem>
+                                        <ResultItemTitle>Component Publishing</ResultItemTitle>
+                                        <ResultItemScore>5/5</ResultItemScore>
+                                    </ResultItem>
+                                    <ResultItem>
+                                        <ResultItemTitle>Component Updates</ResultItemTitle>
+                                        <ResultItemScore>5/5 & 4.5/5</ResultItemScore>
+                                    </ResultItem>
+                                </ResultsList>
+                            </ResultsColumn>
+
+                            <ResultsColumn>
+                                <ResultsTitle>Sidenotes</ResultsTitle>
+                                <ResultsText>
+                                    We decided to focus efforts on flows 1 & 2 for the second round of testing.
+                                </ResultsText>
+                                <ResultsText style={{ marginTop: '16px' }}>
+                                    Flows 3&4 only underwent one testing round due to the high usability scores and our need to prioritize user time.
+                                </ResultsText>
+                            </ResultsColumn>
+                        </EvaluationResultsSection>
+
+                        <EvaluationExampleSection>
+                            <ExampleTitle>Example</ExampleTitle>
+                            <ExampleText>
+                                We we made usability tweaks to all 4 flows.<br />
+                                Below is 1 portion of designs that I took the lead on. For more <ExampleLink href="#">go here.</ExampleLink>
+                            </ExampleText>
+
+                            <ExampleImageBox>
+                                <ExampleImageLabel>Example ⬇️</ExampleImageLabel>
+                                <ExampleImageSubtext>Codesign Marketplace</ExampleImageSubtext>
+                                <ExampleImageSubtext>Change to allow for multi-select of components from marketplace view and detail view</ExampleImageSubtext>
+                            </ExampleImageBox>
+
+                            <EvaluationImage src={evaluationImage2} alt="Codesign Marketplace multi-select example" />
+                        </EvaluationExampleSection>
+                    </EvaluationSectionContainer>
+
+                    <SectionDivider />
+
+                    {/* CONCLUSION */}
+                    <ConclusionSectionContainer>
+                        <ConclusionHeader>
+                            <ConclusionTitleWrapper>
+                                <ConclusionSquiggle src={squiggleBlip} alt="" />
+                                <ConclusionTitleText>CONCLUSION</ConclusionTitleText>
+                            </ConclusionTitleWrapper>
+
+                            <ConclusionContent>
+                                <ConclusionSubsection>
+                                    <ConclusionSubtitle>Overall</ConclusionSubtitle>
+                                    <ConclusionParagraph>
+                                        We were able to take an open ended brief, identify user needs and pain points, identify the flows and feature work needed to address those pains and execute from there.
+                                    </ConclusionParagraph>
+                                    <ConclusionParagraph>
+                                        Of course our final metrics show that we were able to reach our goals, but it was also great to have our stakeholders invested and congratulatory on our work done for Codesign.
+                                    </ConclusionParagraph>
+                                </ConclusionSubsection>
+
+                                <ConclusionSubsection>
+                                    <ConclusionSubtitle>Next Steps</ConclusionSubtitle>
+                                    <ConclusionList>
+                                        <ConclusionListItem>Expand to other types of assets</ConclusionListItem>
+                                        <ConclusionListItem>Analytics dashboard with component usage details for design contributors</ConclusionListItem>
+                                        <ConclusionListItem>Adding component groups and favorites</ConclusionListItem>
+                                    </ConclusionList>
+                                </ConclusionSubsection>
+
+                                <ConclusionSubsection>
+                                    <ConclusionSubtitle>Learnings</ConclusionSubtitle>
+                                    <ConclusionList>
+                                        <ConclusionListItem>It's always best to come to design review with 3 options or less</ConclusionListItem>
+                                        <ConclusionListItem>Watching the users actions &gt; Listening to their responses</ConclusionListItem>
+                                        <ConclusionListItem>How to pivot during a design sprint and encourage confidence</ConclusionListItem>
+                                    </ConclusionList>
+                                </ConclusionSubsection>
+
+                                <ConclusionSubsection>
+                                    <ConclusionSubtitle>Thank you</ConclusionSubtitle>
+                                    <ConclusionParagraph>
+                                        Thank you to the Codesign Users for their time, the Codesign team for the mentorship, and my teammate Guru for teaching me new figma-isms. 👩‍💻 And... Thank you for taking the time to check out my work!
+                                    </ConclusionParagraph>
+                                </ConclusionSubsection>
+                            </ConclusionContent>
+                        </ConclusionHeader>
+
+                        <ConclusionBannerWrapper>
+                            <ConclusionBanner src={conclusionBanner} alt="Codesign prototype screenshots" />
+                            <ConclusionButtonsContainer>
+                                <ConclusionButton href="#" target="_blank" rel="noopener noreferrer">
+                                    View Prototype
+                                </ConclusionButton>
+                                <ConclusionButton href="#" target="_blank" rel="noopener noreferrer">
+                                    View Design Sprint Slides
+                                </ConclusionButton>
+                            </ConclusionButtonsContainer>
+                        </ConclusionBannerWrapper>
+                    </ConclusionSectionContainer>
+
                 </ContentWrapper>
             </BoardContent>
 

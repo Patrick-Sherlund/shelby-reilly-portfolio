@@ -98,7 +98,7 @@ export const TextsWrapper = styled('div')(({ theme }) => ({
 // Blue text chips
 export const SingleTextContainer = styled('div')(({ theme }) => ({
   position: 'relative',
-  backgroundColor: '#6675FF',
+  backgroundColor: '#5263FF',
   borderRadius: 4,
   padding: '16px',
   fontSize: 'clamp(28px, 5vw, 64px)',

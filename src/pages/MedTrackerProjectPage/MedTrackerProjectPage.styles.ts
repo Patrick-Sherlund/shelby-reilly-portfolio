@@ -23,7 +23,7 @@ export const BoardContent = styled('div')(() => ({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  paddingBottom: 240,
+  paddingBottom: 60,
   boxSizing: 'border-box'
 }))
 
@@ -33,10 +33,10 @@ export const ContentWrapper = styled('div')(({ theme }) => ({
   width: '100%',
   maxWidth: 1420,
   margin: '0 auto',
-  padding: '40px 32px 120px 32px',
+  padding: '40px 32px 40px 32px',
   boxSizing: 'border-box',
-  [theme.breakpoints.down('md')]: { padding: '32px 24px 120px 24px' },
-  [theme.breakpoints.down('sm')]: { padding: '24px 16px 120px 16px' },
+  [theme.breakpoints.down('md')]: { padding: '32px 24px 40px 24px' },
+  [theme.breakpoints.down('sm')]: { padding: '24px 16px 40px 16px' },
 }))
 
 export const BackButton = styled('button')(({ theme }) => ({

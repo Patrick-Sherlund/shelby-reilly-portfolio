@@ -174,8 +174,8 @@ export default function CursorChat() {
             <div
                 style={{
                     position: 'relative',
-                    backgroundColor: '#6675FF',
-                    border: '2px solid #5263FF',
+                    backgroundColor: '#5263FF',
+                    border: '2px solid #3646d9ff',
                     borderTopRightRadius: 24,
                     borderBottomLeftRadius: 24,
                     borderBottomRightRadius: 24,

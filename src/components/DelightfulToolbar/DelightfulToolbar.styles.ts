@@ -51,7 +51,7 @@ export const ToolSection = styled('div')<{
     // Cursor tool is centered vertically, others bottom-aligned
     alignItems: isCursorTool ? 'center' : 'flex-end',
     transition: 'background-color 0.2s ease',
-    backgroundColor: isActive ? '#6675FF' : 'transparent'
+    backgroundColor: isActive ? '#5263FF' : 'transparent'
 }))
 
 // The actual image. We use maxWidth & maxHeight so it scales within the container

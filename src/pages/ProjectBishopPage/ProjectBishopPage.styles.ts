@@ -207,7 +207,7 @@ export const LearnMoreButton = styled('button')(({ theme }) => ({
     display: 'inline-block',
     cursor: 'pointer',
     backgroundColor: '#91B6FF',
-    color: '#FFFFFF',
+    color: '#010413',
     fontFamily: 'Futura, sans-serif',
     fontWeight: 700,
     fontSize: '32px',

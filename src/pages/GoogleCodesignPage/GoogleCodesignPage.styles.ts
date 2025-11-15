@@ -62,7 +62,7 @@ export const DemoPlaceholder = styled('div')(() => ({
 
 // Description column on the right
 export const DescriptionWrapper = styled('div')(({ theme }) => ({
-    width: '40%',
+    width: '50%',
     maxWidth: '600px',
     display: 'flex',
     flexDirection: 'column',
@@ -82,7 +82,10 @@ export const Title = styled('h2')(() => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 500,
     fontSize: '64px',
-    color: '#4285F4', // Google Blue accent
+    background: 'linear-gradient(90deg, #E54335 0%, #F6B704 28%, #34A353 64%, #4280EF 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
 }))
 
 // Individual line under the title
@@ -91,6 +94,13 @@ export const LineText = styled('div')(() => ({
     fontWeight: 400,
     fontSize: '32px',
     color: '#FFFFFF',
+}))
+
+export const SubLineText = styled('div')(() => ({
+    fontFamily: 'Futura, sans-serif',
+    fontWeight: 400,
+    fontSize: '32px',
+    color: '#A4A4A4',
 }))
 
 // Button with drop shadow effect

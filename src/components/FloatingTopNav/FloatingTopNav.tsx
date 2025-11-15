@@ -239,7 +239,14 @@ export default function FloatingTopNav() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { mode } = useThemeMode()
-  const isDark = mode === 'dark'
+
+  // Check if we're on a project page
+  const isProjectPage = window.location.hash.includes('bishop-project') ||
+                        window.location.hash.includes('codesign-project') ||
+                        window.location.hash.includes('medtracker-project')
+
+  // Force dark mode on project pages, otherwise use theme mode
+  const isDark = isProjectPage ? true : mode === 'dark'
 
   const [openProfiles, setOpenProfiles] = useState(false) // desktop mini-panel
   const [menuOpen, setMenuOpen] = useState(false)         // mobile drawer
@@ -285,6 +292,7 @@ export default function FloatingTopNav() {
                   <ProfileTooltip title={profile.name}>
                     <Avatar
                       src={profile.src}
+                      onClick={toggleProfiles}
                       sx={{ width: 40, height: 40, border: '1px solid rgba(0,0,0,.65)', cursor: 'pointer' }}
                     />
                   </ProfileTooltip>
@@ -310,12 +318,19 @@ export default function FloatingTopNav() {
                   </Box>
                 </ProfileHeader>
 
-                <MenuItemRow>
-                  <DescriptionOutlinedIcon sx={{ fontSize: 22, color: '#fff' }} />
-                  <Box sx={{ color: '#fff', fontWeight: 500, fontSize: 14 }}>
-                    Resume
-                  </Box>
-                </MenuItemRow>
+                <Box
+                  component="a"
+                  href={`${process.env.PUBLIC_URL}/files/Reilly_Resume.pdf`}
+                  download="Reilly_Resume.pdf"
+                  sx={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <MenuItemRow>
+                    <DescriptionOutlinedIcon sx={{ fontSize: 22, color: '#fff' }} />
+                    <Box sx={{ color: '#fff', fontWeight: 500, fontSize: 14 }}>
+                      Resume
+                    </Box>
+                  </MenuItemRow>
+                </Box>
 
                 <MenuItemRow>
                   <InfoOutlinedIcon sx={{ fontSize: 22, color: '#fff' }} />
@@ -334,16 +349,19 @@ export default function FloatingTopNav() {
             </IconButton>
 
             <SocialIconsContainer>
-              <IconButton aria-label="LinkedIn">{isDark ? <LinkedInIconDark /> : <LinkedInIconLight />}</IconButton>
-              <IconButton aria-label="Figma">{isDark ? <FigmaIconDark /> : <FigmaIconLight />}</IconButton>
-              <IconButton aria-label="Dribbble">{isDark ? <DribbbleIconDark /> : <DribbbleIconLight />}</IconButton>
+              <IconButton target='_blank' href='https://www.linkedin.com/in/shelbyreilly' aria-label="LinkedIn">{isDark ? <LinkedInIconDark /> : <LinkedInIconLight />}</IconButton>
+              <IconButton target='_blank' href='https://www.figma.com/@ShelbyReilly' aria-label="Figma">{isDark ? <FigmaIconDark /> : <FigmaIconLight />}</IconButton>
+              <IconButton target='_blank' href='https://dribbble.com/ShelbyReilly' aria-label="Dribbble">{isDark ? <DribbbleIconDark /> : <DribbbleIconLight />}</IconButton>
             </SocialIconsContainer>
 
-            <VerticalDivider />
-
-            <ThemeToggleContainer>
-              <ThemeToggle />
-            </ThemeToggleContainer>
+            {!isProjectPage && (
+              <>
+                <VerticalDivider />
+                <ThemeToggleContainer>
+                  <ThemeToggle />
+                </ThemeToggleContainer>
+              </>
+            )}
           </>
         )}
 
@@ -410,7 +428,9 @@ export default function FloatingTopNav() {
                         size="small"
                         aria-label={`${p.name} resume`}
                         edge="end"
-                        href="#"
+                        component="a"
+                        href={`${process.env.PUBLIC_URL}/files/Reilly_Resume.pdf`}
+                        download="Reilly_Resume.pdf"
                       >
                         <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />
                         <ChevronRightRoundedIcon sx={{ fontSize: 18, ml: .25 }} />
@@ -449,13 +469,17 @@ export default function FloatingTopNav() {
             </ListItem>
           </List>
 
-          <Divider sx={{ my: 0.5 }} />
+          {!isProjectPage && (
+            <>
+              <Divider sx={{ my: 0.5 }} />
 
-          {/* Theme pinned bottom */}
-          <Box sx={{ mt: 'auto', p: 2 }}>
-            <Box sx={{ fontSize: 12, fontWeight: 900, opacity: 0.6, mb: 1, textTransform: 'uppercase' }}>Theme</Box>
-            <ThemeToggle />
-          </Box>
+              {/* Theme pinned bottom */}
+              <Box sx={{ mt: 'auto', p: 2 }}>
+                <Box sx={{ fontSize: 12, fontWeight: 900, opacity: 0.6, mb: 1, textTransform: 'uppercase' }}>Theme</Box>
+                <ThemeToggle />
+              </Box>
+            </>
+          )}
         </Box>
       </Drawer>
     </>

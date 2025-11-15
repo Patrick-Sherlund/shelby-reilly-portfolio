@@ -107,5 +107,4 @@ export const EmojiImage = styled('img')<EmojiImageProps>(({ isSelected }) => ({
     height: 'auto',
     objectFit: 'contain', // ensure it won't crop but will preserve aspect ratio
     borderRadius: '50%',
-    backgroundColor: isSelected ? 'rgba(255,255,255,0.4)' : 'transparent'
 }))

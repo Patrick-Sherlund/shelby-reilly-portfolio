@@ -90,7 +90,7 @@ export const Title = styled('h2')(() => ({
   fontFamily: 'Futura, sans-serif',
   fontWeight: 500,
   fontSize: '64px',
-  color: '#6675FF',
+  color: '#5263FF',
 }))
 
 export const LineText = styled('div')(() => ({
@@ -112,7 +112,7 @@ export const CaseStudyButton = styled('button')(() => ({
   position: 'relative',
   display: 'inline-block',
   cursor: 'pointer',
-  backgroundColor: '#6675FF',
+  backgroundColor: '#2F2BED',
   color: '#FFFFFF',
   fontFamily: 'Futura, sans-serif',
   fontWeight: 700,
@@ -130,7 +130,7 @@ export const CaseStudyButton = styled('button')(() => ({
     width: '100%',
     height: '100%',
     boxSizing: 'border-box',
-    backgroundColor: '#6675FF',
+    backgroundColor: '#5263FF',
     border: '8px solid #A9A9A9',
     zIndex: -1,
   },
@@ -181,7 +181,7 @@ export const MobileTitle = styled('h2')(() => ({
   fontFamily: 'Futura, sans-serif',
   fontWeight: 600,
   fontSize: 'clamp(28px, 6vw, 36px)',
-  color: '#6675FF',
+  color: '#5263FF',
 }))
 
 export const MobileMeta = styled('div')(() => ({
@@ -252,7 +252,7 @@ export const Dot = styled('button')(() => ({
   padding: 0,
   transition: 'transform 160ms ease, background 160ms ease',
   '&[data-active="true"]': {
-    background: '#6675FF',
+    background: '#5263FF',
     transform: 'scale(1.4)',
   },
 }))
