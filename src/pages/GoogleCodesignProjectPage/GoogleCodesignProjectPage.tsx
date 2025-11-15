@@ -846,7 +846,7 @@ export default function GoogleCodesignProjectPage() {
                             <ExampleTitle>Example</ExampleTitle>
                             <ExampleText>
                                 We we made usability tweaks to all 4 flows.<br />
-                                Below is 1 portion of designs that I took the lead on. For more <ExampleLink href="#">go here.</ExampleLink>
+                                Below is 1 portion of designs that I took the lead on. For more <ExampleLink target='_blank' href="https://docs.google.com/presentation/d/1lEyUje8HDCOtqq-gOQUrQ3E0DX50e55oNg_7pHaMXGY/edit">go here.</ExampleLink>
                             </ExampleText>
 
                             <ExampleImageBox>
@@ -910,10 +910,10 @@ export default function GoogleCodesignProjectPage() {
                         <ConclusionBannerWrapper>
                             <ConclusionBanner src={conclusionBanner} alt="Codesign prototype screenshots" />
                             <ConclusionButtonsContainer>
-                                <ConclusionButton href="#" target="_blank" rel="noopener noreferrer">
+                                <ConclusionButton href="https://www.figma.com/proto/9GkFUccLaG4OcDgoqlzeUy?node-id=1605-6829&t=WufZgx0NQqJRKphg-6" target="_blank" rel="noopener noreferrer">
                                     View Prototype
                                 </ConclusionButton>
-                                <ConclusionButton href="#" target="_blank" rel="noopener noreferrer">
+                                <ConclusionButton href="https://docs.google.com/presentation/d/1lEyUje8HDCOtqq-gOQUrQ3E0DX50e55oNg_7pHaMXGY" target="_blank" rel="noopener noreferrer">
                                     View Design Sprint Slides
                                 </ConclusionButton>
                             </ConclusionButtonsContainer>
