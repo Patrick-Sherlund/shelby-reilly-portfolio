@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/shelby-reilly-portfolio/static/css/main.4fddafce.css",
-    "main.js": "/shelby-reilly-portfolio/static/js/main.f4e08dae.js",
+    "main.js": "/shelby-reilly-portfolio/static/js/main.874d3c36.js",
     "static/media/bishop_devices.png": "/shelby-reilly-portfolio/static/media/bishop_devices.613604d406a2ec7267f6.png",
     "static/media/codesign-evaluation-1.png": "/shelby-reilly-portfolio/static/media/codesign-evaluation-1.ee9e0f23c27be67dd198.png",
     "static/media/codesign-evaluation-2.png": "/shelby-reilly-portfolio/static/media/codesign-evaluation-2.c944dca311b693676e53.png",
@@ -13,6 +13,7 @@
     "static/media/design_iteration_3.png": "/shelby-reilly-portfolio/static/media/design_iteration_3.fdaead2b4c501e48431b.png",
     "static/media/design_iteration_4.png": "/shelby-reilly-portfolio/static/media/design_iteration_4.d2b4c8a58cd1c35c8435.png",
     "static/media/tablet.png": "/shelby-reilly-portfolio/static/media/tablet.2f4ee084e14ee96adb92.png",
+    "static/media/macbook.png": "/shelby-reilly-portfolio/static/media/macbook.d01287cdddf09b56a25e.png",
     "static/media/data_design_2.png": "/shelby-reilly-portfolio/static/media/data_design_2.539821616c371eba7a79.png",
     "static/media/codesign-findings.png": "/shelby-reilly-portfolio/static/media/codesign-findings.40b1fd344fa78e649fd8.png",
     "static/media/design_iteration_2.png": "/shelby-reilly-portfolio/static/media/design_iteration_2.1a7bc54ae9e9c92682a7.png",
@@ -90,10 +91,10 @@
     "static/media/green_squigle.svg": "/shelby-reilly-portfolio/static/media/green_squigle.c410c597948c2a966f5fac529089829d.svg",
     "index.html": "/shelby-reilly-portfolio/index.html",
     "main.4fddafce.css.map": "/shelby-reilly-portfolio/static/css/main.4fddafce.css.map",
-    "main.f4e08dae.js.map": "/shelby-reilly-portfolio/static/js/main.f4e08dae.js.map"
+    "main.874d3c36.js.map": "/shelby-reilly-portfolio/static/js/main.874d3c36.js.map"
   },
   "entrypoints": [
     "static/css/main.4fddafce.css",
-    "static/js/main.f4e08dae.js"
+    "static/js/main.874d3c36.js"
   ]
 }
