@@ -75,6 +75,26 @@ import {
     SprintOutcomeExample,
     SprintOutcomeImageWrapper,
     SprintOutcomeImage,
+    DesignSectionContainer,
+    DesignHeader,
+    DesignTitleWrapper,
+    DesignSquiggle,
+    DesignTitleText,
+    DesignMainContent,
+    DesignParagraph,
+    DesignSubsectionBox,
+    DesignSubsectionContent,
+    DesignSubsectionTitle,
+    DesignSubsectionLabel,
+    DesignSubsectionText,
+    DesignSubsectionRow,
+    DesignSubsectionImageWrapper,
+    DesignSubsectionImage,
+    DesignSubsectionList,
+    PrototypeBannerSection,
+    PrototypeBannerContainer,
+    PrototypeBannerBg,
+    PrototypeOverlay,
 } from './GoogleCodesignProjectPage.styles'
 
 import codesignLogo from '../../assets/images/codesign-logo.png'
@@ -93,10 +113,55 @@ import persona2 from '../../assets/images/codesign-persona-2.png'
 import persona3 from '../../assets/images/codesign-persona-3.png'
 import purpleSquiggle from '../../assets/images/codesign-purple-squigley.png'
 import wireframeSketch from '../../assets/images/codesign-wireframe-sketch.png'
+import greenSquiggle from '../../assets/images/green_squigle.svg'
+import designWireframes from '../../assets/images/codesign-design-wireframes.png'
+import designMockups from '../../assets/images/codesign-design-mockups.png'
+import designPrototypes from '../../assets/images/codesign-design-prototypes.png'
+import prototypeBg from '../../assets/images/codesign-prototype/codesign-prototype-bg.png'
+import prototype1 from '../../assets/images/codesign-prototype/codesign-prototype-1.png'
+import prototype2 from '../../assets/images/codesign-prototype/codesign-prototype-2.png'
+import prototype3 from '../../assets/images/codesign-prototype/codesign-prototype-3.png'
+import prototype4 from '../../assets/images/codesign-prototype/codesign-prototype-4.png'
+import prototype5 from '../../assets/images/codesign-prototype/codesign-prototype-5.png'
+import prototype6 from '../../assets/images/codesign-prototype/codesign-prototype-6.png'
+import prototype7 from '../../assets/images/codesign-prototype/codesign-prototype-7.png'
+import prototype8 from '../../assets/images/codesign-prototype/codesign-prototype-8.png'
+import prototype9 from '../../assets/images/codesign-prototype/codesign-prototype-9.png'
+import prototype10 from '../../assets/images/codesign-prototype/codesign-prototype-10.png'
+import prototype11 from '../../assets/images/codesign-prototype/codesign-prototype-11.png'
+import prototype12 from '../../assets/images/codesign-prototype/codesign-prototype-12.png'
+import prototype13 from '../../assets/images/codesign-prototype/codesign-prototype-13.png'
+import prototype14 from '../../assets/images/codesign-prototype/codesign-prototype-14.png'
 import PersonaCarousel from '../../components/PersonaCarousel/PersonaCarousel'
+import { useRef, useEffect, useState } from 'react'
 
 export default function GoogleCodesignProjectPage() {
     const handleBackClick = () => { window.location.hash = '' }
+    const prototypeBannerRef = useRef<HTMLDivElement>(null)
+    const [isPrototypeBannerVisible, setIsPrototypeBannerVisible] = useState(false)
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !isPrototypeBannerVisible) {
+                        setIsPrototypeBannerVisible(true)
+                    }
+                })
+            },
+            { threshold: 0.4 } // Trigger when 20% of the section is visible
+        )
+
+        if (prototypeBannerRef.current) {
+            observer.observe(prototypeBannerRef.current)
+        }
+
+        return () => {
+            if (prototypeBannerRef.current) {
+                observer.unobserve(prototypeBannerRef.current)
+            }
+        }
+    }, [isPrototypeBannerVisible])
 
     return (
         <ProjectPageContainer>
@@ -387,6 +452,270 @@ export default function GoogleCodesignProjectPage() {
                             </SprintOutcomeImageWrapper>
                         </SprintOutcomeSection>
                     </IdeationSectionContainer>
+                    <SectionDivider />
+
+                    {/* DESIGN */}
+                    <DesignSectionContainer>
+                        <DesignHeader>
+                            <DesignTitleWrapper>
+                                <DesignSquiggle src={greenSquiggle} alt="" />
+                                <DesignTitleText>DESIGN</DesignTitleText>
+                            </DesignTitleWrapper>
+
+                            <DesignMainContent>
+                                <DesignParagraph>
+                                    After identifying the flows where we could have the most user impact we moved forward to wireframes, mockups, and prototyping.
+                                </DesignParagraph>
+                                <DesignParagraph>
+                                    During this phase we had weekly design reviews with the <span style={{ color: '#4285F4' }}>G</span><span style={{ color: '#EA4335' }}>o</span><span style={{ color: '#FBBC04' }}>o</span><span style={{ color: '#4285F4' }}>g</span><span style={{ color: '#34A853' }}>l</span><span style={{ color: '#EA4335' }}>e</span> Codesign team including Eng, Prod, Design.
+                                </DesignParagraph>
+                                <DesignParagraph>
+                                    It was a whirlwind of rapid prototyping. We were moving so quickly that one of our Google team members told us "I can't believe how much you guys are getting done" 💪
+                                </DesignParagraph>
+                            </DesignMainContent>
+                        </DesignHeader>
+
+                        {/* Wireframes */}
+                        <DesignSubsectionBox>
+                            <DesignSubsectionImageWrapper>
+                                <DesignSubsectionImage src={designWireframes} alt="Wireframes" />
+                            </DesignSubsectionImageWrapper>
+                            <DesignSubsectionContent>
+                                <DesignSubsectionTitle>Wireframes</DesignSubsectionTitle>
+                                <DesignSubsectionRow>
+                                    <DesignSubsectionLabel>Goal</DesignSubsectionLabel>
+                                    <DesignSubsectionText>Working on higher level concepts</DesignSubsectionText>
+                                </DesignSubsectionRow>
+                                <DesignSubsectionRow>
+                                    <DesignSubsectionLabel>Focus</DesignSubsectionLabel>
+                                    <DesignSubsectionText>Flow 2: Codesign Marketplace Search</DesignSubsectionText>
+                                </DesignSubsectionRow>
+                                <div>
+                                    <DesignSubsectionLabel>📸 Example</DesignSubsectionLabel>
+                                    <DesignSubsectionList>
+                                        <div>Overlay of marketplace search</div>
+                                        <div>Attribute based filtering</div>
+                                        <div>Verified/Accessibility chips</div>
+                                    </DesignSubsectionList>
+                                </div>
+                            </DesignSubsectionContent>
+                        </DesignSubsectionBox>
+
+                        {/* Mockups */}
+                        <DesignSubsectionBox>
+                            <DesignSubsectionContent>
+                                <DesignSubsectionTitle>Mockups</DesignSubsectionTitle>
+                                <DesignSubsectionRow>
+                                    <DesignSubsectionLabel>Goal</DesignSubsectionLabel>
+                                    <DesignSubsectionText>Consistency, Integration, Details</DesignSubsectionText>
+                                </DesignSubsectionRow>
+                                <DesignSubsectionRow>
+                                    <DesignSubsectionLabel>Focus</DesignSubsectionLabel>
+                                    <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search, Component Publishing, and Component Updates)</DesignSubsectionText>
+                                </DesignSubsectionRow>
+                                <div>
+                                    <DesignSubsectionLabel>Example 📸</DesignSubsectionLabel>
+                                    <DesignSubsectionList>
+                                        <div>Publish Flow</div>
+                                        <div>Interactive Component</div>
+                                        <div>Accessibility</div>
+                                        <div>Side Panel Drawer</div>
+                                    </DesignSubsectionList>
+                                </div>
+                            </DesignSubsectionContent>
+                            <DesignSubsectionImageWrapper>
+                                <DesignSubsectionImage src={designMockups} alt="Mockups" />
+                            </DesignSubsectionImageWrapper>
+                        </DesignSubsectionBox>
+
+                        {/* Prototypes */}
+                        <DesignSubsectionBox>
+                            <DesignSubsectionImageWrapper>
+                                <DesignSubsectionImage src={designPrototypes} alt="Prototypes" />
+                            </DesignSubsectionImageWrapper>
+                            <DesignSubsectionContent>
+                                <DesignSubsectionTitle>Prototypes</DesignSubsectionTitle>
+                                <DesignSubsectionRow>
+                                    <DesignSubsectionLabel>Goal</DesignSubsectionLabel>
+                                    <DesignSubsectionText>Testing Predictability, Consistency, Ease of Use</DesignSubsectionText>
+                                </DesignSubsectionRow>
+                                <DesignSubsectionRow>
+                                    <DesignSubsectionLabel>Focus</DesignSubsectionLabel>
+                                    <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search, Component Publishing, and Component Updates)</DesignSubsectionText>
+                                </DesignSubsectionRow>
+                                <div>
+                                    <DesignSubsectionLabel>📸 Example</DesignSubsectionLabel>
+                                    <DesignSubsectionList>
+                                        <div>Marketplace Search Flow</div>
+                                        <div>Most Used</div>
+                                        <div>Trending</div>
+                                        <div>Recently used</div>
+                                        <div>Recommended</div>
+                                    </DesignSubsectionList>
+                                </div>
+                            </DesignSubsectionContent>
+                        </DesignSubsectionBox>
+                    </DesignSectionContainer>
+
+                    <PrototypeBannerSection ref={prototypeBannerRef}>
+                        <PrototypeBannerContainer>
+                            <PrototypeBannerBg src={prototypeBg} alt="Prototype Background" />
+
+                            <PrototypeOverlay
+                                src={prototype1}
+                                alt="Prototype 1"
+                                $top="4%"
+                                $left="10.5%"
+                                $width="30%"
+                                $zIndex={2}
+                                $delay={0.05}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype2}
+                                alt="Prototype 2"
+                                $top="37%"
+                                $left="4%"
+                                $width="28%"
+                                $zIndex={3}
+                                $delay={0.1}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype3}
+                                alt="Prototype 3"
+                                $top="69%"
+                                $left="4%"
+                                $width="32%"
+                                $zIndex={4}
+                                $delay={0.15}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype4}
+                                alt="Prototype 4"
+                                $top="25%"
+                                $left="25%"
+                                $width="25%"
+                                $zIndex={5}
+                                $delay={0.2}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype5}
+                                alt="Prototype 5"
+                                $top="47%"
+                                $left="33%"
+                                $width="38%"
+                                $zIndex={1}
+                                $delay={0.25}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype6}
+                                alt="Prototype 6"
+                                $top="75%"
+                                $left="45%"
+                                $width="12%"
+                                $zIndex={7}
+                                $delay={0.3}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype7}
+                                alt="Prototype 7"
+                                $top="3%"
+                                $left="46%"
+                                $width="14%"
+                                $zIndex={8}
+                                $delay={0.35}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype8}
+                                alt="Prototype 8"
+                                $top="3%"
+                                $left="61.5%"
+                                $width="20%"
+                                $zIndex={9}
+                                $delay={0.4}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype9}
+                                alt="Prototype 9"
+                                $top="32%"
+                                $left="58%"
+                                $width="30%"
+                                $zIndex={10}
+                                $delay={0.45}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype10}
+                                alt="Prototype 10"
+                                $top="77%"
+                                $left="63%"
+                                $width="18%"
+                                $zIndex={11}
+                                $delay={0.5}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype11}
+                                alt="Prototype 11"
+                                $top="26%"
+                                $left="82.5%"
+                                $width="10%"
+                                $zIndex={12}
+                                $delay={0.55}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype12}
+                                alt="Prototype 12"
+                                $top="8%"
+                                $left="78.5%"
+                                $width="16%"
+                                $zIndex={13}
+                                $delay={0.6}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype13}
+                                alt="Prototype 13"
+                                $top="60%"
+                                $left="86.5%"
+                                $width="10%"
+                                $zIndex={14}
+                                $delay={0.65}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+
+                            <PrototypeOverlay
+                                src={prototype14}
+                                alt="Prototype 14"
+                                $top="73%"
+                                $left="82.5%"
+                                $width="12%"
+                                $zIndex={15}
+                                $delay={0.7}
+                                $isVisible={isPrototypeBannerVisible}
+                            />
+                        </PrototypeBannerContainer>
+                    </PrototypeBannerSection>
                 </ContentWrapper>
             </BoardContent>
 

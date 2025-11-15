@@ -131,7 +131,7 @@ export const HeroBanner = styled('img')(() => ({
   objectFit: 'cover',
   objectPosition: 'center',
   // Fixed height based on typical banner proportions
-  maxHeight: '500px',
+  maxHeight: '540px',
   margin: 0,
   padding: 0
 }))
@@ -1347,7 +1347,7 @@ export const LinkButton = styled('a')(({ theme }) => ({
 export const IdeationSectionContainer = styled('section')(() => ({
   width: '100%',
   maxWidth: '1100px',
-  margin: '80px auto 0 auto',
+  margin: '80px auto 120px auto',
   padding: '0 32px',
   boxSizing: 'border-box',
   display: 'flex',
@@ -1505,4 +1505,203 @@ export const SprintOutcomeImage = styled('img')(() => ({
   borderRadius: '8px',
   userSelect: 'none',
   WebkitUserDrag: 'none'
+}))
+
+/* ---- Design Section ---- */
+export const DesignSectionContainer = styled('section')(() => ({
+  width: '100%',
+  maxWidth: '1200px',
+  margin: '120px auto 80px auto'
+}))
+
+export const DesignHeader = styled('div')(() => ({
+  display: 'grid',
+  gridTemplateColumns: '280px 1fr',
+  gap: '80px',
+  marginBottom: '80px',
+  '@media (max-width: 900px)': {
+    gridTemplateColumns: '1fr',
+    gap: '40px'
+  }
+}))
+
+export const DesignTitleWrapper = styled('div')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px'
+}))
+
+export const DesignSquiggle = styled('img')(() => ({
+  width: '50px',
+  height: 'auto',
+  userSelect: 'none',
+  WebkitUserDrag: 'none'
+}))
+
+export const DesignTitleText = styled('h2')(() => ({
+  fontSize: '48px',
+  fontWeight: 700,
+  color: '#107BFF',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  letterSpacing: '-0.5px'
+}))
+
+export const DesignMainContent = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px'
+}))
+
+export const DesignParagraph = styled('p')(() => ({
+  fontSize: '16px',
+  lineHeight: '26px',
+  color: '#000000',
+  margin: 0,
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const DesignSubsectionBox = styled('div')(() => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '60px',
+  marginBottom: '60px',
+  alignItems: 'flex-start',
+  '@media (max-width: 900px)': {
+    gridTemplateColumns: '1fr',
+    gap: '30px'
+  }
+}))
+
+export const DesignSubsectionContent = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '16px'
+}))
+
+export const DesignSubsectionTitle = styled('h3')(() => ({
+  fontSize: '24px',
+  fontWeight: 700,
+  color: '#107BFF',
+  margin: '0 0 8px 0',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const DesignSubsectionLabel = styled('span')(() => ({
+  fontSize: '16px',
+  fontWeight: 700,
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif"
+}))
+
+export const DesignSubsectionText = styled('span')(() => ({
+  fontSize: '16px',
+  lineHeight: '24px',
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+export const DesignSubsectionRow = styled('div')(() => ({
+  display: 'flex',
+  gap: '8px',
+  alignItems: 'baseline',
+  marginBottom: '8px'
+}))
+
+export const DesignSubsectionImageWrapper = styled('div')(() => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-start'
+}))
+
+export const DesignSubsectionImage = styled('img')(() => ({
+  width: '100%',
+  maxWidth: '100%',
+  height: 'auto',
+  display: 'block',
+  userSelect: 'none',
+  WebkitUserDrag: 'none'
+}))
+
+export const DesignSubsectionList = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+  fontSize: '16px',
+  lineHeight: '24px',
+  color: '#000000',
+  fontFamily: "'Google Sans', 'Roboto', sans-serif",
+  fontWeight: 400
+}))
+
+/* ---- Prototype Banner Section ---- */
+export const PrototypeBannerSection = styled('section')(({ theme }) => ({
+  width: '100vw',
+  marginLeft: 'calc(-50vw + 50%)',
+  position: 'relative',
+  margin: '80px calc(-50vw + 50%) 80px calc(-50vw + 50%)',
+  overflow: 'hidden',
+  [theme.breakpoints.down('md')]: {
+    margin: '60px calc(-50vw + 50%) 60px calc(-50vw + 50%)'
+  },
+  [theme.breakpoints.down('sm')]: {
+    margin: '40px calc(-50vw + 50%) 40px calc(-50vw + 50%)'
+  }
+}))
+
+export const PrototypeBannerContainer = styled('div')(() => ({
+  position: 'relative',
+  width: '100%',
+  paddingTop: '66.67%', // Aspect ratio based on the prototype background image
+  overflow: 'visible'
+}))
+
+export const PrototypeBannerBg = styled('img')(() => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  objectPosition: 'center',
+  zIndex: 1,
+  userSelect: 'none',
+  WebkitUserDrag: 'none'
+}))
+
+export const PrototypeOverlay = styled('img')<{
+  $top: string;
+  $left: string;
+  $width: string;
+  $zIndex: number;
+  $transform?: string;
+  $delay?: number;
+  $isVisible?: boolean;
+}>(({ $top, $left, $width, $zIndex, $transform, $delay = 0, $isVisible = false}) => ({
+  position: 'absolute',
+  top: $top,
+  left: $left,
+  width: $width,
+  height: 'auto',
+  zIndex: $zIndex,
+  userSelect: 'none',
+  WebkitUserDrag: 'none',
+  transform: $transform || 'none',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+  borderRadius: '4px',
+  opacity: $isVisible ? 1 : 0,
+  animation: $isVisible ? `bubbleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both` : 'none',
+  '@keyframes bubbleUp': {
+    '0%': {
+      opacity: 0,
+      transform: `translateY(20px) scale(0.8) ${$transform || ''}`,
+    },
+    '100%': {
+      opacity: 1,
+      transform: `translateY(0) scale(1) ${$transform || ''}`,
+    }
+  }
 }))

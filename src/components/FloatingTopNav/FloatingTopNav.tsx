@@ -19,6 +19,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { motion } from 'framer-motion'
 
 import ThemeToggle from '../ThemeToggle/ThemeToggle'
@@ -45,7 +46,7 @@ const FloatingNavBarContainer = styled(Paper)<{ open: boolean; $mobileOpen: bool
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: `4px 12px 4px ${open ? 12 : 92}px`, // space for absolute avatars
+    padding: '4px 12px 4px 92px', // space for absolute avatars - never changes
     borderRadius: 12,
     zIndex: 999,
     boxShadow:
@@ -58,7 +59,7 @@ const FloatingNavBarContainer = styled(Paper)<{ open: boolean; $mobileOpen: bool
         : 'linear-gradient(180deg, rgba(18,18,18,.78), rgba(18,18,18,.66))',
     backdropFilter: 'blur(10px)',
     overflow: 'visible',
-    transition: 'padding 0.45s ease-in-out, background .25s ease, box-shadow .25s ease, backdrop-filter .25s ease',
+    transition: 'background .25s ease, box-shadow .25s ease, backdrop-filter .25s ease',
     [theme.breakpoints.down('sm')]: {
       padding: '8px 10px',
       right: 16,
@@ -132,6 +133,42 @@ const ThemeToggleContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   [theme.breakpoints.down('sm')]: { display: 'none' }
 }))
+
+// Dropdown panel
+const ProfileDropdown = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 'calc(100% + 12px)',
+  left: 0,
+  background: 'rgba(60,60,62,0.95)',
+  backdropFilter: 'blur(12px)',
+  borderRadius: 12,
+  padding: '8px',
+  minWidth: 280,
+  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+  zIndex: 1000
+}))
+
+const ProfileHeader = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+  padding: '12px 12px 8px 12px',
+  borderBottom: '1px solid rgba(255,255,255,0.1)',
+  marginBottom: 8
+})
+
+const MenuItemRow = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+  padding: '12px',
+  borderRadius: 8,
+  cursor: 'pointer',
+  transition: 'background 0.2s',
+  '&:hover': {
+    background: 'rgba(255,255,255,0.08)'
+  }
+})
 
 /* Tooltips / text (desktop avatars) */
 const ProfileTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -232,21 +269,18 @@ export default function FloatingTopNav() {
         $mobileOpen={isMobile ? menuOpen : false}
         elevation={0}
       >
-        {/* ===== DESKTOP (unchanged) ===== */}
+        {/* ===== DESKTOP ===== */}
         {!isMobile && (
           <>
-            <AvatarsContainer
-              open={openProfiles}
-              initial={false}
-              animate={openProfiles ? { y: 'calc(100% - 2px)' } : { y: 10 }}
-              transition={{ type: 'spring', stiffness: 360, damping: 30 }}
-            >
+            {/* Avatars - never move, positioned absolutely */}
+            <Box sx={{ position: 'absolute', top: 10, left: 18, display: 'flex', alignItems: 'center', zIndex: 1 }}>
               {PROFILES.map((profile, idx) => (
-                <AvatarWrapper
+                <Box
                   key={profile.src}
-                  index={idx}
-                  open={openProfiles}
-                  transition={{ type: 'spring', stiffness: 360, damping: 30 }}
+                  sx={{
+                    marginLeft: idx === 0 ? 0 : '-15px',
+                    zIndex: 100 - idx
+                  }}
                 >
                   <ProfileTooltip title={profile.name}>
                     <Avatar
@@ -254,26 +288,43 @@ export default function FloatingTopNav() {
                       sx={{ width: 40, height: 40, border: '1px solid rgba(0,0,0,.65)', cursor: 'pointer' }}
                     />
                   </ProfileTooltip>
-                  {/* Only visible when expanded */}
-                  {openProfiles && (
-                    <Box sx={{ ml: 6, display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Chip
-                        size="small"
-                        label={profile.name}
-                        sx={{
-                          fontWeight: 800,
-                          borderRadius: 1.5,
-                          bgcolor: isDark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.06)'
-                        }}
-                      />
-                      <IconButton size="small" sx={{ ml: 0.5 }}>
-                        <DescriptionOutlinedIcon sx={{ fontSize: 18 }} />
-                      </IconButton>
-                    </Box>
-                  )}
-                </AvatarWrapper>
+                </Box>
               ))}
-            </AvatarsContainer>
+            </Box>
+            {/* Dropdown - positioned relative to container */}
+            {openProfiles && (
+              <ProfileDropdown
+                sx={{
+                  opacity: openProfiles ? 1 : 0,
+                  transition: 'opacity 0.15s ease-in-out',
+                  left: 2
+                }}
+              >
+                <ProfileHeader>
+                  <Avatar
+                    src={PROFILES[0].src}
+                    sx={{ width: 40, height: 40 }}
+                  />
+                  <Box sx={{ color: '#fff', fontWeight: 600, fontSize: 15 }}>
+                    Shelby Reilly
+                  </Box>
+                </ProfileHeader>
+
+                <MenuItemRow>
+                  <DescriptionOutlinedIcon sx={{ fontSize: 22, color: '#fff' }} />
+                  <Box sx={{ color: '#fff', fontWeight: 500, fontSize: 14 }}>
+                    Resume
+                  </Box>
+                </MenuItemRow>
+
+                <MenuItemRow>
+                  <InfoOutlinedIcon sx={{ fontSize: 22, color: '#fff' }} />
+                  <Box sx={{ color: '#fff', fontWeight: 500, fontSize: 14 }}>
+                    About
+                  </Box>
+                </MenuItemRow>
+              </ProfileDropdown>
+            )}
 
             <IconButton size="small" sx={{ ml: 0, mr: 2 }} onClick={toggleProfiles}>
               <KeyboardArrowDownIcon
