@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "/shelby-reilly-portfolio/static/css/main.4fddafce.css",
-    "main.js": "/shelby-reilly-portfolio/static/js/main.651175fd.js",
+    "main.js": "/shelby-reilly-portfolio/static/js/main.e6fd17c2.js",
     "static/media/bishop_devices.png": "/shelby-reilly-portfolio/static/media/bishop_devices.613604d406a2ec7267f6.png",
+    "static/media/about-me-presentation-1.png": "/shelby-reilly-portfolio/static/media/about-me-presentation-1.5f3b7c64b78309d8b521.png",
     "static/media/codesign-evaluation-1.png": "/shelby-reilly-portfolio/static/media/codesign-evaluation-1.ee9e0f23c27be67dd198.png",
     "static/media/codesign-evaluation-2.png": "/shelby-reilly-portfolio/static/media/codesign-evaluation-2.c944dca311b693676e53.png",
     "static/media/codesign-conclusion-banner.png": "/shelby-reilly-portfolio/static/media/codesign-conclusion-banner.df8c95079fe90637eaa0.png",
@@ -31,6 +32,7 @@
     "static/media/design_iteration_7.png": "/shelby-reilly-portfolio/static/media/design_iteration_7.12461726c87b9119cfb0.png",
     "static/media/codesign-hero-banner.png": "/shelby-reilly-portfolio/static/media/codesign-hero-banner.a46cfcef5b14a7d75ca6.png",
     "static/media/data_design_1.png": "/shelby-reilly-portfolio/static/media/data_design_1.b724623d022038e03c1a.png",
+    "static/media/about-me-shelby-standing-2.png": "/shelby-reilly-portfolio/static/media/about-me-shelby-standing-2.2e0ed0c5f9745ee244b9.png",
     "static/media/codesign-persona-background.png": "/shelby-reilly-portfolio/static/media/codesign-persona-background.e4d269c17e1d250e745c.png",
     "static/media/codesign-wireframe-sketch.png": "/shelby-reilly-portfolio/static/media/codesign-wireframe-sketch.d7308498964d00dba4d3.png",
     "static/media/codesign-design-prototypes.png": "/shelby-reilly-portfolio/static/media/codesign-design-prototypes.f83653de252d35e9fe6d.png",
@@ -83,6 +85,7 @@
     "static/media/sparkle-color.svg": "/shelby-reilly-portfolio/static/media/sparkle-color.1904f0cab92607edba22ca75ef918a07.svg",
     "static/media/figma-dark.svg": "/shelby-reilly-portfolio/static/media/figma-dark.9acda9025b690a7aab72f17f8eb29049.svg",
     "static/media/figma-light.svg": "/shelby-reilly-portfolio/static/media/figma-light.e1ba5c19d95667471ad6242b457fe5e0.svg",
+    "static/media/magic-wand.svg": "/shelby-reilly-portfolio/static/media/magic-wand.743b213103e20f009b38e1315afec514.svg",
     "static/media/sparkle-white.svg": "/shelby-reilly-portfolio/static/media/sparkle-white.c3345a8f25ca7fc92ab916d9d9d6bf94.svg",
     "static/media/linkedin-light.svg": "/shelby-reilly-portfolio/static/media/linkedin-light.d2ac1437d3c5bb00b491800fc8faeb91.svg",
     "static/media/linkedin-dark.svg": "/shelby-reilly-portfolio/static/media/linkedin-dark.6b2177957c180b2bf26618fdffc7310a.svg",
@@ -91,10 +94,10 @@
     "static/media/green_squigle.svg": "/shelby-reilly-portfolio/static/media/green_squigle.c410c597948c2a966f5fac529089829d.svg",
     "index.html": "/shelby-reilly-portfolio/index.html",
     "main.4fddafce.css.map": "/shelby-reilly-portfolio/static/css/main.4fddafce.css.map",
-    "main.651175fd.js.map": "/shelby-reilly-portfolio/static/js/main.651175fd.js.map"
+    "main.e6fd17c2.js.map": "/shelby-reilly-portfolio/static/js/main.e6fd17c2.js.map"
   },
   "entrypoints": [
     "static/css/main.4fddafce.css",
-    "static/js/main.651175fd.js"
+    "static/js/main.e6fd17c2.js"
   ]
 }
