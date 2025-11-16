@@ -342,7 +342,7 @@ export const StepPanel = styled('div')<{ $active?: boolean }>(({ $active, theme 
     lineHeight: 1.2,
     marginBottom: 6,
     color: theme.palette.text.primary,
-    paddingLeft: '8px'
+    paddingLeft: '0px'
   },
 
   // Subtext line of each bullet (same inset as header)
@@ -351,7 +351,7 @@ export const StepPanel = styled('div')<{ $active?: boolean }>(({ $active, theme 
     lineHeight: 1.6,
     color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.84)' : 'rgba(0,0,0,0.84)',
     marginBottom: 16,
-    paddingLeft: '8px'
+    paddingLeft: '0px'
   }
 }))
 
@@ -376,4 +376,8 @@ export const StepBadge = styled('span')(({ theme }) => ({
   color: '#FFFFFF',
   background: INDIGO,
   boxShadow: '0 6px 16px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2)'
+}))
+
+export const StepContent = styled('div')(() => ({
+  paddingLeft: '36px', // 26px badge width + 10px gap = aligns with title
 }))

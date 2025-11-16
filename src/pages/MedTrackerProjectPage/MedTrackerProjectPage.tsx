@@ -42,7 +42,8 @@ import {
     StatDescription,
     StepPanel,
     StepHeader,
-    StepBadge
+    StepBadge,
+    StepContent
 } from './MedTrackerProjectPage.styles'
 
 import medTrackerLogo from '../../assets/images/MedTracker-Logo.png'
@@ -487,7 +488,8 @@ export default function ProjectPage() {
                                             <div><div className="eyebrow">STEP ONE</div><h3>On‑Site Research & Contextual Inquiry</h3></div>
                                         </StepHeader>
 
-                                        <Box
+                                        <StepContent>
+                                            <Box
                                             sx={{
                                                 display: 'grid',
                                                 gridTemplateColumns: { xs: '1fr', md: '1.5fr 1fr' },
@@ -540,6 +542,7 @@ export default function ProjectPage() {
                                                 />
                                             </Box>
                                         </Box>
+                                        </StepContent>
                                     </StepPanel>
 
                                     <StepPanel
@@ -554,7 +557,8 @@ export default function ProjectPage() {
                                             <div><div className="eyebrow">STEP TWO</div><h3>Affinity + Process Mapping</h3></div>
                                         </StepHeader>
 
-                                        <TextBlock as="div" style={{ marginBottom: 16 }}>
+                                        <StepContent>
+                                            <TextBlock as="div" style={{ marginBottom: 16 }}>
                                             We synthesized observations into affinity clusters and built a comprehensive as-is map of every task, decision, and dependency.
                                         </TextBlock>
 
@@ -588,6 +592,7 @@ export default function ProjectPage() {
                                                 }}
                                             />
                                         </Box>
+                                        </StepContent>
                                     </StepPanel>
 
                                     <StepPanel
@@ -602,7 +607,8 @@ export default function ProjectPage() {
                                             <div><div className="eyebrow">STEP THREE</div><h3>Problem Prioritization</h3></div>
                                         </StepHeader>
 
-                                        <Box
+                                        <StepContent>
+                                            <Box
                                             sx={{
                                                 display: 'grid',
                                                 gridTemplateColumns: { xs: '1fr', md: '1.5fr 1fr' },
@@ -647,6 +653,7 @@ export default function ProjectPage() {
                                                 />
                                             </Box>
                                         </Box>
+                                        </StepContent>
                                     </StepPanel>
 
                                     {/* NEW: STEP FOUR (RESEARCH) */}
@@ -662,7 +669,8 @@ export default function ProjectPage() {
                                             <div><div className="eyebrow">STEP FOUR</div><h3>Problem Statement Alignment</h3></div>
                                         </StepHeader>
 
-                                        <Box sx={{ mb: 3 }}>
+                                        <StepContent>
+                                            <Box sx={{ mb: 3 }}>
                                             <div className="bullet-h">Problem Statement</div>
                                             <TextBlock as="div" style={{ marginTop: 4 }}>
                                                 as a warehouse worker, <BoldText>I don't know what viable supplies we have</BoldText> which leads to the sets not being ready to deploy, or wasting of $Ms of items
@@ -689,6 +697,7 @@ export default function ProjectPage() {
                                                 }}
                                             />
                                         </Box>
+                                        </StepContent>
                                     </StepPanel>
                                 </Box>
                             </Box>
@@ -736,15 +745,16 @@ export default function ProjectPage() {
                                             <div><div className="eyebrow">STEP ONE</div><h3>Defining the user flows</h3></div>
                                         </StepHeader>
 
-                                        {/* text “reaches” toward image; image capped by text height; image centered vertically */}
-                                        <Box
-                                            sx={{
-                                                display: 'grid',
-                                                gridTemplateColumns: { xs: '1fr', md: 'minmax(0,1.18fr) minmax(0,0.82fr)' },
-                                                columnGap: { xs: 2, md: 3 },
-                                                alignItems: { md: 'stretch' }
-                                            }}
-                                        >
+                                        <StepContent>
+                                            {/* text "reaches" toward image; image capped by text height; image centered vertically */}
+                                            <Box
+                                                sx={{
+                                                    display: 'grid',
+                                                    gridTemplateColumns: { xs: '1fr', md: 'minmax(0,1.18fr) minmax(0,0.82fr)' },
+                                                    columnGap: { xs: 2, md: 3 },
+                                                    alignItems: { md: 'stretch' }
+                                                }}
+                                            >
                                             {/* LEFT: measured text column */}
                                             <Box ref={step1TextColRef} sx={{ pr: { md: 1 } }}>
                                                 <TextBlock as="div" className="bullet-p">
@@ -794,6 +804,7 @@ export default function ProjectPage() {
                                                 />
                                             </Box>
                                         </Box>
+                                        </StepContent>
                                     </StepPanel>
 
                                     {/* STEP TWO */}
@@ -809,7 +820,8 @@ export default function ProjectPage() {
                                             <div><div className="eyebrow">STEP TWO</div><h3>Data Mapping</h3></div>
                                         </StepHeader>
 
-                                        <TwoColumn>
+                                        <StepContent>
+                                            <TwoColumn>
                                             <div>
                                                 <TextBlock as="div" className="bullet-p">
                                                     With engineering, we defined the schema that powers search, bulk updates, and expiration
@@ -851,6 +863,7 @@ export default function ProjectPage() {
                                                 </ul>
                                             </Box>
                                         </TwoColumn>
+                                        </StepContent>
                                     </StepPanel>
 
                                     {/* STEP THREE */}
@@ -869,8 +882,9 @@ export default function ProjectPage() {
                                             </div>
                                         </StepHeader>
 
-                                        {/* FIX: protect text width + tame image scaling */}
-                                        <Box
+                                        <StepContent>
+                                            {/* FIX: protect text width + tame image scaling */}
+                                            <Box
                                             sx={{
                                                 display: 'grid',
                                                 // Ensure the text column never collapses (min 420px).
@@ -930,6 +944,7 @@ export default function ProjectPage() {
                                                 />
                                             </Box>
                                         </Box>
+                                        </StepContent>
                                     </StepPanel>
 
                                 </Box>
