@@ -34,6 +34,7 @@ import AboutPage from './pages/AboutPage/AboutPage'
 import { CursorSimulatorProvider, useCursorSimulator } from './context/CursorSimulatorContext'
 import { CursorSimulator } from './components/CursorSimulator/CursorSimulator'
 import { BackButton as ProjectBackButton } from './pages/MedTrackerProjectPage/MedTrackerProjectPage.styles'
+import { useThemeMode } from './theme/ThemeProvider'
 
 const AppContainer = styled(Box)(({ theme }) => ({
     width: '100vw',
@@ -82,6 +83,7 @@ function AppContent() {
     } | null>(null)
 
     const { waypoints, startCursor } = useCursorSimulator()
+    const { setMode: setThemeMode } = useThemeMode()
 
     // --- Viewport-safe sizing for mobile toolbars / browser chrome ---
     const [viewport, setViewport] = useState<{ w: number; h: number }>({
@@ -323,6 +325,17 @@ function AppContent() {
         }
     }, [currentRoute, setStagePos, setStageScale])
 
+    // Automatically switch to dark mode on case study pages
+    useEffect(() => {
+        const isCaseStudyPage = currentRoute === '#/medtracker-project' ||
+                                currentRoute === '#/bishop-project' ||
+                                currentRoute === '#/googlecodesign-project'
+
+        if (isCaseStudyPage) {
+            setThemeMode('dark')
+        }
+    }, [currentRoute, setThemeMode])
+
     if (currentRoute === '#/medtracker-project') {
         return (
             <ZoomPanContext.Provider value={{
@@ -419,6 +432,7 @@ function AppContent() {
                         activeTool={activeTool}
                         setActiveTool={handleToolChange}
                         setEmojiButtonRect={setEmojiButtonRect}
+                        hasSelectedEmoji={hasSelectedEmoji}
                     />
                     <EmojiPicker
                         visible={emojiPickerOpen}
@@ -630,6 +644,7 @@ function AppContent() {
                         activeTool={activeTool}
                         setActiveTool={handleToolChange}
                         setEmojiButtonRect={setEmojiButtonRect}
+                        hasSelectedEmoji={hasSelectedEmoji}
                     />
                     <EmojiPicker
                         visible={emojiPickerOpen}

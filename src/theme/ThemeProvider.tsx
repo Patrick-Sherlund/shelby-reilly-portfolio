@@ -10,11 +10,13 @@ type Props = {
 type ThemeContextType = {
     mode: 'light' | 'dark'
     toggleTheme: () => void
+    setMode: (mode: 'light' | 'dark') => void
 }
 
 const ThemeContext = createContext<ThemeContextType>({
     mode: 'light',
-    toggleTheme: () => {}
+    toggleTheme: () => {},
+    setMode: () => {}
 })
 
 export function useThemeMode() {
@@ -30,7 +32,7 @@ export default function ThemeProviderWrapper({ children }: Props) {
     }
 
     return (
-        <ThemeContext.Provider value={{ mode, toggleTheme }}>
+        <ThemeContext.Provider value={{ mode, toggleTheme, setMode }}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <GlobalFonts />

@@ -18,12 +18,14 @@ type Props = {
     setEmojiButtonRect: React.Dispatch<
         React.SetStateAction<{ x: number; y: number; width: number; height: number }>
     >
+    hasSelectedEmoji?: boolean
 }
 
 export default function DelightfulToolbar({
                                               activeTool,
                                               setActiveTool,
-                                              setEmojiButtonRect
+                                              setEmojiButtonRect,
+                                              hasSelectedEmoji = false
                                           }: Props) {
     const emojiButtonRef = useRef<HTMLButtonElement | null>(null)
 
@@ -34,6 +36,18 @@ export default function DelightfulToolbar({
     }, [activeTool, setActiveTool])
 
     const handleSelectTool = (tool: Tool) => {
+        // For emoji tool: only toggle off if picker is open (no emoji selected yet)
+        if (tool === 'emoji' && activeTool === 'emoji' && !hasSelectedEmoji) {
+            setActiveTool('hand')
+            return
+        }
+
+        // For other tools: toggle off if clicking the same tool
+        if (activeTool === tool && tool !== 'emoji') {
+            setActiveTool('hand')
+            return
+        }
+
         setActiveTool(tool)
         if (tool === 'emoji' && emojiButtonRef.current) {
             const rect = emojiButtonRef.current.getBoundingClientRect()

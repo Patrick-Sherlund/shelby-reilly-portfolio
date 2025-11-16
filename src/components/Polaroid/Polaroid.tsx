@@ -32,6 +32,10 @@ const PolaroidWrapper = styled('div')<{
   // Only set pointerEvents to none when using tools that need to interact with the Konva stage
   const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
 
+  // Create safe keyframe name (CSS doesn't allow starting with numbers or double dashes)
+  const safeRotation = String(rotationDeg).replace('-', 'neg').replace('.', 'p');
+  const keyframeName = `bubbleUp-r${safeRotation}`;
+
   return {
     position: 'absolute',
     top,
@@ -48,8 +52,8 @@ const PolaroidWrapper = styled('div')<{
     pointerEvents: isKonvaToolActive ? 'none' : 'auto',
     ...(hasAnimation && {
       opacity: $isVisible ? 1 : 0,
-      animation: $isVisible ? `bubbleUp-${rotationDeg} 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both` : 'none',
-      [`@keyframes bubbleUp-${rotationDeg}`]: {
+      animation: $isVisible ? `${keyframeName} 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both` : 'none',
+      [`@keyframes ${keyframeName}`]: {
         '0%': {
           opacity: 0,
           transform: `translateY(20px) scale(0.8) rotate(${rotationDeg}deg)`,

@@ -85,6 +85,8 @@ export default function PolaroidCollection() {
 
   const [localScale, setLocalScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set());
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const compute = () => {
@@ -99,6 +101,15 @@ export default function PolaroidCollection() {
       window.removeEventListener('resize', compute);
       window.removeEventListener('orientationchange', compute);
     };
+  }, []);
+
+  useEffect(() => {
+    // Trigger all animations at once - the $delay prop in each Polaroid handles the stagger
+    const timer = setTimeout(() => {
+      setVisibleImages(new Set([0, 1, 2]));
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -127,28 +138,7 @@ export default function PolaroidCollection() {
 
       <PolaroidGroup>
         <Polaroid
-          src={`${process.env.PUBLIC_URL}/images/polaroid/ctrly.png`}
-          alt="Ctrl+Y"
-          title="Ctrl+Y"
-          date="Nov 2024 - Current"
-          width={140}
-          rotationDeg={5.75}
-          zIndex={3}
-          top="15px"
-          left="20px"
-        />
-        <Polaroid
-          src={`${process.env.PUBLIC_URL}/images/polaroid/dpod.png`}
-          alt="dPod"
-          title="dPod"
-          date="Aug 2019 - Dec 2019"
-          width={140}
-          rotationDeg={-10}
-          zIndex={2}
-          top="35px"
-          left="160px"
-        />
-        <Polaroid
+          ref={(el) => (imageRefs.current[2] = el)}
           src={`${process.env.PUBLIC_URL}/images/polaroid/hoop.png`}
           alt="LED Basketball Hoop"
           title="LED Basketball Hoop"
@@ -158,6 +148,36 @@ export default function PolaroidCollection() {
           zIndex={4}
           top="12px"
           left="302px"
+          $isVisible={visibleImages.has(2)}
+          $delay={0.1}
+        />
+        <Polaroid
+          ref={(el) => (imageRefs.current[1] = el)}
+          src={`${process.env.PUBLIC_URL}/images/polaroid/dpod.png`}
+          alt="dPod"
+          title="dPod"
+          date="Aug 2019 - Dec 2019"
+          width={140}
+          rotationDeg={-10}
+          zIndex={2}
+          top="35px"
+          left="160px"
+          $isVisible={visibleImages.has(1)}
+          $delay={0.2}
+        />
+        <Polaroid
+          ref={(el) => (imageRefs.current[0] = el)}
+          src={`${process.env.PUBLIC_URL}/images/polaroid/ctrly.png`}
+          alt="Ctrl+Y"
+          title="Ctrl+Y"
+          date="Nov 2024 - Current"
+          width={140}
+          rotationDeg={5.75}
+          zIndex={3}
+          top="15px"
+          left="20px"
+          $isVisible={visibleImages.has(0)}
+          $delay={0.3}
         />
       </PolaroidGroup>
     </CollectionContainer>
