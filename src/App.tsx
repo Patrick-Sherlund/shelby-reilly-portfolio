@@ -316,6 +316,13 @@ function AppContent() {
         }
     }, [isCommentMode, commentPaneCollapsed, setActiveCommentId])
 
+    useEffect(() => {
+        if (currentRoute === '#/about') {
+            setStageScale(1)
+            setStagePos({ x: 0, y: 0 })
+        }
+    }, [currentRoute, setStagePos, setStageScale])
+
     if (currentRoute === '#/medtracker-project') {
         return <MedTrackerProjectPage />
     }
