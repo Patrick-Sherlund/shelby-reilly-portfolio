@@ -4,9 +4,10 @@ import { Tool, BoardItem, EmojiSubMode } from '../types'
 
 interface UseEmojiToolParams {
     stageRef: React.RefObject<Konva.Stage>
+    currentRoute?: string
 }
 
-export function useEmojiTool({ stageRef }: UseEmojiToolParams) {
+export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams) {
     const [activeTool, setActiveTool] = useState<Tool>(null)
     const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
     const [selectedEmoji, setSelectedEmoji] = useState(
@@ -15,7 +16,8 @@ export function useEmojiTool({ stageRef }: UseEmojiToolParams) {
     const [hasSelectedEmoji, setHasSelectedEmoji] = useState(false)
     const [emojiButtonRect, setEmojiButtonRect] = useState({ x: 0, y: 0, width: 0, height: 0 })
     const [emojiSubMode, setEmojiSubMode] = useState<EmojiSubMode>('stamp')
-    const [objects, setObjects] = useState<BoardItem[]>([])
+    // Store objects per route: { route: BoardItem[] }
+    const [objectsByRoute, setObjectsByRoute] = useState<Record<string, BoardItem[]>>({})
 
     const stampEmojis = [
         require('../assets/images/emoji-wheel/shelby-medal-sticker.png'),
@@ -100,9 +102,15 @@ export function useEmojiTool({ stageRef }: UseEmojiToolParams) {
                 x: pointer.x - 20,
                 y: pointer.y - 20
             }
-            setObjects((prev) => [...prev, newObj])
+            setObjectsByRoute((prev) => ({
+                ...prev,
+                [currentRoute]: [...(prev[currentRoute] || []), newObj]
+            }))
         }
     }
+
+    // Get objects for current route
+    const objects = objectsByRoute[currentRoute] || []
 
     return {
         activeTool,

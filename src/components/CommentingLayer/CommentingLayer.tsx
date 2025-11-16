@@ -18,6 +18,7 @@ interface CommentData {
 
 interface Props {
     activeTool: Tool
+    currentRoute?: string
 }
 
 // Styled Components
@@ -121,14 +122,24 @@ const SubmitButton = styled(IconButton)({
     },
 })
 
-export default function CommentingLayer({ activeTool }: Props) {
-    const [comments, setComments] = useState<CommentData[]>([])
+export default function CommentingLayer({ activeTool, currentRoute = '' }: Props) {
+    // Store comments per route
+    const [commentsByRoute, setCommentsByRoute] = useState<Record<string, CommentData[]>>({})
     const [editing, setEditing] = useState<CommentData | null>(null)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const [hoveredId, setHoveredId] = useState<string | null>(null)
 
     // Access zoom / pan / stage information
     const { stageScale, stagePos } = useZoomPanContext()
+
+    // Get comments for current route
+    const comments = commentsByRoute[currentRoute] || []
+    const setComments = (updater: React.SetStateAction<CommentData[]>) => {
+        setCommentsByRoute(prev => ({
+            ...prev,
+            [currentRoute]: typeof updater === 'function' ? updater(prev[currentRoute] || []) : updater
+        }))
+    }
 
     // Utility to coerce any loaded comment to the latest shape
     const normalizeComment = (raw: any): CommentData => {
@@ -144,12 +155,19 @@ export default function CommentingLayer({ activeTool }: Props) {
 
     // Load from localStorage on mount
     useEffect(() => {
-        const stored = window.localStorage.getItem('figma-comments')
+        const stored = window.localStorage.getItem('figma-comments-by-route')
         if (stored) {
             try {
                 const parsed = JSON.parse(stored)
-                if (Array.isArray(parsed)) {
-                    setComments(parsed.map(normalizeComment))
+                if (typeof parsed === 'object') {
+                    // Normalize all comments in all routes
+                    const normalized: Record<string, CommentData[]> = {}
+                    for (const [route, routeComments] of Object.entries(parsed)) {
+                        if (Array.isArray(routeComments)) {
+                            normalized[route] = routeComments.map(normalizeComment)
+                        }
+                    }
+                    setCommentsByRoute(normalized)
                 }
             } catch {
                 // ignore parse errors
@@ -159,8 +177,8 @@ export default function CommentingLayer({ activeTool }: Props) {
 
     // Persist to localStorage when comments change
     useEffect(() => {
-        window.localStorage.setItem('figma-comments', JSON.stringify(comments))
-    }, [comments])
+        window.localStorage.setItem('figma-comments-by-route', JSON.stringify(commentsByRoute))
+    }, [commentsByRoute])
 
     // Focus textarea when it appears
     useEffect(() => {

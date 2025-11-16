@@ -105,6 +105,8 @@ function AppContent() {
         }
     }, [])
 
+    const [currentRoute, setCurrentRoute] = React.useState<string>(window.location.hash)
+
     const {
         stageScale,
         setStageScale,
@@ -134,7 +136,7 @@ function AppContent() {
         objects,
         handleStamp,
         hasSelectedEmoji
-    } = useEmojiTool({ stageRef })
+    } = useEmojiTool({ stageRef, currentRoute })
     const { showOverlay, setShowOverlay, overlayPos } = usePointerOverlay()
     const { wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave } =
         useWandEmojis({
@@ -151,8 +153,6 @@ function AppContent() {
     const prevScaleRef = useRef(1)
     const prevPosYRef = useRef(stagePos.y)
     const handleBackToHome = () => { window.location.hash = '' }
-
-    const [currentRoute, setCurrentRoute] = React.useState<string>(window.location.hash)
 
     const dragBoundFunc = (pos: { x: number; y: number }) => ({
         x: pos.x,
@@ -451,7 +451,7 @@ function AppContent() {
 
                     <CursorChat />
                     <FastWaveCursor />
-                    <CommentingLayer activeTool={activeTool} />
+                    <CommentingLayer activeTool={activeTool} currentRoute={currentRoute} />
                     <SearchPalette />
 
                     {waypoints.length > 0 && startCursor && currentRoute != '#/about' && (
@@ -644,7 +644,7 @@ function AppContent() {
 
                 <CursorChat />
                 <FastWaveCursor />
-                <CommentingLayer activeTool={activeTool} />
+                <CommentingLayer activeTool={activeTool} currentRoute={currentRoute} />
                 <SearchPalette />
 
                 {waypoints.length > 0 && startCursor && (
