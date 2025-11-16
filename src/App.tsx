@@ -325,7 +325,7 @@ function AppContent() {
         }
     }, [currentRoute, setStagePos, setStageScale])
 
-    // Automatically switch to dark mode on case study pages
+    // Automatically switch to dark mode and reset cursor on case study pages
     useEffect(() => {
         const isCaseStudyPage = currentRoute === '#/medtracker-project' ||
                                 currentRoute === '#/bishop-project' ||
@@ -333,8 +333,10 @@ function AppContent() {
 
         if (isCaseStudyPage) {
             setThemeMode('dark')
+            // Ensure toolbar switches back to default cursor when entering case studies
+            handleToolChange('hand')
         }
-    }, [currentRoute, setThemeMode])
+    }, [currentRoute, setThemeMode, handleToolChange])
 
     if (currentRoute === '#/medtracker-project') {
         return (

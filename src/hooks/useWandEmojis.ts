@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { Tool, EmojiSubMode, WandEmoji } from '../types'
 import Konva from 'konva'
 
-export const WAND_SPAWN_INTERVAL = 50
+// Reduced spawn rate ~40% (from 20/sec -> ~12/sec)
+export const WAND_SPAWN_INTERVAL = 84
 export const WAND_LIFETIME = 1000
 export const WAND_MAX_ANGLE = Math.PI / 2
 export const WAND_TRAVEL_DISTANCE = 450
