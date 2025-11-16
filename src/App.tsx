@@ -135,7 +135,12 @@ function AppContent() {
         handleSetSubMode,
         objects,
         handleStamp,
-        hasSelectedEmoji
+        hasSelectedEmoji,
+        handleStampMouseUp,
+        handleStampCancel,
+        previewScale,
+        previewRotation,
+        previewOpacity
     } = useEmojiTool({ stageRef, currentRoute })
     const { showOverlay, setShowOverlay, overlayPos } = usePointerOverlay()
     const { wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave } =
@@ -372,6 +377,9 @@ function AppContent() {
                         visible={showOverlay}
                         x={overlayPos.x}
                         y={overlayPos.y}
+                        scale={previewScale}
+                        rotation={previewRotation}
+                        opacity={previewOpacity}
                     />
                     <Stage
                         ref={stageRef}
@@ -397,6 +405,7 @@ function AppContent() {
                         onTouchEnd={(e) => {
                             handleTouchEnd(prevTouchRef)
                             handleStageMouseUp()
+                            handleStampMouseUp()
                         }}
                         onMouseDown={(e) => {
                             handleStageMouseDown()
@@ -406,9 +415,18 @@ function AppContent() {
                             handleStageMouseDown()
                             handleStamp()
                         }}
-                        onMouseUp={handleStageMouseUp}
-                        onTouchCancel={handleStageMouseLeave}
-                        onMouseLeave={handleStageMouseLeave}
+                        onMouseUp={() => {
+                            handleStageMouseUp()
+                            handleStampMouseUp()
+                        }}
+                        onTouchCancel={() => {
+                            handleStageMouseLeave()
+                            handleStampCancel()
+                        }}
+                        onMouseLeave={() => {
+                            handleStageMouseLeave()
+                            handleStampCancel()
+                        }}
                     >
                         <Layer>
                             <Rect
@@ -421,7 +439,14 @@ function AppContent() {
                             />
                             {objects.map((obj) =>
                                 obj.type === 'sticky' ? null : (
-                                    <EmojiObject scale={1.5} key={obj.id} src={obj.src!} x={obj.x} y={obj.y} />
+                                    <EmojiObject
+                                        scale={obj.scale ?? 1}
+                                        rotation={obj.rotation ?? 0}
+                                        key={obj.id}
+                                        src={obj.src!}
+                                        x={obj.x}
+                                        y={obj.y}
+                                    />
                                 )
                             )}
                             {wandEmojis.map((we) => {
@@ -556,6 +581,9 @@ function AppContent() {
                     visible={showOverlay}
                     x={overlayPos.x}
                     y={overlayPos.y}
+                    scale={previewScale}
+                    rotation={previewRotation}
+                    opacity={previewOpacity}
                 />
                 <Stage
                     ref={stageRef}
@@ -581,6 +609,7 @@ function AppContent() {
                     onTouchEnd={(e) => {
                         handleTouchEnd(prevTouchRef)
                         handleStageMouseUp()
+                        handleStampMouseUp()
                     }}
                     onMouseDown={(e) => {
                         handleStageMouseDown()
@@ -590,9 +619,18 @@ function AppContent() {
                         handleStageMouseDown()
                         handleStamp()
                     }}
-                    onMouseUp={handleStageMouseUp}
-                    onTouchCancel={handleStageMouseLeave}
-                    onMouseLeave={handleStageMouseLeave}
+                    onMouseUp={() => {
+                        handleStageMouseUp()
+                        handleStampMouseUp()
+                    }}
+                    onTouchCancel={() => {
+                        handleStageMouseLeave()
+                        handleStampCancel()
+                    }}
+                    onMouseLeave={() => {
+                        handleStageMouseLeave()
+                        handleStampCancel()
+                    }}
                 >
                     <Layer>
                         <Rect
@@ -605,7 +643,14 @@ function AppContent() {
                         />
                         {objects.map((obj) =>
                             obj.type === 'sticky' ? null : (
-                                <EmojiObject scale={1.5} key={obj.id} src={obj.src!} x={obj.x} y={obj.y} />
+                                <EmojiObject
+                                    scale={obj.scale ?? 1}
+                                    rotation={obj.rotation ?? 0}
+                                    key={obj.id}
+                                    src={obj.src!}
+                                    x={obj.x}
+                                    y={obj.y}
+                                />
                             )
                         )}
                         {wandEmojis.map((we) => {

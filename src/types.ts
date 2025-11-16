@@ -10,6 +10,8 @@ export type BoardItem = {
     src?: string
     x: number
     y: number
+    rotation?: number
+    scale?: number
 }
 
 
