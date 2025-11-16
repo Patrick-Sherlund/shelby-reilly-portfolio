@@ -25,6 +25,8 @@ import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
 import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import { GlobalStyles } from '@mui/material'
 import SearchPalette from './components/SearchPalette/SearchPalette'
+import { CommentSidepane } from './components/CommentSidepane/CommentSidepane'
+import { CommentsProvider, useComments } from './context/CommentsContext'
 import MedTrackerProjectPage from './pages/MedTrackerProjectPage/MedTrackerProjectPage'
 import BishopProjectPage from './pages/BishopProjectPage/BishopProjectPage'
 import GoogleCodesignProjectPage from './pages/GoogleCodesignProjectPage/GoogleCodesignProjectPage'
@@ -106,6 +108,7 @@ function AppContent() {
     }, [])
 
     const [currentRoute, setCurrentRoute] = React.useState<string>(window.location.hash)
+    const [commentPaneCollapsed, setCommentPaneCollapsed] = useState(false)
 
     const {
         stageScale,
@@ -142,6 +145,7 @@ function AppContent() {
         previewRotation,
         previewOpacity
     } = useEmojiTool({ stageRef, currentRoute })
+    const { setActiveCommentId } = useComments()
     const { showOverlay, setShowOverlay, overlayPos } = usePointerOverlay()
     const { wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave } =
         useWandEmojis({
@@ -159,6 +163,7 @@ function AppContent() {
     const prevScaleRef = useRef(1)
     const prevPosYRef = useRef(stagePos.y)
     const handleBackToHome = () => { window.location.hash = '' }
+    const prevToolRef = useRef<string | null>(null)
 
     const dragBoundFunc = (pos: { x: number; y: number }) => ({
         x: pos.x,
@@ -244,7 +249,8 @@ function AppContent() {
                 // Regular scrolling behavior when no modifier keys are pressed
                 setStagePos((prev) => {
                     const newY = clampStagePosition(prev.y - deltaY)
-                    return { x: prev.x, y: newY }
+                    const newX = prev.x - e.deltaX
+                    return { x: newX, y: newY }
                 })
             }
         }
@@ -282,10 +288,26 @@ function AppContent() {
     useEffect(() => {
         const handleHashChange = () => {
             setCurrentRoute(window.location.hash)
+            setCommentPaneCollapsed(false)
         }
         window.addEventListener('hashchange', handleHashChange)
         return () => window.removeEventListener('hashchange', handleHashChange)
     }, [])
+
+    const isCommentMode = activeTool === 'commenting-cursor'
+
+    useEffect(() => {
+        if (activeTool === 'commenting-cursor' && prevToolRef.current !== 'commenting-cursor') {
+            setCommentPaneCollapsed(false)
+        }
+        prevToolRef.current = activeTool
+    }, [activeTool])
+
+    useEffect(() => {
+        if (!isCommentMode || commentPaneCollapsed) {
+            setActiveCommentId(null)
+        }
+    }, [isCommentMode, commentPaneCollapsed, setActiveCommentId])
 
     if (currentRoute === '#/medtracker-project') {
         return <MedTrackerProjectPage />
@@ -482,6 +504,12 @@ function AppContent() {
                     <FastWaveCursor />
                     <CommentingLayer activeTool={activeTool} currentRoute={currentRoute} />
                     <SearchPalette />
+                    <CommentSidepane
+                        open={isCommentMode}
+                        currentRoute={currentRoute}
+                        collapsed={commentPaneCollapsed}
+                        onCollapseToggle={() => setCommentPaneCollapsed((p) => !p)}
+                    />
 
                     {waypoints.length > 0 && startCursor && currentRoute != '#/about' && (
                         <CursorSimulator
@@ -498,222 +526,232 @@ function AppContent() {
     }
 
     return (
-        <ZoomPanContext.Provider value={{
-            stageRef,
-            stageScale,
-            setStageScale,
-            stagePos,
-            setStagePos,
-            maxScrollPages,
-            setMaxScrollPages,
-            clampStagePosition,
-            zoomIn,
-            zoomOut,
-            activeTool
-        }}>
-            <AppContainer>
-                {/* Mobile polish without touching desktop */}
-                <GlobalStyles styles={{
-                    img: {
-                        WebkitUserDrag: 'none',
-                        userDrag: 'none',
-                        userSelect: 'none',
-                        maxWidth: '100%',
-                    },
-                    '*': {
-                        WebkitTapHighlightColor: 'transparent'
-                    }
-                }} />
-                <FloatingTopNav />
-                <ZoomControls
-                    scale={stageScale}
-                    pos={stagePos}
-                    onZoomIn={() => zoomIn(stageRef)}
-                    onZoomOut={() => zoomOut(stageRef)}
-                    onReset={resetView}
-                />
-                <DelightfulToolbar
-                    activeTool={activeTool}
-                    setActiveTool={handleToolChange}
-                    setEmojiButtonRect={setEmojiButtonRect}
-                />
-                <EmojiPicker
-                    visible={emojiPickerOpen}
-                    stampEmojis={stampEmojis}
-                    smileyEmojis={smileyEmojis}
-                    selected={selectedEmoji}
-                    onSelect={handleSelectEmoji}
-                    anchorRect={emojiButtonRect}
-                    subMode={emojiSubMode}
-                    setSubMode={handleSetSubMode}
-                    emojiOffsets={{
-                        'pikachu-sticker': {
-                            angleOffset: 4
+        <CommentsProvider>
+            <ZoomPanContext.Provider value={{
+                stageRef,
+                stageScale,
+                setStageScale,
+                stagePos,
+                setStagePos,
+                maxScrollPages,
+                setMaxScrollPages,
+                clampStagePosition,
+                zoomIn,
+                zoomOut,
+                activeTool
+            }}>
+                <AppContainer>
+                    {/* Mobile polish without touching desktop */}
+                    <GlobalStyles styles={{
+                        img: {
+                            WebkitUserDrag: 'none',
+                            userDrag: 'none',
+                            userSelect: 'none',
+                            maxWidth: '100%',
                         },
-                        'shelby-rodeo-sticker': {
-                            angleOffset: 4,
-                            scale: 1.3
-                        },
-                        'shrekby-sticker': {
-                            angleOffset: 2,
-                            scale: 1.2
-                        },
-                        'shelby-goddess-sticker': {
-                            angleOffset: 0,
-                            scale: 1.2,
-                            distanceOffset: -.2
-                        },
-                        'pat-plotting-sticker': {
-                            angleOffset: -3,
-                            scale: 1.3,
-                        },
-                        'shelby-medal-sticker': {
-                            scale: 1.2,
-                        },
-                        'shelby-laptop-sticker': {
-                            angleOffset: 5,
-                            scale: 1.6,
-                            distanceOffset: -.6
+                        '*': {
+                            WebkitTapHighlightColor: 'transparent'
                         }
-                    }}
-                />
-                <EmojiBrushOverlay
-                    emoji={selectedEmoji}
-                    visible={showOverlay}
-                    x={overlayPos.x}
-                    y={overlayPos.y}
-                    scale={previewScale}
-                    rotation={previewRotation}
-                    opacity={previewOpacity}
-                />
-                <Stage
-                    ref={stageRef}
-                    x={stagePos.x}
-                    y={stagePos.y}
-                    scaleX={stageScale}
-                    scaleY={stageScale}
-                    width={viewport.w}
-                    height={viewport.h}
-                    draggable={canDragBackground}
-                    dragBoundFunc={dragBoundFunc}
-                    onDragMove={handleDragMove}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        background: 'transparent',
-                        zIndex: 2,
-                        pointerEvents: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 'auto' : 'none'
-                    }}
-                    onWheel={(e) => handleWheel(e, stageRef)}
-                    onTouchMove={(e) => handleTouchMove(e, stageRef, prevTouchRef)}
-                    onTouchEnd={(e) => {
-                        handleTouchEnd(prevTouchRef)
-                        handleStageMouseUp()
-                        handleStampMouseUp()
-                    }}
-                    onMouseDown={(e) => {
-                        handleStageMouseDown()
-                        handleStamp()
-                    }}
-                    onTouchStart={(e) => {
-                        handleStageMouseDown()
-                        handleStamp()
-                    }}
-                    onMouseUp={() => {
-                        handleStageMouseUp()
-                        handleStampMouseUp()
-                    }}
-                    onTouchCancel={() => {
-                        handleStageMouseLeave()
-                        handleStampCancel()
-                    }}
-                    onMouseLeave={() => {
-                        handleStageMouseLeave()
-                        handleStampCancel()
-                    }}
-                >
-                    <Layer>
-                        <Rect
-                            x={0}
-                            y={0}
-                            width={viewport.w}
-                            height={viewport.h}
-                            fill="rgba(0,0,0,0)"
-                            listening={true}
-                        />
-                        {objects.map((obj) =>
-                            obj.type === 'sticky' ? null : (
-                                <EmojiObject
-                                    scale={obj.scale ?? 1}
-                                    rotation={obj.rotation ?? 0}
-                                    key={obj.id}
-                                    src={obj.src!}
-                                    x={obj.x}
-                                    y={obj.y}
-                                />
-                            )
-                        )}
-                        {wandEmojis.map((we) => {
-                            const elapsed = performance.now() - we.bornAt
-                            const progress = Math.min(elapsed / WAND_LIFETIME, 1)
-                            const offsetX = WAND_TRAVEL_DISTANCE * progress * Math.sin(we.floatAngle)
-                            const offsetY = -WAND_TRAVEL_DISTANCE * progress * Math.cos(we.floatAngle)
-                            const currentX = we.x + offsetX
-                            const currentY = we.y + offsetY
-                            const currentOpacity = 1 - progress
-
-                            return (
-                                <EmojiObject
-                                    key={we.id}
-                                    src={we.src}
-                                    x={currentX}
-                                    y={currentY}
-                                    rotation={we.rotation}
-                                    opacity={currentOpacity}
-                                    scale={1.5}
-                                />
-                            )
-                        })}
-                    </Layer>
-                </Stage>
-
-                <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                    <IntroductionPage />
-                </PageWrapper>
-                <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                    <MedTrackerPage />
-                </PageWrapper>
-                <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                    <ProjectBishopPage />
-                </PageWrapper>
-                <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                    <GoogleCodesignPage />
-                </PageWrapper>
-
-                <CursorChat />
-                <FastWaveCursor />
-                <CommentingLayer activeTool={activeTool} currentRoute={currentRoute} />
-                <SearchPalette />
-
-                {waypoints.length > 0 && startCursor && (
-                    <CursorSimulator
-                        startSide="left"
-                        endSide="bottom"
-                        waypoints={waypoints}
-                        start={true}
-                        offScreenSpeed={Math.round(800 * norm)}
+                    }} />
+                    <FloatingTopNav />
+                    <ZoomControls
+                        scale={stageScale}
+                        pos={stagePos}
+                        onZoomIn={() => zoomIn(stageRef)}
+                        onZoomOut={() => zoomOut(stageRef)}
+                        onReset={resetView}
                     />
-                )}
-            </AppContainer>
-        </ZoomPanContext.Provider>
+                    <DelightfulToolbar
+                        activeTool={activeTool}
+                        setActiveTool={handleToolChange}
+                        setEmojiButtonRect={setEmojiButtonRect}
+                    />
+                    <EmojiPicker
+                        visible={emojiPickerOpen}
+                        stampEmojis={stampEmojis}
+                        smileyEmojis={smileyEmojis}
+                        selected={selectedEmoji}
+                        onSelect={handleSelectEmoji}
+                        anchorRect={emojiButtonRect}
+                        subMode={emojiSubMode}
+                        setSubMode={handleSetSubMode}
+                        emojiOffsets={{
+                            'pikachu-sticker': {
+                                angleOffset: 4
+                            },
+                            'shelby-rodeo-sticker': {
+                                angleOffset: 4,
+                                scale: 1.3
+                            },
+                            'shrekby-sticker': {
+                                angleOffset: 2,
+                                scale: 1.2
+                            },
+                            'shelby-goddess-sticker': {
+                                angleOffset: 0,
+                                scale: 1.2,
+                                distanceOffset: -.2
+                            },
+                            'pat-plotting-sticker': {
+                                angleOffset: -3,
+                                scale: 1.3,
+                            },
+                            'shelby-medal-sticker': {
+                                scale: 1.2,
+                            },
+                            'shelby-laptop-sticker': {
+                                angleOffset: 5,
+                                scale: 1.6,
+                                distanceOffset: -.6
+                            }
+                        }}
+                    />
+                    <EmojiBrushOverlay
+                        emoji={selectedEmoji}
+                        visible={showOverlay}
+                        x={overlayPos.x}
+                        y={overlayPos.y}
+                        scale={previewScale}
+                        rotation={previewRotation}
+                        opacity={previewOpacity}
+                    />
+                    <Stage
+                        ref={stageRef}
+                        x={stagePos.x}
+                        y={stagePos.y}
+                        scaleX={stageScale}
+                        scaleY={stageScale}
+                        width={viewport.w}
+                        height={viewport.h}
+                        draggable={canDragBackground}
+                        dragBoundFunc={dragBoundFunc}
+                        onDragMove={handleDragMove}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            background: 'transparent',
+                            zIndex: 2,
+                            pointerEvents: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 'auto' : 'none'
+                        }}
+                        onWheel={(e) => handleWheel(e, stageRef)}
+                        onTouchMove={(e) => handleTouchMove(e, stageRef, prevTouchRef)}
+                        onTouchEnd={(e) => {
+                            handleTouchEnd(prevTouchRef)
+                            handleStageMouseUp()
+                            handleStampMouseUp()
+                        }}
+                        onMouseDown={(e) => {
+                            handleStageMouseDown()
+                            handleStamp()
+                        }}
+                        onTouchStart={(e) => {
+                            handleStageMouseDown()
+                            handleStamp()
+                        }}
+                        onMouseUp={() => {
+                            handleStageMouseUp()
+                            handleStampMouseUp()
+                        }}
+                        onTouchCancel={() => {
+                            handleStageMouseLeave()
+                            handleStampCancel()
+                        }}
+                        onMouseLeave={() => {
+                            handleStageMouseLeave()
+                            handleStampCancel()
+                        }}
+                    >
+                        <Layer>
+                            <Rect
+                                x={0}
+                                y={0}
+                                width={viewport.w}
+                                height={viewport.h}
+                                fill="rgba(0,0,0,0)"
+                                listening={true}
+                            />
+                            {objects.map((obj) =>
+                                obj.type === 'sticky' ? null : (
+                                    <EmojiObject
+                                        scale={obj.scale ?? 1}
+                                        rotation={obj.rotation ?? 0}
+                                        key={obj.id}
+                                        src={obj.src!}
+                                        x={obj.x}
+                                        y={obj.y}
+                                    />
+                                )
+                            )}
+                            {wandEmojis.map((we) => {
+                                const elapsed = performance.now() - we.bornAt
+                                const progress = Math.min(elapsed / WAND_LIFETIME, 1)
+                                const offsetX = WAND_TRAVEL_DISTANCE * progress * Math.sin(we.floatAngle)
+                                const offsetY = -WAND_TRAVEL_DISTANCE * progress * Math.cos(we.floatAngle)
+                                const currentX = we.x + offsetX
+                                const currentY = we.y + offsetY
+                                const currentOpacity = 1 - progress
+
+                                return (
+                                    <EmojiObject
+                                        key={we.id}
+                                        src={we.src}
+                                        x={currentX}
+                                        y={currentY}
+                                        rotation={we.rotation}
+                                        opacity={currentOpacity}
+                                        scale={1.5}
+                                    />
+                                )
+                            })}
+                        </Layer>
+                    </Stage>
+
+                    <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
+                        <IntroductionPage />
+                    </PageWrapper>
+                    <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
+                        <MedTrackerPage />
+                    </PageWrapper>
+                    <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
+                        <ProjectBishopPage />
+                    </PageWrapper>
+                    <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
+                        <GoogleCodesignPage />
+                    </PageWrapper>
+
+                    <CursorChat />
+                    <FastWaveCursor />
+                    <CommentingLayer activeTool={activeTool} currentRoute={currentRoute} />
+                    <SearchPalette />
+                    <CommentSidepane
+                        open={isCommentMode}
+                        currentRoute={currentRoute}
+                        collapsed={commentPaneCollapsed}
+                        onCollapseToggle={() => setCommentPaneCollapsed((p) => !p)}
+                    />
+
+                    {waypoints.length > 0 && startCursor && (
+                        <CursorSimulator
+                            startSide="left"
+                            endSide="bottom"
+                            waypoints={waypoints}
+                            start={true}
+                            offScreenSpeed={Math.round(800 * norm)}
+                        />
+                    )}
+                </AppContainer>
+            </ZoomPanContext.Provider>
+        </CommentsProvider>
     )
 }
 
 export default function App() {
     return (
         <CursorSimulatorProvider>
-            <AppContent />
+            <CommentsProvider>
+                <AppContent />
+            </CommentsProvider>
         </CursorSimulatorProvider>
     )
 }

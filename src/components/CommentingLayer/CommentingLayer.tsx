@@ -5,16 +5,7 @@ import Divider from '@mui/material/Divider'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import { Tool } from '../../types'
 import { useZoomPanContext } from '../../context/ZoomPanContext'
-
-// Types
-interface CommentData {
-    id: string
-    x: number
-    y: number
-    text: string
-    userName: string
-    createdAt: number // epoch millis
-}
+import { CommentData, useComments } from '../../context/CommentsContext'
 
 interface Props {
     activeTool: Tool
@@ -123,8 +114,7 @@ const SubmitButton = styled(IconButton)({
 })
 
 export default function CommentingLayer({ activeTool, currentRoute = '' }: Props) {
-    // Store comments per route
-    const [commentsByRoute, setCommentsByRoute] = useState<Record<string, CommentData[]>>({})
+    const { getCommentsForRoute, addComment, activeCommentId } = useComments()
     const [editing, setEditing] = useState<CommentData | null>(null)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -133,52 +123,7 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
     const { stageScale, stagePos } = useZoomPanContext()
 
     // Get comments for current route
-    const comments = commentsByRoute[currentRoute] || []
-    const setComments = (updater: React.SetStateAction<CommentData[]>) => {
-        setCommentsByRoute(prev => ({
-            ...prev,
-            [currentRoute]: typeof updater === 'function' ? updater(prev[currentRoute] || []) : updater
-        }))
-    }
-
-    // Utility to coerce any loaded comment to the latest shape
-    const normalizeComment = (raw: any): CommentData => {
-        return {
-            id: raw.id ?? Date.now().toString(),
-            x: raw.x ?? 0,
-            y: raw.y ?? 0,
-            text: raw.text ?? '',
-            userName: raw.userName ?? 'Anonymous',
-            createdAt: raw.createdAt ?? Date.now(),
-        }
-    }
-
-    // Load from localStorage on mount
-    useEffect(() => {
-        const stored = window.localStorage.getItem('figma-comments-by-route')
-        if (stored) {
-            try {
-                const parsed = JSON.parse(stored)
-                if (typeof parsed === 'object') {
-                    // Normalize all comments in all routes
-                    const normalized: Record<string, CommentData[]> = {}
-                    for (const [route, routeComments] of Object.entries(parsed)) {
-                        if (Array.isArray(routeComments)) {
-                            normalized[route] = routeComments.map(normalizeComment)
-                        }
-                    }
-                    setCommentsByRoute(normalized)
-                }
-            } catch {
-                // ignore parse errors
-            }
-        }
-    }, [])
-
-    // Persist to localStorage when comments change
-    useEffect(() => {
-        window.localStorage.setItem('figma-comments-by-route', JSON.stringify(commentsByRoute))
-    }, [commentsByRoute])
+    const comments = getCommentsForRoute(currentRoute)
 
     // Focus textarea when it appears
     useEffect(() => {
@@ -235,10 +180,12 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
         if (!editing) return
         const trimmed = editing.text.trim()
         if (trimmed === '') return
-        setComments((prev) => [
-            ...prev,
-            { ...editing, text: trimmed, createdAt: Date.now(), userName: editing.userName ?? 'Anonymous' },
-        ])
+        addComment(currentRoute, {
+            ...editing,
+            text: trimmed,
+            createdAt: Date.now(),
+            userName: editing.userName ?? 'Anonymous'
+        })
         setEditing(null)
     }
 
@@ -271,7 +218,7 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
             {comments.map((c) => {
                 const screenX = stagePos.x + c.x * stageScale
                 const screenY = stagePos.y + c.y * stageScale
-                const isHovered = hoveredId === c.id
+                const isHovered = hoveredId === c.id || activeCommentId === c.id
 
                 // When hovered, bubble should expand to the right without shifting left border
                 const leftPosition = isHovered ? screenX - BUBBLE_SIZE / 2 : screenX

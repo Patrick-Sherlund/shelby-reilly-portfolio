@@ -32,6 +32,8 @@ import { ReactComponent as DribbbleIconLight } from '../../assets/dribble-light.
 import { ReactComponent as FigmaIconLight } from '../../assets/figma-light.svg'
 import { ReactComponent as LinkedInIconLight } from '../../assets/linkedin-light.svg'
 
+type Props = {}
+
 const PROFILES = [
   { name: 'Shelby Reilly', src: `${process.env.PUBLIC_URL}/images/shelby-rodeo.png` },
   { name: 'Anonymous', src: `${process.env.PUBLIC_URL}/images/anonymous.png` }
@@ -235,7 +237,7 @@ const DrawerPaperSX = (theme: any) => ({
   }
 })
 
-export default function FloatingTopNav() {
+export default function FloatingTopNav({}: Props) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { mode } = useThemeMode()

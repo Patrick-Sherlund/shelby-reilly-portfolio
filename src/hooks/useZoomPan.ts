@@ -72,7 +72,8 @@ export function useZoomPan() {
                 // Regular scrolling behavior when no modifier keys are pressed
                 setStagePos((prev) => {
                     const newY = clampStagePosition(prev.y - deltaY)
-                    return { x: prev.x, y: newY }
+                    const newX = prev.x - e.evt.deltaX
+                    return { x: newX, y: newY }
                 })
             }
         },
