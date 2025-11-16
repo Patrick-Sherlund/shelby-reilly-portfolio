@@ -54,6 +54,13 @@ const List = styled('div')({
     overflowY: 'auto'
 })
 
+const CollapsedList = styled('div')({
+    flex: 1,
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column'
+})
+
 const Row = styled('button')<{ $active: boolean; $collapsed: boolean }>(({ $active, $collapsed }) => ({
     width: '100%',
     background: $active ? 'rgba(255,255,255,0.08)' : 'transparent',
@@ -180,11 +187,16 @@ export function CommentSidepane({
                                 {collapsed ? <KeyboardArrowLeftIcon /> : <KeyboardArrowLeftIcon sx={{ transform: 'rotate(180deg)' }} />}
                             </IconButton>
                         </Header>
-                        <List>
+                        <List
+                            onWheel={(e) => {
+                                // Prevent Konva stage from hijacking scroll when hovering the pane
+                                e.stopPropagation()
+                            }}
+                        >
                             {ordered.length === 0 && (
                                 <EmptyState>No comments on this page yet.</EmptyState>
                             )}
-                            {ordered.map((comment) => (
+                            {ordered.map((comment, idx) => (
                                 <Row
                                     key={comment.id}
                                     onClick={() => focusComment(comment.id)}
@@ -193,6 +205,9 @@ export function CommentSidepane({
                                 >
                                     <Box sx={{ flex: 1, minWidth: 0 }}>
                                         <Meta>
+                                            <Typography sx={{ fontWeight: 800, fontSize: 13, opacity: 0.85 }}>
+                                                #{idx + 1}
+                                            </Typography>
                                             <Typography sx={{ fontWeight: 700, fontSize: 13 }}>
                                                 {comment.userName || 'Anonymous'}
                                             </Typography>
@@ -225,21 +240,28 @@ export function CommentSidepane({
                         >
                             <ChatBubbleOutlineIcon sx={{ color: '#FFFFFF', fontSize: 26 }} />
                         </Row>
-                        {ordered.map((comment, idx) => (
-                            <Row
-                                key={comment.id}
-                                onClick={() => {
-                                    onCollapseToggle()
-                                    focusComment(comment.id)
-                                }}
-                                $active={activeCommentId === comment.id}
-                                $collapsed={collapsed}
-                            >
-                                <Typography sx={{ fontSize: 26, fontWeight: 800 }}>
-                                    #{idx + 1}
-                                </Typography>
-                            </Row>
-                        ))}
+                        <CollapsedList
+                            onWheel={(e) => {
+                                // Prevent Konva stage from hijacking scroll when hovering the pane
+                                e.stopPropagation()
+                            }}
+                        >
+                            {ordered.map((comment, idx) => (
+                                <Row
+                                    key={comment.id}
+                                    onClick={() => {
+                                        onCollapseToggle()
+                                        focusComment(comment.id)
+                                    }}
+                                    $active={activeCommentId === comment.id}
+                                    $collapsed={collapsed}
+                                >
+                                    <Typography sx={{ fontSize: 26, fontWeight: 800 }}>
+                                        #{idx + 1}
+                                    </Typography>
+                                </Row>
+                            ))}
+                        </CollapsedList>
                     </Box>
                 )}
             </Panel>

@@ -175,22 +175,6 @@ export const StickyNote = styled('div')(({ theme }) => ({
   }
 }))
 
-export const LogoRow = styled('div')(({ theme }) => ({
-  marginTop: 8,
-  display: 'flex',
-  flexDirection: 'column',
-  flexWrap: 'wrap',
-  gap: 8,
-  alignItems: 'center',
-  [theme.breakpoints.down('md')]: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, auto)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 6
-  }
-}))
-
 export const ContentWrapper = styled('div')(({ theme }) => ({
   transform: 'translateX(60px)',
   display: 'flex',

@@ -10,7 +10,6 @@ import {
   SparklesImage,
   StickyNotesWrapper,
   StickyNote,
-  LogoRow,
   ContentWrapper
 } from './IntroductionPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
@@ -488,35 +487,38 @@ export default function IntroductionPage() {
           style={{
             backgroundColor: '#FFFFFF',
             width: NOTE, height: NOTE,
+            paddingTop: isMobile ? 14 : 18,
             ...sticky3Pos,
             zIndex: 2,
             transform: `translate(${noteOffsets.note3.x}px, ${noteOffsets.note3.y}px)`,
             cursor: dragInfoRef.current?.id === 'note3' ? 'grabbing' : 'grab'
           }}
         >
-          Previously:
-          <LogoRow>
-            <img
-              src={`${process.env.PUBLIC_URL}/images/intro/airforce.png`}
-              alt="U.S. Air Force"
-              height={18}
-            />
-            <img
-              src={`${process.env.PUBLIC_URL}/images/intro/jamba.png`}
-              alt="Jamba"
-              height={20}
-            />
-            <img
-              src={`${process.env.PUBLIC_URL}/images/intro/vmware.png`}
-              alt="VMware"
-              height={20}
-            />
-            <img
-              src={`${process.env.PUBLIC_URL}/images/intro/google.png`}
-              alt="Google"
-              height={20}
-            />
-          </LogoRow>
+          <Typography
+            sx={{
+              fontWeight: 800,
+              fontSize: isMobile ? 16 : 20,
+              mb: isMobile ? 1 : 1.5,
+              lineHeight: 1.1,
+              whiteSpace: 'nowrap',
+              textAlign: 'center'
+            }}
+          >
+            Previously @
+          </Typography>
+          <img
+            src={`${process.env.PUBLIC_URL}/images/intro/logos.png`}
+            alt="Previously at logos"
+            style={{
+              width: '96%',
+              height: 'auto',
+              objectFit: 'contain',
+              marginTop: isMobile ? 0 : 2,
+              borderRadius: 8,
+              padding: isMobile ? 0 : 2,
+              background: 'rgba(255,255,255,0.9)'
+            }}
+          />
         </StickyNote>
       </StickyNotesWrapper>
     </MainWrapper>
