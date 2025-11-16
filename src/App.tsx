@@ -186,7 +186,8 @@ function AppContent() {
 
     useDisableBrowserZoom()
 
-    // Global wheel handler for when cursor tool is active (Stage has pointerEvents: none)
+    // Global wheel handler for when cursor/hand tool is active OR when commenting tool is active
+    // (Stage has pointerEvents: none for hand tool, and CommentingLayer blocks wheel events for commenting tool)
     useEffect(() => {
         // Don't add wheel handler on project pages (they have normal scrolling)
         const isProjectPage = currentRoute === '#/medtracker-project' ||
@@ -194,8 +195,10 @@ function AppContent() {
                               currentRoute === '#/googlecodesign-project'
         if (isProjectPage) return
 
-        // Only active when cursor/hand tool is selected (Stage won't receive wheel events due to pointerEvents: none)
-        if (activeTool !== 'hand' && activeTool !== null) return
+        // Active when cursor/hand tool is selected OR when commenting tool is active
+        // (both need global wheel handling because Stage won't receive events)
+        const needsGlobalWheel = activeTool === 'hand' || activeTool === null || activeTool === 'commenting-cursor'
+        if (!needsGlobalWheel) return
 
         const handleGlobalWheel = (e: WheelEvent) => {
             e.preventDefault()
