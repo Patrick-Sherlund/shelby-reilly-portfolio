@@ -33,19 +33,19 @@ export default function EmojiObject({
                 // Width is the larger dimension; scale to 40, adjust height proportionally
                 const aspectRatio = originalHeight / originalWidth
                 setDimensions({
-                    width: 40 * scale,
-                    height: 40 * aspectRatio * scale
+                    width: 40,
+                    height: 40 * aspectRatio
                 })
             } else {
                 // Height is the larger dimension; scale to 40, adjust width proportionally
                 const aspectRatio = originalWidth / originalHeight
                 setDimensions({
-                    width: 40 * aspectRatio * scale,
-                    height: 40 * scale
+                    width: 40 * aspectRatio,
+                    height: 40
                 })
             }
         }
-    }, [img, scale])
+    }, [img])
 
     return (
         <KonvaImage
@@ -56,6 +56,10 @@ export default function EmojiObject({
             opacity={opacity}
             width={dimensions.width}
             height={dimensions.height}
+            offsetX={dimensions.width / 2}
+            offsetY={dimensions.height / 2}
+            scaleX={scale}
+            scaleY={scale}
         />
     )
 }

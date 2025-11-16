@@ -47,6 +47,19 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
     const rafRef = useRef<number | null>(null)
     const currentStageRef = useRef<number>(0)
     const overshootUntilRef = useRef<number | null>(null)
+    const emojiSizesRef = useRef<Record<string, { w: number; h: number }>>({})
+
+    const ensureEmojiSize = useCallback((src: string) => {
+        if (emojiSizesRef.current[src]) return
+        const img = new Image()
+        img.onload = () => {
+            emojiSizesRef.current[src] = {
+                w: img.naturalWidth || img.width,
+                h: img.naturalHeight || img.height
+            }
+        }
+        img.src = src
+    }, [])
 
     const stampEmojis = [
         require('../assets/images/emoji-wheel/shelby-medal-sticker.png'),
@@ -76,6 +89,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
             setEmojiPickerOpen(true)
             // Reset the selection state when emoji tool is opened
             setHasSelectedEmoji(false)
+            ensureEmojiSize(selectedEmoji as string)
             // Reset to default cursor when emoji tool is first selected
             document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`
         } else if (tool === 'commenting-cursor') {
@@ -85,12 +99,17 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
             setEmojiPickerOpen(false)
             document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`
         }
-    }, [emojiSubMode])
+    }, [emojiSubMode, ensureEmojiSize, selectedEmoji])
+
+    useEffect(() => {
+        ensureEmojiSize(selectedEmoji as string)
+    }, [selectedEmoji, ensureEmojiSize])
 
     const handleSelectEmoji = (emoji: string) => {
         setSelectedEmoji(emoji)
         setHasSelectedEmoji(true)
         setEmojiPickerOpen(false)
+        ensureEmojiSize(emoji)
         // After selecting an emoji, update cursor based on submode
         if (emojiSubMode === 'stamp') {
             document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/stamp-cursor.png) 0 32, auto`
@@ -196,8 +215,8 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
                 id: Date.now().toString(),
                 type: 'emoji',
                 src: selectedEmoji,
-                x: pointer.x - 20 * scale,
-                y: pointer.y - 20 * scale,
+                x: pointer.x,
+                y: pointer.y,
                 rotation,
                 scale
             }
