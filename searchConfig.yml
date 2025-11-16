@@ -1,15 +1,36 @@
 groups:
-  Home:
-    - id: intro-polaroids
-      label: Shelby's Polaroids!!!
-      keywords: [polaroid, photos, collection]
-    - id: intro-sticky
-      label: Little Stickies :)
-      keywords: [sticky, notes]
-  MedTracker:
-    - id: med-images
-      label: MedTracker Mockups
-      keywords: [iphone, mockups, images]
-    - id: med-description
-      label: Information
-      keywords: [description, text] 
+  AboutPage:
+    - id: about-page
+      label: About Me
+      keywords: [about, bio, profile, information]
+      route: '#/about'
+  HomePage:
+    - id: home-introduction
+      label: Introduction
+      keywords: [intro, home, welcome, start]
+      pageIndex: 0
+    - id: home-medtracker
+      label: MedTracker
+      keywords: [med, tracker, medicine, health, app]
+      pageIndex: 1
+    - id: home-projectbishop
+      label: Project Bishop
+      keywords: [bishop, project, game, unity]
+      pageIndex: 2
+    - id: home-googlecodesign
+      label: Google Codesign
+      keywords: [google, codesign, design, collaboration]
+      pageIndex: 3
+  CaseStudy:
+    - id: casestudy-medtracker
+      label: MedTracker Project
+      keywords: [medtracker, case, study, project, details]
+      route: '#/medtracker-project'
+    - id: casestudy-bishop
+      label: Bishop Project
+      keywords: [bishop, case, study, project, details]
+      route: '#/bishop-project'
+    - id: casestudy-googlecodesign
+      label: Google Codesign Project
+      keywords: [google, codesign, case, study, project, details]
+      route: '#/googlecodesign-project' 
