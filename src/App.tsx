@@ -152,6 +152,8 @@ function AppContent() {
     const prevPosYRef = useRef(stagePos.y)
     const handleBackToHome = () => { window.location.hash = '' }
 
+    const [currentRoute, setCurrentRoute] = React.useState<string>(window.location.hash)
+
     const dragBoundFunc = (pos: { x: number; y: number }) => ({
         x: pos.x,
         y: clampStagePosition(pos.y)
@@ -186,6 +188,12 @@ function AppContent() {
 
     // Global wheel handler for when cursor tool is active (Stage has pointerEvents: none)
     useEffect(() => {
+        // Don't add wheel handler on project pages (they have normal scrolling)
+        const isProjectPage = currentRoute === '#/medtracker-project' ||
+                              currentRoute === '#/bishop-project' ||
+                              currentRoute === '#/googlecodesign-project'
+        if (isProjectPage) return
+
         // Only active when cursor/hand tool is selected (Stage won't receive wheel events due to pointerEvents: none)
         if (activeTool !== 'hand' && activeTool !== null) return
 
@@ -236,7 +244,7 @@ function AppContent() {
         return () => {
             window.removeEventListener('wheel', handleGlobalWheel)
         }
-    }, [activeTool, stageScale, stagePos, clampStagePosition, setStageScale, setStagePos])
+    }, [activeTool, stageScale, stagePos, clampStagePosition, setStageScale, setStagePos, currentRoute])
 
     useEffect(() => {
         if (prevScaleRef.current === 1 && stageScale !== 1) {
@@ -261,8 +269,6 @@ function AppContent() {
         setStageScale(1)
         setStagePos({ x: 0, y: targetY })
     }
-
-    const [currentRoute, setCurrentRoute] = React.useState<string>(window.location.hash)
 
     useEffect(() => {
         const handleHashChange = () => {
