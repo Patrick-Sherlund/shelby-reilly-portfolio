@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import IconButton from '@mui/material/IconButton'
 import {
     BottomHalf,
@@ -44,6 +44,16 @@ export default function EmojiPicker({
     setSubMode,
     emojiOffsets = {}
 }: Props) {
+    const [isAnimating, setIsAnimating] = useState(false)
+
+    useEffect(() => {
+        if (visible) {
+            setIsAnimating(true)
+        } else {
+            setIsAnimating(false)
+        }
+    }, [visible])
+
     if (!visible) return null
 
     const emojisToShow = subMode === 'stamp' ? stampEmojis : smileyEmojis
@@ -63,7 +73,11 @@ export default function EmojiPicker({
     }
 
     return (
-        <PickerContainer data-ignore-stage style={{ left: centerLeft, top: centerTop }}>
+        <PickerContainer
+            data-ignore-stage
+            style={{ left: centerLeft, top: centerTop }}
+            className={isAnimating ? 'animating' : ''}
+        >
             {emojisToShow.map((emoji, i) => {
                 const emojiKey = getEmojiKey(emoji)
                 const offset = emojiOffsets[emojiKey] || {}

@@ -1,4 +1,14 @@
 import { styled } from '@mui/material/styles'
+import { keyframes } from '@mui/system'
+
+const wheelReveal = keyframes`
+    0% {
+        clip-path: circle(2.575rem at center);
+    }
+    100% {
+        clip-path: circle(8rem at center);
+    }
+`
 
 export const PickerContainer = styled('div')(() => ({
     position: 'fixed',
@@ -14,7 +24,11 @@ export const PickerContainer = styled('div')(() => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    zIndex: 9999
+    zIndex: 9999,
+    clipPath: 'circle(2.575rem at center)',
+    '&.animating': {
+        animation: `${wheelReveal} 0.25s ease-out forwards`
+    }
 }))
 
 export const EmojiSlice = styled('div')(() => ({
