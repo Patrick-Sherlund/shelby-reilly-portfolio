@@ -23,9 +23,9 @@ const getHoldStage = (elapsedSeconds: number) => {
 
 const getHoldTransform = (elapsedSeconds: number) => {
     if (elapsedSeconds < 1) return { scale: 1, rotation: 0 }
-    if (elapsedSeconds < 2) return { scale: 1.15, rotation: -15 }
-    if (elapsedSeconds < 3) return { scale: 1.25, rotation: 15 }
-    return { scale: 1.35, rotation: -15 }
+    if (elapsedSeconds < 2) return { scale: 1.5, rotation: -15 }
+    if (elapsedSeconds < 3) return { scale: 2, rotation: 15 }
+    return { scale: 2.5, rotation: -15 }
 }
 
 export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams) {

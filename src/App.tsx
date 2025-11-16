@@ -151,7 +151,8 @@ function AppContent() {
             selectedEmoji
         })
     const isWandActive = activeTool === 'emoji' && emojiSubMode === 'wand'
-    const canDragBackground = !isWandActive
+    const isStampMode = activeTool === 'emoji' && emojiSubMode === 'stamp'
+    const canDragBackground = !(isWandActive || isStampMode)
 
     const yBeforeZoomRef = useRef<number | null>(null)
     const scrolledWhileZoomedRef = useRef(false)
