@@ -69,14 +69,11 @@ const LetterCircle = styled('div')({
     flexShrink: 0,
 })
 
-// White bubble for existing user comments
+// Dark bubble for existing user comments
 const UserBubble = styled(BubbleBase)(({ theme }) => ({
-    backgroundColor: '#ffffff',
-    boxShadow:
-        theme.palette.mode === 'light'
-            ? '0 0 0 1px rgba(0,0,0,0.15)'
-            : '0 0 0 1px rgba(255,255,255,0.4)',
-    color: '#000',
+    backgroundColor: '#222222',
+    boxShadow: '0 0 0 0.75px #FFFFFF',
+    color: '#FFFFFF',
     display: 'flex',
     alignItems: 'center',
     pointerEvents: 'auto',
@@ -285,9 +282,11 @@ export default function CommentingLayer({ activeTool }: Props) {
                         }}
                         onMouseLeave={() => setHoveredId(null)}
                     >
-                        <LetterCircle style={{ marginRight: isHovered ? 8 : 0 }}>
-                            {c.userName.charAt(0).toUpperCase()}
-                        </LetterCircle>
+                        {!isHovered && (
+                            <span style={{ fontSize: 12, fontWeight: 700 }}>
+                                {c.userName.charAt(0).toUpperCase()}
+                            </span>
+                        )}
                         {isHovered && (
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <div

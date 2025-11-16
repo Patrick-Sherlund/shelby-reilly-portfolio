@@ -112,7 +112,7 @@ export default function DelightfulToolbar({
                         <ToolImage  isActive={activeTool === 'emoji'}
                             src={shelbyStickerIcon}
                             alt="Stickers"
-                            sx={{ width: '100px', height: '48px' }}
+                            sx={{ width: '70px', height: 'auto' }}
                         />
                     </IconButton>
                 </ToolSection>

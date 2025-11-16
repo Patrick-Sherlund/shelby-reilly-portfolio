@@ -74,5 +74,6 @@ export const ToolImage = styled('img')<{
     objectFit: 'contain',
     transition: 'transform 0.2s ease',
     position: 'relative',
-    zIndex: 1
+    zIndex: 1,
+    transformOrigin: 'center bottom'
 }))
