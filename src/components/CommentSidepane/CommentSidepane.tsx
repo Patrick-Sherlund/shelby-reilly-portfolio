@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { styled } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -135,6 +135,12 @@ export function CommentSidepane({
         () => [...comments].sort((a, b) => b.createdAt - a.createdAt),
         [comments]
     )
+
+    useEffect(() => {
+        if (collapsed) {
+            setActiveCommentId(null)
+        }
+    }, [collapsed, setActiveCommentId])
 
     const focusComment = (commentId: string) => {
         const target = comments.find((c) => c.id === commentId)

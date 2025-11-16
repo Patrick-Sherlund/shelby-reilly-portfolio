@@ -114,7 +114,7 @@ const SubmitButton = styled(IconButton)({
 })
 
 export default function CommentingLayer({ activeTool, currentRoute = '' }: Props) {
-    const { getCommentsForRoute, addComment, activeCommentId } = useComments()
+    const { getCommentsForRoute, addComment, activeCommentId, setActiveCommentId } = useComments()
     const [editing, setEditing] = useState<CommentData | null>(null)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -139,8 +139,9 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
     useEffect(() => {
         if (!activeCommentId || activeTool !== 'commenting-cursor') {
             setHoveredId(null)
+            setActiveCommentId(null)
         }
-    }, [activeCommentId, activeTool])
+    }, [activeCommentId, activeTool, setActiveCommentId])
 
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         // When editing exists and user clicks outside the box, cancel editing without creating a new one
