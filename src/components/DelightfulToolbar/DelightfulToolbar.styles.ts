@@ -58,7 +58,7 @@ export const ToolSection = styled('div')<{
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: '#5969FF',
+        backgroundColor: '#6674FF',
         borderRadius: '14px',
         zIndex: 0,
         transition: 'all 0.2s ease'
