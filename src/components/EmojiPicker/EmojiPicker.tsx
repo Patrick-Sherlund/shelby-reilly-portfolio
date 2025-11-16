@@ -1,17 +1,25 @@
 
 import React from 'react'
+import IconButton from '@mui/material/IconButton'
 import {
     BottomHalf,
-    CenterRing,
     EmojiImage,
     EmojiSlice,
     InnerCircle,
     PickerContainer,
-    PieDivider,
     TopHalf
 } from './EmojiPicker.styles'
 
+import { ReactComponent as WandEmoji } from '../../assets/images/emoji-wheel/wand-emoji.svg'
+import { ReactComponent as StampEmoji } from '../../assets/images/emoji-wheel/stamp-emoji.svg'
+
 type EmojiSubMode = 'stamp' | 'wand'
+
+type EmojiOffset = {
+    scale?: number // Scale multiplier (e.g., 1.2 for 20% larger)
+    angleOffset?: number // Rotation offset in degrees
+    distanceOffset?: number // Additional distance from center in rem
+}
 
 type Props = {
     visible: boolean
@@ -22,18 +30,20 @@ type Props = {
     anchorRect: { x: number; y: number; width: number; height: number }
     subMode: EmojiSubMode
     setSubMode: (mode: EmojiSubMode) => void
+    emojiOffsets?: Record<string, EmojiOffset> // Key is emoji filename
 }
 
 export default function EmojiPicker({
-                                        visible,
-                                        stampEmojis,
-                                        smileyEmojis,
-                                        selected,
-                                        onSelect,
-                                        anchorRect,
-                                        subMode,
-                                        setSubMode
-                                    }: Props) {
+    visible,
+    stampEmojis,
+    smileyEmojis,
+    selected,
+    onSelect,
+    anchorRect,
+    subMode,
+    setSubMode,
+    emojiOffsets = {}
+}: Props) {
     if (!visible) return null
 
     const emojisToShow = subMode === 'stamp' ? stampEmojis : smileyEmojis
@@ -41,19 +51,28 @@ export default function EmojiPicker({
     const centerLeft = anchorRect.x + anchorRect.width / 2 + window.scrollX
     const centerTop = anchorRect.y + anchorRect.height / 2 + window.scrollY - 90
 
+    // Helper function to extract filename from emoji path
+    const getEmojiKey = (emojiPath: string | any): string => {
+        // Convert to string in case it's a require() object
+        const pathStr = typeof emojiPath === 'string' ? emojiPath : String(emojiPath)
+        const parts = pathStr.split('/')
+        const filename = parts[parts.length - 1]
+        // Remove file extension and webpack hash (e.g., .aef6f19801208a6a9541)
+        const cleanName = filename.replace(/\.[a-f0-9]+\.(png|jpg|jpeg|gif|svg)$/i, '.$1').replace(/\.(png|jpg|jpeg|gif|svg)$/i, '')
+        return cleanName
+    }
+
     return (
         <PickerContainer data-ignore-stage style={{ left: centerLeft, top: centerTop }}>
-            {emojisToShow.map((_, i) => {
-                const angle = i * angleStep + 10
-                return (
-                    <PieDivider
-                        key={`divider-${i}`}
-                        style={{ transform: `translate(-50%, -50%) rotate(${angle}deg)` }}
-                    />
-                )
-            })}
             {emojisToShow.map((emoji, i) => {
-                const angle = i * angleStep
+                const emojiKey = getEmojiKey(emoji)
+                const offset = emojiOffsets[emojiKey] || {}
+                const scale = offset.scale || 1
+                const angleOffset = offset.angleOffset || 0
+                const distanceOffset = offset.distanceOffset || 0
+                const angle = i * angleStep + angleOffset
+                const distance = 5.75 + distanceOffset
+
                 return (
                     <EmojiSlice
                         key={emoji}
@@ -61,8 +80,9 @@ export default function EmojiPicker({
                             transform: `
                 translate(-50%, -50%)
                 rotate(${angle}deg)
-                translate(5.5rem)
+                translate(${distance}rem)
                 rotate(-${angle}deg)
+                scale(${scale})
               `
                         }}
                         onClick={() => onSelect(emoji)}
@@ -71,29 +91,20 @@ export default function EmojiPicker({
                     </EmojiSlice>
                 )
             })}
-            <CenterRing />
             <InnerCircle>
                 <TopHalf
                     active={subMode === 'wand'}
                     onClick={() => setSubMode('wand')}
                 >
-                    <img
-                        src={`${process.env.PUBLIC_URL}/images/wand-cursor.png`}
-                        alt="Wand Mode"
-                        width={24}
-                        height={24}
-                    />
+                    <WandEmoji width={"24px"} height={"24px"} />
+
                 </TopHalf>
                 <BottomHalf
                     active={subMode === 'stamp'}
                     onClick={() => setSubMode('stamp')}
                 >
-                    <img
-                        src={`${process.env.PUBLIC_URL}/images/stamp-cursor.png`}
-                        alt="Stamp Mode"
-                        width={24}
-                        height={24}
-                    />
+                    <StampEmoji width={"24px"} height={"24px"} />
+
                 </BottomHalf>
             </InnerCircle>
         </PickerContainer>

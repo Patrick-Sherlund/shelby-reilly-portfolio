@@ -1,18 +1,24 @@
-import { styled } from '@mui/material/styles'
+import { styled, keyframes } from '@mui/material/styles'
+
+const gentleSwing = keyframes`
+  0% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  100% { transform: rotate(-15deg); }
+`
 
 // Full-page wrapper
 export const MainWrapper = styled('div')(({ theme }) => ({
   width: '100%',
-  minHeight: '100%',
+  minHeight: 'auto',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   position: 'relative',
+  paddingBottom: 0,
   [theme.breakpoints.down('md')]: {
-    justifyContent: 'flex-start',
     paddingTop: 72,
-    paddingBottom: 'max(24px, env(safe-area-inset-bottom))'
+    paddingBottom: 'max(12px, env(safe-area-inset-bottom))'
   }
 }))
 
@@ -34,7 +40,7 @@ export const ContentWrapper = styled('div')(({ theme }) => ({
 // Title Section Styles
 export const TitleSectionContainer = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
   position: 'absolute',
-  top: isMobile ? 100 : 110,
+  top: isMobile ? 72 : 90,
   left: isMobile ? 32 : 84,
   zIndex: 10
 }))
@@ -61,13 +67,13 @@ export const TitleChip = styled('div')<{ isMobile: boolean }>(({ isMobile }) => 
 export const MainContentArea = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
   display: 'flex',
   flexDirection: 'row',
-  alignItems: 'flex-start',
+  alignItems: 'stretch',
   justifyContent: 'center',
   gap: isMobile ? 24 : 40,
   width: '100%',
-  maxWidth: '100%',
-  margin: 0,
-  padding: isMobile ? '280px 0 40px' : '320px 0 40px',
+  maxWidth: 1600,
+  margin: '0 auto',
+  padding: isMobile ? '200px 0 20px' : '300px 0 28px',
   position: 'relative'
 }))
 
@@ -81,6 +87,8 @@ export const TextContentSection = styled('div')(({ theme }) => ({
   flex: 1,
   position: 'relative',
   maxWidth: 900,
+  display: 'flex',
+  flexDirection: 'column',
   [theme.breakpoints.down('lg')]: {
     maxWidth: 780
   },
@@ -93,7 +101,7 @@ export const AboutTextCard = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'light' ? '#FFFFFF' : '#1E1E1E',
   borderRadius: 12,
   padding: 'clamp(20px, 3vw, 32px)',
-  paddingRight: '30px',
+  paddingRight: '50px',
   fontSize: 'clamp(14px, 1.5vw, 16px)',
   fontFamily: 'Futura, sans-serif',
   lineHeight: 1.6,
@@ -101,10 +109,33 @@ export const AboutTextCard = styled('div')(({ theme }) => ({
   boxShadow: theme.palette.mode === 'light'
     ? '0 4px 16px rgba(0,0,0,0.1)'
     : '0 4px 16px rgba(0,0,0,0.3)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 12,
+  height: '100%',
+  boxSizing: 'border-box',
   [theme.breakpoints.down('md')]: {
     padding: '20px',
     paddingRight: '20px',
-    fontSize: '15px'
+    fontSize: '15px',
+    height: 'auto',
+    display: 'block'
+  }
+}))
+
+export const ContentBlock = styled('div')(({ theme }) => ({
+  flex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  '& > *': {
+    margin: 0,
+    width: '100%'
+  },
+  [theme.breakpoints.down('md')]: {
+    display: 'block',
+    flex: 'unset',
+    marginBottom: 16
   }
 }))
 
@@ -163,16 +194,17 @@ export const BottomSection = styled('div')<{ isMobile: boolean }>(({ isMobile })
   justifyContent: 'center',
   gap: isMobile ? 32 : 60,
   width: '100%',
-  maxWidth: '100%',
-  margin: 0,
-  padding: isMobile ? '80px 0 40px' : '100px 0 60px',
+  maxWidth: 1600,
+  margin: '0 auto',
+  padding: isMobile ? '48px 0 32px' : '60px 0 40px',
   position: 'relative'
 }))
 
 export const HobbiesContentSection = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
   position: 'relative',
-  flex: 1,
-  maxWidth: isMobile ? '100%' : 900
+  flex: isMobile ? '1 1 auto' : '0 0 60%',
+  maxWidth: isMobile ? '100%' : '600px',
+  width: isMobile ? '100%' : '60%'
 }))
 
 export const HobbiesTitle = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
@@ -187,14 +219,31 @@ export const HobbiesFooter = styled('div')<{ isMobile: boolean }>(({ isMobile })
   opacity: 0.9
 }))
 
-export const BlueSquiggleImage = styled('img')(() => ({
+export const BlueSquiggleImage = styled('img')<{
+  $isVisible?: boolean;
+  $delay?: number;
+}>(({ $isVisible = false, $delay = 0 }) => ({
   position: 'absolute',
   bottom: -26,
   right: -26,
   width: 72,
   height: 72,
   zIndex: 10,
-  pointerEvents: 'none'
+  pointerEvents: 'none',
+  opacity: $isVisible ? 1 : 0,
+  animation: $isVisible
+    ? `bubbleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both, ${gentleSwing} 7s ease-in-out ${$delay + 0.5}s infinite`
+    : 'none',
+  '@keyframes bubbleUp': {
+    '0%': {
+      opacity: 0,
+      transform: 'translateY(20px) scale(0.8)',
+    },
+    '100%': {
+      opacity: 1,
+      transform: 'translateY(0) scale(1)',
+    }
+  }
 }))
 
 export const PolaroidSection = styled('div')<{ isMobile: boolean }>(({ isMobile }) => ({
@@ -206,8 +255,8 @@ export const PolaroidSection = styled('div')<{ isMobile: boolean }>(({ isMobile 
   gap: 0,
   flex: '0 0 auto',
   marginTop: isMobile ? 0 : 40,
-  height: isMobile ? 'auto' : 280,
-  width: isMobile ? '100%' : 520
+  height: isMobile ? 'auto' : 285,
+  width: isMobile ? '100%' : 640
 }))
 
 // Image Components
@@ -222,17 +271,34 @@ export const PresentationImage = styled('img')(({ theme }) => ({
   }
 }))
 
-export const ShelbyStandingImage = styled('img')(({ theme }) => ({
+export const ShelbyStandingImage = styled('img')<{
+  $isVisible?: boolean;
+  $delay?: number;
+}>(({ theme, $isVisible = false, $delay = 0 }) => ({
   width: 'clamp(120px, 10vw, 150px)',
   height: 'auto',
   borderRadius: 8,
-  boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+  opacity: $isVisible ? 1 : 0,
+  animation: $isVisible ? `bubbleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both` : 'none',
+  '@keyframes bubbleUp': {
+    '0%': {
+      opacity: 0,
+      transform: 'translateY(20px) scale(0.8)',
+    },
+    '100%': {
+      opacity: 1,
+      transform: 'translateY(0) scale(1)',
+    }
+  },
   [theme.breakpoints.down('md')]: {
     width: 'clamp(100px, 30vw, 140px)'
   }
 }))
 
-export const YellowSquiggle = styled('img')(({ theme }) => ({
+export const YellowSquiggle = styled('img')<{
+  $isVisible?: boolean;
+  $delay?: number;
+}>(({ theme, $isVisible = false, $delay = 0 }) => ({
   position: 'absolute',
   top: -26,
   left: -26,
@@ -240,6 +306,20 @@ export const YellowSquiggle = styled('img')(({ theme }) => ({
   height: 72,
   zIndex: 10,
   pointerEvents: 'none',
+  opacity: $isVisible ? 1 : 0,
+  animation: $isVisible
+    ? `bubbleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both, ${gentleSwing} 6s ease-in-out ${$delay + 0.5}s infinite`
+    : 'none',
+  '@keyframes bubbleUp': {
+    '0%': {
+      opacity: 0,
+      transform: 'translateY(20px) scale(0.8)',
+    },
+    '100%': {
+      opacity: 1,
+      transform: 'translateY(0) scale(1)',
+    }
+  },
   [theme.breakpoints.down('md')]: {
     width: 36,
     height: 36,

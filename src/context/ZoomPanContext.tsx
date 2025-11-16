@@ -7,6 +7,8 @@ export interface ZoomPanContextValue {
     setStageScale: React.Dispatch<React.SetStateAction<number>>
     stagePos: { x: number; y: number }
     setStagePos: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>
+    maxScrollPages: number
+    setMaxScrollPages: React.Dispatch<React.SetStateAction<number>>
     clampStagePosition: (y: number) => number
     zoomIn: (stageRef: React.RefObject<Konva.Stage>) => void
     zoomOut: (stageRef: React.RefObject<Konva.Stage>) => void

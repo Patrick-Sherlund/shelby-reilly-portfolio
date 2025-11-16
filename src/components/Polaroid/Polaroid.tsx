@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import { styled } from '@mui/material/styles';
 
 interface PolaroidProps {
@@ -12,6 +12,8 @@ interface PolaroidProps {
   zIndex?: number;
   top?: number | string;
   left?: number | string;
+  $isVisible?: boolean;
+  $delay?: number;
 }
 
 const PolaroidWrapper = styled('div')<{
@@ -19,32 +21,53 @@ const PolaroidWrapper = styled('div')<{
   zIndex: number;
   top: number | string;
   left: number | string;
-}>(({ rotationDeg, zIndex, top, left }) => ({
-  position: 'absolute',
-  top,
-  left,
-  zIndex,
-  transform: `rotate(${rotationDeg}deg)`,
-  transformOrigin: '50% 50%',
-  backgroundColor: '#ffffff',
-  padding: '10px 10px 10px 10px',
-  boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
-  display: 'inline-block',
-  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-  willChange: 'transform',
-  '&:hover': {
-    boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
-    // straighten to zero when hovered
-    transform: 'rotate(0deg) scale(1.1)',
-    zIndex: 200,
-    cursor: 'pointer',
-  },
-  '&:focus-visible': {
-    boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
-    transform: 'rotate(0deg) scale(1.02)',
-    outline: 'none',
-  },
-}));
+  $isVisible?: boolean;
+  $delay?: number;
+}>(({ rotationDeg, zIndex, top, left, $isVisible, $delay = 0 }) => {
+  // Only apply animation styles if $isVisible prop is explicitly provided
+  const hasAnimation = $isVisible !== undefined;
+
+  return {
+    position: 'absolute',
+    top,
+    left,
+    zIndex,
+    transform: `rotate(${rotationDeg}deg)`,
+    transformOrigin: '50% 50%',
+    backgroundColor: '#ffffff',
+    padding: '10px 10px 10px 10px',
+    boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
+    display: 'inline-block',
+    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+    willChange: 'transform',
+    ...(hasAnimation && {
+      opacity: $isVisible ? 1 : 0,
+      animation: $isVisible ? `bubbleUp-${rotationDeg} 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both` : 'none',
+      [`@keyframes bubbleUp-${rotationDeg}`]: {
+        '0%': {
+          opacity: 0,
+          transform: `translateY(20px) scale(0.8) rotate(${rotationDeg}deg)`,
+        },
+        '100%': {
+          opacity: 1,
+          transform: `translateY(0) scale(1) rotate(${rotationDeg}deg)`,
+        }
+      }
+    }),
+    '&:hover': {
+      boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
+      // straighten to zero when hovered
+      transform: 'rotate(0deg) scale(1.1)',
+      zIndex: 200,
+      cursor: 'pointer',
+    },
+    '&:focus-visible': {
+      boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
+      transform: 'rotate(0deg) scale(1.02)',
+      outline: 'none',
+    },
+  };
+});
 
 const PolaroidImage = styled('img')<{ aspectRatio: number }>(({ aspectRatio, theme }) => ({
   display: 'block',
@@ -81,7 +104,7 @@ const PolaroidDate = styled('div')(() => ({
   whiteSpace: 'normal',
 }));
 
-export default function Polaroid({
+const Polaroid = forwardRef<HTMLDivElement, PolaroidProps>(({
   src,
   alt,
   title,
@@ -92,7 +115,9 @@ export default function Polaroid({
   zIndex = 1,
   top = 0,
   left = 0,
-}: PolaroidProps) {
+  $isVisible,
+  $delay,
+}, ref) => {
   // Calculate aspect ratio for the image
   const [aspectRatio, setAspectRatio] = useState(1);
 
@@ -108,10 +133,13 @@ export default function Polaroid({
 
   return (
     <PolaroidWrapper
+      ref={ref}
       rotationDeg={rotationDeg}
       zIndex={zIndex}
       top={top}
       left={left}
+      $isVisible={$isVisible}
+      $delay={$delay}
       style={{ width }}
       tabIndex={0}
     >
@@ -122,4 +150,8 @@ export default function Polaroid({
       </PolaroidCaption>
     </PolaroidWrapper>
   );
-}
+});
+
+Polaroid.displayName = 'Polaroid';
+
+export default Polaroid;

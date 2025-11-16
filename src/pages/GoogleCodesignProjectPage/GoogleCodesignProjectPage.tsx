@@ -176,6 +176,8 @@ import prototype13 from '../../assets/images/codesign-prototype/codesign-prototy
 import prototype14 from '../../assets/images/codesign-prototype/codesign-prototype-14.png'
 import PersonaCarousel from '../../components/PersonaCarousel/PersonaCarousel'
 import { useRef, useEffect, useState } from 'react'
+import SVGDraw from '../../components/SVG/SVGDraw'
+import { ReactComponent as CutieIllustrationSVG } from '../../assets/images/cutie-illustration.svg'
 
 export default function GoogleCodesignProjectPage() {
     const handleBackClick = () => { window.location.hash = '' }
@@ -358,7 +360,20 @@ export default function GoogleCodesignProjectPage() {
                             </ProcessRow>
                         </ProcessContent>
 
-                        <ProcessIllustration src={cutieIllustration} alt="Process illustration" />
+                        <div style={{ display: 'block', margin: '0 auto', width: '300px' }}>
+                            <SVGDraw
+                                width={300}
+                                height="auto"
+                                duration={2}
+                                stagger={0.15}
+                                trigger="inView"
+                                threshold={0.5}
+                                preserveStroke={true}
+                                preserveColors={true}
+                            >
+                                <CutieIllustrationSVG />
+                            </SVGDraw>
+                        </div>
                     </ProcessSection>
 
                     <SectionDivider />

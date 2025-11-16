@@ -1,23 +1,19 @@
 import { styled } from '@mui/material/styles'
 
-export const PickerContainer = styled('div')(({ theme }) => ({
+export const PickerContainer = styled('div')(() => ({
     position: 'fixed',
-    width: '14rem',
-    height: '14rem',
+    width: '16rem',
+    height: '16rem',
     boxSizing: 'border-box',
     margin: 0,
     padding: 0,
     borderRadius: '50%',
     pointerEvents: 'auto',
     transform: 'translate(-58%, -80%)',
-    background:
-        theme.palette.mode === 'light'
-            ? 'rgba(255,255,255,0.95)'
-            : 'rgba(50,50,50,0.85)',
-    boxShadow:
-        theme.palette.mode === 'light'
-            ? '0 4px 8px rgba(0,0,0,0.15)'
-            : '0 4px 8px rgba(0,0,0,0.35)',
+    backgroundImage: `url(${require('../../assets/images/emoji-wheel/emoji-wheel.png')})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     zIndex: 9999
 }))
 
@@ -26,33 +22,22 @@ export const EmojiSlice = styled('div')(() => ({
     top: '50%',
     left: '50%',
     transformOrigin: 'center center',
-    width: '3rem',
-    height: '3rem',
+    width: '3.5rem',
+    height: '3.5rem',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    cursor: 'pointer'
-}))
-
-export const CenterRing = styled('div')(() => ({
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    width: '7rem',
-    height: '7rem',
-    borderRadius: '50%',
-    transform: 'translate(-50%, -50%)',
-    border: '4px solid #4A90E2',
-    zIndex: 2
+    cursor: 'pointer',
+    overflow: 'visible'
 }))
 
 export const InnerCircle = styled('div')(() => ({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    width: '7rem',
-    height: '7rem',
+    width: '5.15rem',
+    height: '5.15rem',
     borderRadius: '50%',
     transform: 'translate(-50%, -50%)',
     overflow: 'hidden',
@@ -65,7 +50,7 @@ export const TopHalf = styled('div')<{ active: boolean }>(({ active }) => ({
     left: 0,
     width: '100%',
     height: '50%',
-    backgroundColor: active ? '#4A90E2' : '#ffffff',
+    backgroundColor: active ? '#7B68EE' : '#242424',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -78,22 +63,11 @@ export const BottomHalf = styled('div')<{ active: boolean }>(({ active }) => ({
     left: 0,
     width: '100%',
     height: '50%',
-    backgroundColor: active ? '#4A90E2' : '#ffffff',
+    backgroundColor: active ? '#7B68EE' : '#242424',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer'
-}))
-
-export const PieDivider = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    top: '75%',
-    left: '50%',
-    width: '1px',
-    height: '50%',
-    backgroundColor: theme.palette.mode === 'light' ? '#e2e2e2' : '#515151',
-    transformOrigin: 'top center',
-    zIndex: 1
 }))
 
 type EmojiImageProps = {
@@ -101,10 +75,9 @@ type EmojiImageProps = {
 }
 
 export const EmojiImage = styled('img')<EmojiImageProps>(({ isSelected }) => ({
-    maxWidth: '2rem',
-    maxHeight: '2rem',
+    maxWidth: '2.5rem',
+    maxHeight: '2.5rem',
     width: 'auto',
     height: 'auto',
     objectFit: 'contain', // ensure it won't crop but will preserve aspect ratio
-    borderRadius: '50%',
 }))

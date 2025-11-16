@@ -22,7 +22,8 @@ export const ToolbarContainer = styled(Paper)(({ theme }) => ({
     alignItems: 'center',
     width: 'max-content',
     height: 'max-content',
-    borderRadius: 24,
+    borderRadius: 20,
+    gap: 0,
     // No right padding: each tool sets its own required width
     boxShadow:
         theme.palette.mode === 'light'
@@ -32,35 +33,46 @@ export const ToolbarContainer = styled(Paper)(({ theme }) => ({
         theme.palette.mode === 'light'
             ? 'rgba(255, 255, 255, 0.95)'
             : 'rgba(50, 50, 50, 0.8)',
-    padding: 0,
+    padding: '6px',
     cursor: `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`,
 }))
 
-// We give each section a base width of 80px...
-// except the sticker tool, which gets extra width to avoid clipping.
+// Each section takes up exactly 1/3 of the toolbar width
 export const ToolSection = styled('div')<{
     isActive: boolean
     isCursorTool?: boolean
     isStickerTool?: boolean
 }>(({ isActive, isCursorTool, isStickerTool }) => ({
-    width: isStickerTool ? 112 : 100, // 80 + 12 extra for sticker
-    height: 62,
+    position: 'relative',
+    flex: '1 1 33.333%',
+    minWidth: 0,
+    height: 56,
     display: 'flex',
     justifyContent: 'center',
-    borderRadius: isCursorTool ? '24px 0 0 24px' : isStickerTool ? '0 24px 24px 0' : 0,
-    // Cursor tool is centered vertically, others bottom-aligned
-    alignItems: isCursorTool ? 'center' : 'flex-end',
-    transition: 'background-color 0.2s ease',
-    backgroundColor: isActive ? '#5263FF' : 'transparent'
+    alignItems: 'center',
+    padding: '0 30px',
+    '&::before': isActive ? {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#5969FF',
+        borderRadius: '14px',
+        zIndex: 0,
+        transition: 'all 0.2s ease'
+    } : {}
 }))
 
 // The actual image. We use maxWidth & maxHeight so it scales within the container
 export const ToolImage = styled('img')<{
     isActive?: boolean
 }>(({isActive}) => ({
-    maxWidth: '100%',
-    maxHeight: '100%',
-    transformOrigin: "bottom",
-    scale: isActive ? 1.15 : 1,
-    objectFit: 'contain'
+    width: '56px',
+    height: '56px',
+    objectFit: 'contain',
+    transition: 'transform 0.2s ease',
+    position: 'relative',
+    zIndex: 1
 }))

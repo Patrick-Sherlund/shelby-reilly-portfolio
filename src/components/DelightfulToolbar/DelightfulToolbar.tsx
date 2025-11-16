@@ -6,8 +6,11 @@ import {
     ToolSection,
     ToolImage
 } from './DelightfulToolbar.styles'
+import shelbyStickerIcon from '../../assets/images/emoji-wheel/sticker-tab-icon.png'
+import cursorIcon from '../../assets/images/emoji-wheel/cursor-tab-icon.png'
+import commentIcon from '../../assets/images/emoji-wheel/comment-tab-icon.png'
 
-type Tool = 'hand' | 'commenting-cursor' | 'sticky' | 'emoji' | null
+type Tool = 'hand' | 'commenting-cursor' | 'emoji' | null
 
 type Props = {
     activeTool: Tool
@@ -61,8 +64,7 @@ export default function DelightfulToolbar({
                         }}
                     >
                         <ToolImage isActive={activeTool === 'hand'}
-                            sx={{width: 'auto', height: '50px'}}
-                            src={`${process.env.PUBLIC_URL}/images/bar-cursor.png`}
+                            src={cursorIcon}
                             alt="Cursor"
                         />
                     </IconButton>
@@ -83,34 +85,13 @@ export default function DelightfulToolbar({
                         }}
                     >
                         <ToolImage isActive={activeTool === 'commenting-cursor'}
-                            src={`${process.env.PUBLIC_URL}/images/commenting-cursor-lg.png`}
+                            src={commentIcon}
                             alt="commenting-cursor"
                         />
                     </IconButton>
                 </ToolSection>
 
-                {/* 3) Sticky tool (middle) */}
-                <ToolSection isActive={activeTool === 'sticky'}>
-                    <IconButton
-                        onClick={() => handleSelectTool('sticky')}
-                        sx={{
-                            p: 0,
-                            '&:hover': {
-                                backgroundColor:
-                                    activeTool === 'sticky'
-                                        ? 'rgba(255,255,255,0.1)'
-                                        : 'rgba(0,0,0,0.04)'
-                            }
-                        }}
-                    >
-                        <ToolImage isActive={activeTool === 'sticky'}
-                            src={`${process.env.PUBLIC_URL}/images/sticky-notes.png`}
-                            alt="Sticky Notes"
-                        />
-                    </IconButton>
-                </ToolSection>
-
-                {/* 4) Sticker/Emoji tool (right corner) */}
+                {/* 3) Sticker/Emoji tool (right corner) */}
                 <ToolSection
                     isActive={activeTool === 'emoji'}
                     isStickerTool // <--- This will give the extra width
@@ -129,8 +110,9 @@ export default function DelightfulToolbar({
                         }}
                     >
                         <ToolImage  isActive={activeTool === 'emoji'}
-                            src={`${process.env.PUBLIC_URL}/images/stickers.png`}
+                            src={shelbyStickerIcon}
                             alt="Stickers"
+                            sx={{ width: '100px', height: '48px' }}
                         />
                     </IconButton>
                 </ToolSection>

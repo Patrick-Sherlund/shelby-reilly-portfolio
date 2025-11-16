@@ -30,9 +30,12 @@ import {
   YellowSquiggle,
   BulletList,
   BulletItem,
-  IconWrapper
+  IconWrapper,
+  ContentBlock
 } from './AboutPage.styles'
 import { useSearchContext } from '../../context/SearchContext'
+import { useZoomPanContext } from '../../context/ZoomPanContext'
+import { DEFAULT_SCROLL_PAGES } from '../../hooks/useZoomPan'
 
 // Import images from assets
 import squigleBlip from '../../assets/images/squigle-blip.svg'
@@ -40,11 +43,16 @@ import blueSquiggle from '../../assets/images/blue-squiggle.svg'
 import magicWand from '../../assets/images/magic-wand.svg'
 import aboutMePresentation from '../../assets/images/about-me-presentation-1.png'
 import aboutMeShelbyStanding from '../../assets/images/about-me-shelby-standing-2.png'
+import aboutMeShelbyStandingAlt from '../../assets/images/about-me-shelby-standing-3.png'
 
 export default function AboutPage() {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const [shelbyImageSrc, setShelbyImageSrc] = useState(aboutMeShelbyStandingAlt)
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set())
+  const imageRefs = useRef<(HTMLImageElement | HTMLDivElement | null)[]>([])
 
   const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
+  const zoomPanContext = useZoomPanContext()
 
   // --- responsive runtime flags ---
   const isClient = typeof window !== 'undefined'
@@ -60,6 +68,71 @@ export default function AboutPage() {
 
     return () => {}
   }, [registerGroupAnchor])
+
+  useEffect(() => {
+    if (!isClient) {
+      return
+    }
+
+    const updateScrollBounds = () => {
+      if (!sectionRef.current) {
+        return
+      }
+      const pageHeight = sectionRef.current.getBoundingClientRect().height
+      const viewportHeight = window.innerHeight || 1
+      const extraPages = Math.max(0, pageHeight / viewportHeight - 1)
+      zoomPanContext.setMaxScrollPages(Math.max(extraPages + 0.1, 0))
+    }
+
+    updateScrollBounds()
+    window.addEventListener('resize', updateScrollBounds)
+
+    return () => {
+      window.removeEventListener('resize', updateScrollBounds)
+      zoomPanContext.setMaxScrollPages(DEFAULT_SCROLL_PAGES)
+    }
+  }, [zoomPanContext, isClient])
+
+  useEffect(() => {
+    const swapTimer = setTimeout(() => {
+      setShelbyImageSrc(aboutMeShelbyStanding)
+    }, 1200)
+
+    return () => clearTimeout(swapTimer)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = imageRefs.current.indexOf(entry.target as HTMLImageElement | HTMLDivElement)
+            if (index !== -1) {
+              setVisibleImages((prev) => new Set([...prev, index]))
+            }
+          }
+        })
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -10% 0px'
+      }
+    )
+
+    imageRefs.current.forEach((ref) => {
+      if (ref) {
+        observer.observe(ref)
+      }
+    })
+
+    return () => {
+      imageRefs.current.forEach((ref) => {
+        if (ref) {
+          observer.unobserve(ref)
+        }
+      })
+    }
+  }, [])
 
   return (
     <MainWrapper ref={sectionRef}>
@@ -81,8 +154,11 @@ export default function AboutPage() {
           {/* Left Section - Presentation Image */}
           <PresentationSection isMobile={isMobile}>
             <YellowSquiggle
+              ref={(el) => (imageRefs.current[0] = el)}
               src={squigleBlip}
               alt=""
+              $isVisible={visibleImages.has(0)}
+              $delay={0.1}
             />
             <PresentationImage
               src={aboutMePresentation}
@@ -97,11 +173,14 @@ export default function AboutPage() {
                 I'm a Senior Product Designer.
               </SectionTitle>
 
+              <ContentBlock>
               <Paragraph>
                 I specialize in <strong>simplifying complex systems</strong> and creating{' '}
                 <strong>experiences users love.</strong>
               </Paragraph>
+              </ContentBlock>
 
+              <ContentBlock>
               <ParagraphShort>
                 <strong>Previous projects:</strong>{' '}
                 <CompanyNamesOne>Apple,</CompanyNamesOne>
@@ -109,13 +188,17 @@ export default function AboutPage() {
                 <CompanyNamesThree> VMware</CompanyNamesThree>,
                 <CompanyNamesFour> US Air Force</CompanyNamesFour>.
               </ParagraphShort>
+              </ContentBlock>
 
+              <ContentBlock>
               <Paragraph>
                 I completed my <strong>Masters in Human Computer Interaction at Georgia Tech</strong>{' '}
                 where I worked as a lab Assistant in the{' '}
                 <strong>GVU Prototyping & Usability Labs.</strong>
               </Paragraph>
+              </ContentBlock>
 
+              <ContentBlock>
               <IconTextRow>
                 <span>
                   <IconWrapper
@@ -126,13 +209,17 @@ export default function AboutPage() {
                   tools for emergency services <strong>using AI/ML/Computer Vision.</strong>
                 </span>
               </IconTextRow>
+              </ContentBlock>
             </AboutTextCard>
 
             {/* Shelby Standing Image - overlapping on the right */}
             <ShelbyImageContainer isMobile={isMobile}>
               <ShelbyStandingImage
-                src={aboutMeShelbyStanding}
+                ref={(el) => (imageRefs.current[1] = el)}
+                src={shelbyImageSrc}
                 alt="Shelby Reilly"
+                $isVisible={visibleImages.has(1)}
+                $delay={0.2}
               />
             </ShelbyImageContainer>
           </TextContentSection>
@@ -170,45 +257,57 @@ export default function AboutPage() {
 
             {/* Blue Squiggle at bottom right of content */}
             <BlueSquiggleImage
+              ref={(el) => (imageRefs.current[2] = el)}
               src={blueSquiggle}
               alt=""
+              $isVisible={visibleImages.has(2)}
+              $delay={0.05}
             />
           </HobbiesContentSection>
 
           {/* Right - Polaroid Photos */}
           <PolaroidSection isMobile={isMobile}>
             <Polaroid
+              ref={(el) => (imageRefs.current[3] = el)}
               src={`${process.env.PUBLIC_URL}/images/polaroid/ctrly.png`}
               alt="Ctrl+Y"
               title="Ctrl+Y"
               date="Nov 2024 - Current"
-              width={isMobile ? 140 : 150}
-              rotationDeg={-4}
+              width={isMobile ? 162 : 200}
+              rotationDeg={5.75}
               zIndex={3}
               top={isMobile ? 0 : 20}
               left={isMobile ? 0 : 0}
+              $isVisible={visibleImages.has(3)}
+              $delay={0.1}
             />
             <Polaroid
+              ref={(el) => (imageRefs.current[4] = el)}
               src={`${process.env.PUBLIC_URL}/images/polaroid/dpod.png`}
               alt="dPod"
               title="dPod"
               date="Aug 2019 - Dec 2019"
-              width={isMobile ? 140 : 150}
-              rotationDeg={2}
+              width={isMobile ? 162 : 184}
+              rotationDeg={-10}
               zIndex={2}
               top={isMobile ? 20 : 40}
-              left={isMobile ? 20 : 150}
+              left={isMobile ? 20 : 200}
+              $isVisible={visibleImages.has(4)}
+              $delay={0.15}
             />
             <Polaroid
+              ref={(el) => (imageRefs.current[5] = el)}
               src={`${process.env.PUBLIC_URL}/images/polaroid/hoop.png`}
               alt="LED Basketball Hoop"
               title="LED Basketball Hoop"
               date="Sept [wk] 2022"
-              width={isMobile ? 140 : 150}
-              rotationDeg={-3}
+              width={isMobile ? 162 : 150}
+              rotationDeg={3}
               zIndex={4}
               top={isMobile ? 40 : 10}
-              left={isMobile ? 40 : 300}
+              left={isMobile ? 40 : 380}
+              $isVisible={visibleImages.has(5)}
+              $delay={0.2}
             />
           </PolaroidSection>
         </BottomSection>

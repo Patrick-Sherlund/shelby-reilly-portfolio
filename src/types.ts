@@ -1,7 +1,7 @@
 
 
 
-export type Tool = 'hand' | 'commenting-cursor' | 'sticky' | 'emoji' | null
+export type Tool = 'hand' | 'commenting-cursor' | 'emoji' | null
 
 
 export type BoardItem = {

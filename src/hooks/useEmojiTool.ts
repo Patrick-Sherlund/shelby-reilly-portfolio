@@ -10,34 +10,32 @@ export function useEmojiTool({ stageRef }: UseEmojiToolParams) {
     const [activeTool, setActiveTool] = useState<Tool>(null)
     const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
     const [selectedEmoji, setSelectedEmoji] = useState(
-        `${process.env.PUBLIC_URL}/images/emojis/fun/charlie.png`
+        require('../assets/images/emoji-wheel/fire-sticker.png')
     )
     const [emojiButtonRect, setEmojiButtonRect] = useState({ x: 0, y: 0, width: 0, height: 0 })
     const [emojiSubMode, setEmojiSubMode] = useState<EmojiSubMode>('stamp')
     const [objects, setObjects] = useState<BoardItem[]>([])
 
     const stampEmojis = [
-        `${process.env.PUBLIC_URL}/images/emojis/fun/charlie.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/cheeto-pat.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/emo-shelby.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/excited-shelby.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/peace-pat.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/plotting-pat.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/shrek.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/simba.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/tillamook-pat.png`
+        require('../assets/images/emoji-wheel/shelby-medal-sticker.png'),
+        require('../assets/images/emoji-wheel/fire-sticker.png'),
+        require('../assets/images/emoji-wheel/shelby-laptop-sticker.png'),
+        require('../assets/images/emoji-wheel/pikachu-sticker.png'),
+        require('../assets/images/emoji-wheel/shelby-rodeo-sticker.png'),
+        require('../assets/images/emoji-wheel/shrekby-sticker.png'),
+        require('../assets/images/emoji-wheel/shelby-goddess-sticker.png'),
+        require('../assets/images/emoji-wheel/pat-plotting-sticker.png')
     ]
 
     const smileyEmojis = [
-        `${process.env.PUBLIC_URL}/images/emojis/fun/charlie.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/cheeto-pat.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/emo-shelby.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/excited-shelby.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/peace-pat.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/plotting-pat.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/shrek.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/simba.png`,
-        `${process.env.PUBLIC_URL}/images/emojis/fun/tillamook-pat.png`
+        require('../assets/images/emoji-wheel/shelby-medal-sticker.png'),
+        require('../assets/images/emoji-wheel/fire-sticker.png'),
+        require('../assets/images/emoji-wheel/shelby-laptop-sticker.png'),
+        require('../assets/images/emoji-wheel/pikachu-sticker.png'),
+        require('../assets/images/emoji-wheel/shelby-rodeo-sticker.png'),
+        require('../assets/images/emoji-wheel/shrekby-sticker.png'),
+        require('../assets/images/emoji-wheel/shelby-goddess-sticker.png'),
+        require('../assets/images/emoji-wheel/pat-plotting-sticker.png')
     ]
 
     const handleToolChange = useCallback((tool: Tool) => {

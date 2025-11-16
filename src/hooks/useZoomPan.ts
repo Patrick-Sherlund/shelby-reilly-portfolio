@@ -1,9 +1,12 @@
 import { useState, useCallback, RefObject } from 'react'
 import Konva from 'konva'
 
+export const DEFAULT_SCROLL_PAGES = 3
+
 export function useZoomPan() {
     const [stageScale, setStageScale] = useState(1)
     const [stagePos, setStagePos] = useState({ x: 0, y: 0 })
+    const [maxScrollPages, setMaxScrollPages] = useState(DEFAULT_SCROLL_PAGES)
 
     const clampScale = useCallback((s: number) => {
         if (s < 1) return 1
@@ -12,11 +15,11 @@ export function useZoomPan() {
     }, [])
 
     const clampStagePosition = useCallback((y: number) => {
-        const minY = -3 * window.innerHeight * stageScale
+        const minY = -maxScrollPages * window.innerHeight * stageScale
         if (y < minY) return minY
         if (y > 0) return 0
         return y
-    }, [stageScale])
+    }, [stageScale, maxScrollPages])
 
     const zoomStageToPoint = useCallback(
         (stageRef: RefObject<Konva.Stage>, deltaY: number, pointerPosition: { x: number; y: number }) => {
@@ -199,6 +202,8 @@ export function useZoomPan() {
         setStageScale,
         stagePos,
         setStagePos,
+        maxScrollPages,
+        setMaxScrollPages,
         clampScale,
         clampStagePosition,
         handleWheel,
