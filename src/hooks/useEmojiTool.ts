@@ -216,7 +216,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
                 type: 'emoji',
                 src: selectedEmoji,
                 x: pointer.x,
-                y: pointer.y,
+                y: pointer.y - 3,
                 rotation,
                 scale
             }
