@@ -141,7 +141,7 @@ export const DescriptiveParagraph = styled('div')(({ theme }) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '28px',
-    color: '#FFFFFF',
+    color: theme.palette.text.primary,
     [theme.breakpoints.down('md')]: {
         fontSize: '24px',
     },
@@ -155,7 +155,7 @@ export const RoleText = styled('div')(({ theme }) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '28px',
-    color: '#ADADAD',
+    color: theme.palette.text.secondary,
     [theme.breakpoints.down('md')]: {
         fontSize: '24px',
     },
@@ -169,7 +169,7 @@ export const DatesText = styled('div')(({ theme }) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '28px',
-    color: '#ADADAD',
+    color: theme.palette.text.secondary,
     [theme.breakpoints.down('md')]: {
         fontSize: '24px',
     },
@@ -198,7 +198,7 @@ export const LineText = styled('div')(({ theme }) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '32px',
-    color: '#FFFFFF',
+    color: theme.palette.text.primary,
     [theme.breakpoints.down('md')]: {
         fontSize: '24px',
     },

@@ -16,6 +16,8 @@ export interface SearchItem {
   keywords: string[]
   group: string
   element?: HTMLElement | null
+  route?: string
+  pageIndex?: number
 }
 
 interface SearchContextValue {
@@ -42,7 +44,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<SearchItem[]>([])
   const pendingRef = useRef<{ id: string; element: HTMLElement | null }[]>([])
   const groupAnchorsRef = useRef<Record<string, { element: HTMLElement; pageIndex: number }>>({})
-  const configRef = useRef<{ [id: string]: { label: string; keywords: string[]; group: string } }>({})
+  const configRef = useRef<{ [id: string]: { label: string; keywords: string[]; group: string; route?: string; pageIndex?: number } }>({})
 
   // load YAML once
   useEffect(() => {
@@ -52,7 +54,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       .then((text) => {
         if (!mounted) return
         const data: any = yaml.load(text)
-        const map: { [id: string]: { label: string; keywords: string[]; group: string } } = {}
+        const map: { [id: string]: { label: string; keywords: string[]; group: string; route?: string; pageIndex?: number } } = {}
         if (data && typeof data === 'object' && 'groups' in data) {
           const groupsObj = (data as any).groups
           Object.keys(groupsObj).forEach((groupName) => {
@@ -61,11 +63,21 @@ export function SearchProvider({ children }: { children: ReactNode }) {
                 label: item.label,
                 keywords: item.keywords || [],
                 group: groupName,
+                route: item.route,
+                pageIndex: item.pageIndex,
               }
             })
           })
         }
         configRef.current = map
+
+        // Immediately populate items from the config (for items with route/pageIndex that don't need element registration)
+        const initialItems: SearchItem[] = Object.keys(map).map(id => ({
+          id,
+          ...map[id],
+          element: null,
+        }))
+        setItems(initialItems)
 
         // process any pending registrations
         if (pendingRef.current.length > 0) {

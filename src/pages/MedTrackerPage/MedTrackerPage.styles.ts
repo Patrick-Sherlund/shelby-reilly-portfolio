@@ -99,19 +99,19 @@ export const Title = styled('h2')(() => ({
   color: '#5263FF',
 }))
 
-export const LineText = styled('div')(() => ({
+export const LineText = styled('div')(({ theme }) => ({
   fontFamily: 'Futura, sans-serif',
   fontWeight: 400,
   fontSize: '28px',
-  color: '#FFFFFF',
+  color: theme.palette.text.primary,
 }))
 
 
-export const SubLineText = styled('div')(() => ({
+export const SubLineText = styled('div')(({ theme }) => ({
   fontFamily: 'Futura, sans-serif',
   fontWeight: 400,
   fontSize: '28px',
-  color: '#ADADAD',
+  color: theme.palette.text.secondary,
 }))
 
 export const CaseStudyButton = styled('button')(() => ({
@@ -190,10 +190,10 @@ export const MobileTitle = styled('h2')(() => ({
   color: '#5263FF',
 }))
 
-export const MobileMeta = styled('div')(() => ({
+export const MobileMeta = styled('div')(({ theme }) => ({
   fontFamily: 'Futura, sans-serif',
   fontSize: '14px',
-  color: '#FFFFFF',
+  color: theme.palette.text.primary,
   opacity: 0.9,
 }))
 

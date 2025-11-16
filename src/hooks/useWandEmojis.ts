@@ -3,9 +3,9 @@ import { Tool, EmojiSubMode, WandEmoji } from '../types'
 import Konva from 'konva'
 
 export const WAND_SPAWN_INTERVAL = 50
-export const WAND_LIFETIME = 500
+export const WAND_LIFETIME = 1000
 export const WAND_MAX_ANGLE = Math.PI / 2
-export const WAND_TRAVEL_DISTANCE = 225
+export const WAND_TRAVEL_DISTANCE = 450
 
 interface UseWandEmojisParams {
   stageRef: React.RefObject<Konva.Stage>

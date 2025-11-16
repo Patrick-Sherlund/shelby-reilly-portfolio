@@ -27,6 +27,7 @@ export default function SearchPalette() {
     const [query, setQuery] = useState('')
     const [activeIndex, setActiveIndex] = useState(0)
     const theme = useTheme()
+    const listContainerRef = React.useRef<HTMLDivElement>(null)
 
     // Reset when opened / closed
     useEffect(() => {
@@ -34,6 +35,36 @@ export default function SearchPalette() {
             setQuery('')
             setActiveIndex(0)
         }
+    }, [open])
+
+    // Prevent wheel events from propagating to the page when scrolling inside the list
+    useEffect(() => {
+        const listContainer = listContainerRef.current
+        if (!listContainer) return
+
+        const handleWheel = (e: WheelEvent) => {
+            const { scrollTop, scrollHeight, clientHeight } = listContainer
+            const isScrollingUp = e.deltaY < 0
+            const isScrollingDown = e.deltaY > 0
+
+            // Allow scrolling within the container
+            const isAtTop = scrollTop === 0
+            const isAtBottom = scrollTop + clientHeight >= scrollHeight
+
+            // Prevent page scroll if we're scrolling within bounds
+            if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
+                e.stopPropagation()
+            }
+
+            // If we're at the boundary and trying to scroll further, prevent it entirely
+            if ((isScrollingDown && isAtBottom) || (isScrollingUp && isAtTop)) {
+                e.preventDefault()
+                e.stopPropagation()
+            }
+        }
+
+        listContainer.addEventListener('wheel', handleWheel, { passive: false })
+        return () => listContainer.removeEventListener('wheel', handleWheel)
     }, [open])
 
     const results = useMemo(() => {
@@ -63,6 +94,33 @@ export default function SearchPalette() {
         const flatItem = results[index]
         if (!flatItem) return
         closeSearch()
+
+        // If the item has a route, navigate to that page
+        if (flatItem.route) {
+            window.location.hash = flatItem.route
+            return
+        }
+
+        // If the item has a pageIndex, navigate to the home page first (if not already there), then scroll
+        if (flatItem.pageIndex !== undefined) {
+            const currentRoute = window.location.hash
+            const isOnHomePage = !currentRoute || currentRoute === '#/' || currentRoute === ''
+
+            if (!isOnHomePage) {
+                // Navigate to home page first, then scroll
+                window.location.hash = ''
+                // Wait for navigation and page render before scrolling
+                setTimeout(() => {
+                    setStagePos({ x: 0, y: -flatItem.pageIndex! * window.innerHeight })
+                }, 100)
+            } else {
+                // Already on home page, just scroll
+                setStagePos({ x: 0, y: -flatItem.pageIndex * window.innerHeight })
+            }
+            return
+        }
+
+        // Otherwise, scroll to the element (legacy behavior)
         setTimeout(() => {
             if (flatItem.element) {
                 const anchorData = getGroupAnchor(flatItem.group)
@@ -80,10 +138,26 @@ export default function SearchPalette() {
             handleSelect(activeIndex)
         } else if (e.key === 'ArrowDown') {
             e.preventDefault()
-            setActiveIndex((prev) => Math.min(prev + 1, results.length - 1))
+            setActiveIndex((prev) => {
+                const newIndex = Math.min(prev + 1, results.length - 1)
+                // Scroll the new active item into view
+                setTimeout(() => {
+                    const activeElement = listContainerRef.current?.querySelector(`[data-index="${newIndex}"]`)
+                    activeElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+                }, 0)
+                return newIndex
+            })
         } else if (e.key === 'ArrowUp') {
             e.preventDefault()
-            setActiveIndex((prev) => Math.max(prev - 1, 0))
+            setActiveIndex((prev) => {
+                const newIndex = Math.max(prev - 1, 0)
+                // Scroll the new active item into view
+                setTimeout(() => {
+                    const activeElement = listContainerRef.current?.querySelector(`[data-index="${newIndex}"]`)
+                    activeElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+                }, 0)
+                return newIndex
+            })
         } else if (e.key === 'Escape') {
             e.preventDefault()
             closeSearch()
@@ -122,7 +196,7 @@ export default function SearchPalette() {
                 <Box
                     sx={{
                         position: 'fixed',
-                        bottom: 48,
+                        bottom: 120,
                         left: '50%',
                         transform: 'translateX(-50%)',
                         zIndex: 1400,
@@ -154,7 +228,10 @@ export default function SearchPalette() {
                                 variant="standard"
                             />
                             <Box sx={{ height: 12 }} />
-                            <Box sx={{ maxHeight: LIST_HEIGHT, overflowY: 'auto' }}>
+                            <Box
+                                ref={listContainerRef}
+                                sx={{ maxHeight: LIST_HEIGHT, overflowY: 'auto' }}
+                            >
                                 {results.length === 0 ? (
                                     <Typography variant="body2" sx={{ p: 2, textAlign: 'center', opacity: 0.7 }}>
                                         No results
@@ -169,7 +246,7 @@ export default function SearchPalette() {
                                                 {groupItems.map((item) => {
                                                     const idx = results.findIndex((r) => r.id === item.id)
                                                     return (
-                                                        <ListItem disablePadding key={item.id}>
+                                                        <ListItem disablePadding key={item.id} data-index={idx}>
                                                             <ListItemButton selected={idx === activeIndex} onClick={() => handleSelect(idx)}>
                                                                 <ListItemIcon>
                                                                     <WebAssetIcon />

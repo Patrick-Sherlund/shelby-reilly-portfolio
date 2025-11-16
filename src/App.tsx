@@ -324,15 +324,66 @@ function AppContent() {
     }, [currentRoute, setStagePos, setStageScale])
 
     if (currentRoute === '#/medtracker-project') {
-        return <MedTrackerProjectPage />
+        return (
+            <ZoomPanContext.Provider value={{
+                stageRef,
+                stageScale,
+                setStageScale,
+                stagePos,
+                setStagePos,
+                maxScrollPages,
+                setMaxScrollPages,
+                clampStagePosition,
+                zoomIn,
+                zoomOut,
+                activeTool
+            }}>
+                <MedTrackerProjectPage />
+                <SearchPalette />
+            </ZoomPanContext.Provider>
+        )
     }
 
     if (currentRoute === '#/bishop-project') {
-        return <BishopProjectPage />
+        return (
+            <ZoomPanContext.Provider value={{
+                stageRef,
+                stageScale,
+                setStageScale,
+                stagePos,
+                setStagePos,
+                maxScrollPages,
+                setMaxScrollPages,
+                clampStagePosition,
+                zoomIn,
+                zoomOut,
+                activeTool
+            }}>
+                <BishopProjectPage />
+                <SearchPalette />
+            </ZoomPanContext.Provider>
+        )
     }
 
     if (currentRoute === '#/googlecodesign-project') {
-        return <GoogleCodesignProjectPage />
+        return (
+            <ZoomPanContext.Provider value={{
+                stageRef,
+                stageScale,
+                setStageScale,
+                stagePos,
+                setStagePos,
+                maxScrollPages,
+                setMaxScrollPages,
+                clampStagePosition,
+                zoomIn,
+                zoomOut,
+                activeTool
+            }}>
+                <GoogleCodesignProjectPage />
+                <SearchPalette />
+            </ZoomPanContext.Provider>
+        )
     }
 
     if (currentRoute === '#/about') {

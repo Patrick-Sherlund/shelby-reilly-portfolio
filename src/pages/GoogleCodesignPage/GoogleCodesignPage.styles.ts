@@ -114,18 +114,18 @@ export const Title = styled('h2')(() => ({
 }))
 
 // Individual line under the title
-export const LineText = styled('div')(() => ({
+export const LineText = styled('div')(({ theme }) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '32px',
-    color: '#FFFFFF',
+    color: theme.palette.text.primary,
 }))
 
-export const SubLineText = styled('div')(() => ({
+export const SubLineText = styled('div')(({ theme }) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '32px',
-    color: '#A4A4A4',
+    color: theme.palette.text.secondary,
 }))
 
 // Button with drop shadow effect
