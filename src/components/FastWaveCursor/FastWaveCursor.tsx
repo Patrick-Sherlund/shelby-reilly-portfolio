@@ -1,9 +1,12 @@
 import { useEffect, useRef } from 'react'
+import { useZoomPanContext } from '../../context/ZoomPanContext'
 
 export default function FastWaveCursor() {
     const lastPos = useRef<{ x: number; y: number; t: number } | null>(null)
     const resetTimeout = useRef<number | null>(null)
     const lastFast = useRef<{ dirX: number; dirY: number; t: number } | null>(null)
+
+    const { activeTool } = useZoomPanContext()
 
     useEffect(() => {
         const REGULAR = `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`
@@ -15,6 +18,11 @@ export default function FastWaveCursor() {
         const RESET_MS = 500
 
         const handleMove = (e: MouseEvent) => {
+            // Only trigger wave animation when using the hand/cursor tool
+            if (activeTool !== 'hand' && activeTool !== null) {
+                return
+            }
+
             const now = performance.now()
             if (lastPos.current) {
                 const dt = now - lastPos.current.t
@@ -55,7 +63,7 @@ export default function FastWaveCursor() {
             window.removeEventListener('mousemove', handleMove)
             if (resetTimeout.current) window.clearTimeout(resetTimeout.current)
         }
-    }, [])
+    }, [activeTool])
 
     return null
 } 
