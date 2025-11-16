@@ -249,7 +249,7 @@ function AppContent() {
                 // Regular scrolling behavior when no modifier keys are pressed
                 setStagePos((prev) => {
                     const newY = clampStagePosition(prev.y - deltaY)
-                    const newX = prev.x - e.deltaX
+                    const newX = activeTool === 'commenting-cursor' ? prev.x - e.deltaX : prev.x
                     return { x: newX, y: newY }
                 })
             }
@@ -295,6 +295,13 @@ function AppContent() {
     }, [])
 
     const isCommentMode = activeTool === 'commenting-cursor'
+    const toggleCollapsePane = () => {
+        setCommentPaneCollapsed((prev) => {
+            const next = !prev
+            if (next) setActiveCommentId(null)
+            return next
+        })
+    }
 
     useEffect(() => {
         if (activeTool === 'commenting-cursor' && prevToolRef.current !== 'commenting-cursor') {
@@ -423,7 +430,7 @@ function AppContent() {
                             zIndex: 2,
                             pointerEvents: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 'auto' : 'none'
                         }}
-                        onWheel={(e) => handleWheel(e, stageRef)}
+                        onWheel={(e) => handleWheel(e, stageRef, activeTool === 'commenting-cursor')}
                         onTouchMove={(e) => handleTouchMove(e, stageRef, prevTouchRef)}
                         onTouchEnd={(e) => {
                             handleTouchEnd(prevTouchRef)
@@ -508,7 +515,7 @@ function AppContent() {
                         open={isCommentMode}
                         currentRoute={currentRoute}
                         collapsed={commentPaneCollapsed}
-                        onCollapseToggle={() => setCommentPaneCollapsed((p) => !p)}
+                        onCollapseToggle={toggleCollapsePane}
                     />
 
                     {waypoints.length > 0 && startCursor && currentRoute != '#/about' && (

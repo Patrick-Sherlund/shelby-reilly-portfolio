@@ -58,7 +58,7 @@ export function useZoomPan() {
     )
 
     const handleWheel = useCallback(
-        (e: Konva.KonvaEventObject<WheelEvent>, stageRef: RefObject<Konva.Stage>) => {
+        (e: Konva.KonvaEventObject<WheelEvent>, stageRef: RefObject<Konva.Stage>, allowHorizontal: boolean = false) => {
             e.evt.preventDefault()
             
             const pointerPosition = stageRef.current?.getPointerPosition() || { x: 0, y: 0 }
@@ -72,7 +72,7 @@ export function useZoomPan() {
                 // Regular scrolling behavior when no modifier keys are pressed
                 setStagePos((prev) => {
                     const newY = clampStagePosition(prev.y - deltaY)
-                    const newX = prev.x - e.evt.deltaX
+                    const newX = allowHorizontal ? prev.x - e.evt.deltaX : prev.x
                     return { x: newX, y: newY }
                 })
             }

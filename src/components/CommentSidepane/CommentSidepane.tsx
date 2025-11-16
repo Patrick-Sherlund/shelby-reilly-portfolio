@@ -32,7 +32,7 @@ const Panel = styled('aside')<{ $open: boolean; $collapsed: boolean }>(({ $open,
         color: '#FFFFFF',
         boxShadow: '-8px 0 24px rgba(0,0,0,0.45)',
         transform: $open ? 'translateX(0)' : `translateX(${width + 24}px)`,
-        transition: 'transform 200ms ease',
+        transition: 'transform 240ms ease, width 240ms ease',
         zIndex: 1200,
         display: 'flex',
         flexDirection: 'column',
@@ -142,8 +142,7 @@ export function CommentSidepane({
         setActiveCommentId(commentId)
         setStagePos((prev) => {
             const centeredY = clampStagePosition(window.innerHeight / 2 - target.y * stageScale)
-            const centeredX = window.innerWidth / 2 - target.x * stageScale
-            return { x: centeredX, y: centeredY }
+            return { x: prev.x, y: centeredY }
         })
     }
 

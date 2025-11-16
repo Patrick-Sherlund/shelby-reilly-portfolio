@@ -136,6 +136,12 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
         autoResize()
     }, [editing])
 
+    useEffect(() => {
+        if (!activeCommentId || activeTool !== 'commenting-cursor') {
+            setHoveredId(null)
+        }
+    }, [activeCommentId, activeTool])
+
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         // When editing exists and user clicks outside the box, cancel editing without creating a new one
         if (editing) {
