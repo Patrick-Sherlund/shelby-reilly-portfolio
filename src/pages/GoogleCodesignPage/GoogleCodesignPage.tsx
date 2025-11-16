@@ -15,6 +15,7 @@ import {
 } from './GoogleCodesignPage.styles'
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import macbook from "../../assets/images/macbook.png"
+import { useZoomPanContext } from '../../context/ZoomPanContext'
 
 export default function GoogleCodesignPage() {
     const demoRef = useRef<HTMLDivElement>(null)
@@ -22,6 +23,7 @@ export default function GoogleCodesignPage() {
 
     const demoInteraction = useZoomPanInteraction(demoRef)
     const descInteraction = useZoomPanInteraction(descRef)
+    const { activeTool } = useZoomPanContext()
 
     const handleCaseStudyClick = () => { window.location.hash = '#/googlecodesign-project' }
 
@@ -30,6 +32,7 @@ export default function GoogleCodesignPage() {
             <LogoImage
                 src={`${process.env.PUBLIC_URL}/images/google-logo.png`}
                 alt="Google Logo"
+                $activeTool={activeTool}
             />
 
             <MidSection>

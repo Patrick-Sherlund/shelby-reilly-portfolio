@@ -11,6 +11,7 @@ export const MainWrapper = styled('div')(() => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginTop: '154px',
+    pointerEvents: 'auto',
 }))
 
 export const DemoSection = styled('div')(({ theme }) => ({
@@ -27,9 +28,14 @@ export const DemoSection = styled('div')(({ theme }) => ({
     },
 }))
 
-export const CtrlYBadge = styled('div')(() => ({
-    pointerEvents: 'auto',
-}))
+export const CtrlYBadge = styled('div')<{ $activeTool?: string }>(({ $activeTool }) => {
+    // Only set pointerEvents to none when using tools that need to interact with the Konva stage
+    const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
+
+    return {
+        pointerEvents: isKonvaToolActive ? 'none' : 'auto',
+    }
+})
 
 export const CtrlYLogoImage = styled('img')(() => ({
     height: 'clamp(40px, 5vw, 70px)',

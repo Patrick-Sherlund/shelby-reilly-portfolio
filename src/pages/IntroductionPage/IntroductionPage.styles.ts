@@ -10,6 +10,7 @@ export const MainWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   position: 'relative',
+  pointerEvents: 'auto',
   [theme.breakpoints.down('md')]: {
     justifyContent: 'flex-start',
     paddingTop: 72,

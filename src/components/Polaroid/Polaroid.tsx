@@ -1,5 +1,6 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { styled } from '@mui/material/styles';
+import { useZoomPanContext } from '../../context/ZoomPanContext';
 
 interface PolaroidProps {
   src: string;
@@ -23,9 +24,13 @@ const PolaroidWrapper = styled('div')<{
   left: number | string;
   $isVisible?: boolean;
   $delay?: number;
-}>(({ rotationDeg, zIndex, top, left, $isVisible, $delay = 0 }) => {
+  $activeTool?: string;
+}>(({ rotationDeg, zIndex, top, left, $isVisible, $delay = 0, $activeTool }) => {
   // Only apply animation styles if $isVisible prop is explicitly provided
   const hasAnimation = $isVisible !== undefined;
+
+  // Only set pointerEvents to none when using tools that need to interact with the Konva stage
+  const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
 
   return {
     position: 'absolute',
@@ -40,6 +45,7 @@ const PolaroidWrapper = styled('div')<{
     display: 'inline-block',
     transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
     willChange: 'transform',
+    pointerEvents: isKonvaToolActive ? 'none' : 'auto',
     ...(hasAnimation && {
       opacity: $isVisible ? 1 : 0,
       animation: $isVisible ? `bubbleUp-${rotationDeg} 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both` : 'none',
@@ -121,6 +127,16 @@ const Polaroid = forwardRef<HTMLDivElement, PolaroidProps>(({
   // Calculate aspect ratio for the image
   const [aspectRatio, setAspectRatio] = useState(1);
 
+  // Get active tool from context (optional - won't error if not in provider)
+  let activeTool: string | undefined;
+  try {
+    const context = useZoomPanContext();
+    activeTool = context.activeTool;
+  } catch (e) {
+    // Not in context, that's fine
+    activeTool = undefined;
+  }
+
   useEffect(() => {
     const img = new Image();
     img.src = src;
@@ -140,6 +156,7 @@ const Polaroid = forwardRef<HTMLDivElement, PolaroidProps>(({
       left={left}
       $isVisible={$isVisible}
       $delay={$delay}
+      $activeTool={activeTool}
       style={{ width }}
       tabIndex={0}
     >

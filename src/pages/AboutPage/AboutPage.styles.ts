@@ -16,6 +16,7 @@ export const MainWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'flex-start',
   position: 'relative',
   paddingBottom: 0,
+  pointerEvents: 'auto',
   [theme.breakpoints.down('md')]: {
     paddingTop: 72,
     paddingBottom: 'max(12px, env(safe-area-inset-bottom))'

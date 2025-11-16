@@ -12,6 +12,7 @@ export interface ZoomPanContextValue {
     clampStagePosition: (y: number) => number
     zoomIn: (stageRef: React.RefObject<Konva.Stage>) => void
     zoomOut: (stageRef: React.RefObject<Konva.Stage>) => void
+    activeTool?: string
 }
 
 // Provide an undefined default – consumers must sit under a provider

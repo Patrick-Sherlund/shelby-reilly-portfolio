@@ -9,6 +9,7 @@ export const MainWrapper = styled('div')(() => ({
   alignItems: 'center',
   justifyContent: 'flex-start',
   marginTop: '75px',
+  pointerEvents: 'auto',
 }))
 
 
@@ -24,17 +25,22 @@ export const MedTrackerLogo = styled('img')(({ theme }) => ({
 }))
 
 
-export const LogoImage = styled('img')(({ theme }) => ({
-  height: 'clamp(30px, 5vw, 60px)',
-  width: 'auto',
-  pointerEvents: 'auto',
-  alignSelf: 'flex-start',
-  margin: '68px 32px 32px 60px',
-  [theme.breakpoints.down('md')]: {
-    margin: '24px 16px 8px 16px',
-    height: '40px',
-  },
-}))
+export const LogoImage = styled('img')<{ $activeTool?: string }>(({ theme, $activeTool }) => {
+  // Only set pointerEvents to none when using tools that need to interact with the Konva stage
+  const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
+
+  return {
+    height: 'clamp(30px, 5vw, 60px)',
+    width: 'auto',
+    pointerEvents: isKonvaToolActive ? 'none' : 'auto',
+    alignSelf: 'flex-start',
+    margin: '68px 32px 32px 60px',
+    [theme.breakpoints.down('md')]: {
+      margin: '24px 16px 8px 16px',
+      height: '40px',
+    },
+  }
+})
 
 export const MidSection = styled('div')(() => ({
   width: '100%',

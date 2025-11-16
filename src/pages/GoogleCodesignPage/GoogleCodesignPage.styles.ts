@@ -9,16 +9,22 @@ export const MainWrapper = styled('div')(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    pointerEvents: 'auto',
 }))
 
 // Top-left logo
-export const LogoImage = styled('img')(() => ({
-    height: 'clamp(30px, 5vw, 60px)',
-    width: 'auto',
-    pointerEvents: 'auto',
-    alignSelf: 'flex-start',
-    margin: '68px 32px 0px 60px',
-}))
+export const LogoImage = styled('img')<{ $activeTool?: string }>(({ $activeTool }) => {
+    // Only set pointerEvents to none when using tools that need to interact with the Konva stage
+    const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
+
+    return {
+        height: 'clamp(30px, 5vw, 60px)',
+        width: 'auto',
+        pointerEvents: isKonvaToolActive ? 'none' : 'auto',
+        alignSelf: 'flex-start',
+        margin: '68px 32px 0px 60px',
+    }
+})
 
 // Container for the two middle sections (left demo, right text)
 export const MidSection = styled('div')(() => ({

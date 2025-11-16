@@ -29,6 +29,7 @@ import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import IphoneOutline from '../../components/IphoneOutline/IphoneOutline'
 import { Box, useMediaQuery, useTheme, GlobalStyles } from '@mui/material'
 import { useSearchContext } from '../../context/SearchContext'
+import { useZoomPanContext } from '../../context/ZoomPanContext'
 
 // Unframed mobile screenshots
 import mainMobile from '../../assets/images/main-mobile.png'
@@ -48,6 +49,7 @@ export default function MedTrackerPage() {
   const imagesInteraction = useZoomPanInteraction(imagesRef)
   const descInteraction = useZoomPanInteraction(descRef)
   const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
+  const { activeTool } = useZoomPanContext()
 
   // Mobile carousel
   const trackRef = useRef<HTMLDivElement>(null)
@@ -192,6 +194,7 @@ export default function MedTrackerPage() {
       <LogoImage
         src={`${process.env.PUBLIC_URL}/images/vmware.png`}
         alt="VMware Logo"
+        $activeTool={activeTool}
       />
 
       {/* ===== Desktop (unchanged) ===== */}

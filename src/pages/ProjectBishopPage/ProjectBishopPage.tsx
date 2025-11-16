@@ -18,6 +18,7 @@ import {
 import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
 import ipad from '../../assets/images/tablet.png';
 import bishopLogoSmall from '../../assets/images/bishop_logo_small.png';
+import { useZoomPanContext } from '../../context/ZoomPanContext'
 
 export default function ProjectBishopPage() {
     // Refs for interaction areas
@@ -26,6 +27,7 @@ export default function ProjectBishopPage() {
 
     const demoInteraction = useZoomPanInteraction(demoRef)
     const descInteraction = useZoomPanInteraction(descRef)
+    const { activeTool } = useZoomPanContext()
 
     return (
         <MainWrapper>
@@ -67,7 +69,7 @@ export default function ProjectBishopPage() {
 
                 {/* Right – CTRL+Y logo and Web app demo video */}
                 <DemoSection>
-                    <CtrlYBadge data-testid="ctrl-y-badge">
+                    <CtrlYBadge data-testid="ctrl-y-badge" $activeTool={activeTool}>
                         <CtrlYLogoImage
                             src={`${process.env.PUBLIC_URL}/images/ctrly-logo.png`}
                             alt="CTRL+Y Logo"

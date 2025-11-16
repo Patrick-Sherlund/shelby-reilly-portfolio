@@ -52,16 +52,23 @@ const PageWrapper = styled('div')<{
     translateX: number
     translateY: number
     scale: number
-}>(({ baseY, translateX, translateY, scale }) => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    pointerEvents: 'none',
-    transform: `translate(${translateX + 0}px, ${translateY + baseY * scale}px) scale(${scale})`,
-    transformOrigin: 'top left'
-}))
+    $activeTool?: string
+}>(({ baseY, translateX, translateY, scale, $activeTool }) => {
+    // Only disable pointer events when using tools that need to interact with the Konva stage
+    const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor'
+
+    return {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: isKonvaToolActive ? 'none' : 'auto',
+        transform: `translate(${translateX + 0}px, ${translateY + baseY * scale}px) scale(${scale})`,
+        transformOrigin: 'top left',
+        zIndex: 1
+    }
+})
 
 function AppContent() {
     const stageRef = useRef<Konva.Stage>(null)
@@ -177,6 +184,59 @@ function AppContent() {
 
     useDisableBrowserZoom()
 
+    // Global wheel handler for when cursor tool is active (Stage is behind PageWrapper)
+    useEffect(() => {
+        if (activeTool !== 'hand' && activeTool !== null) return // Only when cursor/hand tool is active or no tool
+
+        const handleGlobalWheel = (e: WheelEvent) => {
+            e.preventDefault()
+
+            const deltaY = e.deltaY
+
+            // Check if Ctrl/Cmd key is pressed
+            if (e.ctrlKey || e.metaKey) {
+                // Zoom when Ctrl/Cmd is pressed
+                if (!stageRef.current) return
+
+                const oldScale = stageScale
+                const clampedScale = (s: number) => {
+                    if (s < 1) return 1
+                    if (s > 3) return 3
+                    return s
+                }
+                const newScale = clampedScale(oldScale - deltaY * 0.01)
+
+                if (newScale === oldScale) return
+
+                const pointerPosition = { x: e.clientX, y: e.clientY }
+                const stage = stageRef.current
+                const mousePointTo = {
+                    x: (pointerPosition.x - stage.x()) / oldScale,
+                    y: (pointerPosition.y - stage.y()) / oldScale
+                }
+                const newPos = {
+                    x: pointerPosition.x - mousePointTo.x * newScale,
+                    y: pointerPosition.y - mousePointTo.y * newScale
+                }
+                newPos.y = clampStagePosition(newPos.y)
+
+                setStageScale(newScale)
+                setStagePos(newPos)
+            } else {
+                // Regular scrolling behavior when no modifier keys are pressed
+                setStagePos((prev) => {
+                    const newY = clampStagePosition(prev.y - deltaY)
+                    return { x: prev.x, y: newY }
+                })
+            }
+        }
+
+        window.addEventListener('wheel', handleGlobalWheel, { passive: false })
+        return () => {
+            window.removeEventListener('wheel', handleGlobalWheel)
+        }
+    }, [activeTool, stageScale, stagePos, clampStagePosition, setStageScale, setStagePos])
+
     useEffect(() => {
         if (prevScaleRef.current === 1 && stageScale !== 1) {
             yBeforeZoomRef.current = stagePos.y
@@ -235,7 +295,8 @@ function AppContent() {
                 setMaxScrollPages,
                 clampStagePosition,
                 zoomIn,
-                zoomOut
+                zoomOut,
+                activeTool
             }}>
                 <AppContainer>
                     <GlobalStyles styles={{
@@ -313,7 +374,13 @@ function AppContent() {
                         draggable={canDragBackground}
                         dragBoundFunc={dragBoundFunc}
                         onDragMove={handleDragMove}
-                        style={{ position: 'absolute', top: 0, left: 0, background: 'transparent' }}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            background: 'transparent',
+                            zIndex: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 2 : 0
+                        }}
                         onWheel={(e) => handleWheel(e, stageRef)}
                         onTouchMove={(e) => handleTouchMove(e, stageRef, prevTouchRef)}
                         onTouchEnd={(e) => {
@@ -370,7 +437,7 @@ function AppContent() {
                         </Layer>
                     </Stage>
 
-                    <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+                    <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
                         <AboutPage />
                     </PageWrapper>
 
@@ -404,7 +471,8 @@ function AppContent() {
             setMaxScrollPages,
             clampStagePosition,
             zoomIn,
-            zoomOut
+            zoomOut,
+            activeTool
         }}>
             <AppContainer>
                 {/* Mobile polish without touching desktop */}
@@ -489,7 +557,13 @@ function AppContent() {
                     draggable={canDragBackground}
                     dragBoundFunc={dragBoundFunc}
                     onDragMove={handleDragMove}
-                    style={{ position: 'absolute', top: 0, left: 0, background: 'transparent' }}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        background: 'transparent',
+                        zIndex: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 2 : 0
+                    }}
                     onWheel={(e) => handleWheel(e, stageRef)}
                     onTouchMove={(e) => handleTouchMove(e, stageRef, prevTouchRef)}
                     onTouchEnd={(e) => {
@@ -546,16 +620,16 @@ function AppContent() {
                     </Layer>
                 </Stage>
 
-                <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+                <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
                     <IntroductionPage />
                 </PageWrapper>
-                <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+                <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
                     <MedTrackerPage />
                 </PageWrapper>
-                <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+                <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
                     <ProjectBishopPage />
                 </PageWrapper>
-                <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}>
+                <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
                     <GoogleCodesignPage />
                 </PageWrapper>
 
