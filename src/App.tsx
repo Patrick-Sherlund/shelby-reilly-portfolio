@@ -184,9 +184,10 @@ function AppContent() {
 
     useDisableBrowserZoom()
 
-    // Global wheel handler for when cursor tool is active (Stage is behind PageWrapper)
+    // Global wheel handler for when cursor tool is active (Stage has pointerEvents: none)
     useEffect(() => {
-        if (activeTool !== 'hand' && activeTool !== null) return // Only when cursor/hand tool is active or no tool
+        // Only active when cursor/hand tool is selected (Stage won't receive wheel events due to pointerEvents: none)
+        if (activeTool !== 'hand' && activeTool !== null) return
 
         const handleGlobalWheel = (e: WheelEvent) => {
             e.preventDefault()
@@ -379,7 +380,8 @@ function AppContent() {
                             top: 0,
                             left: 0,
                             background: 'transparent',
-                            zIndex: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 2 : 0
+                            zIndex: 2,
+                            pointerEvents: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 'auto' : 'none'
                         }}
                         onWheel={(e) => handleWheel(e, stageRef)}
                         onTouchMove={(e) => handleTouchMove(e, stageRef, prevTouchRef)}
@@ -562,7 +564,8 @@ function AppContent() {
                         top: 0,
                         left: 0,
                         background: 'transparent',
-                        zIndex: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 2 : 0
+                        zIndex: 2,
+                        pointerEvents: (activeTool === 'emoji' || activeTool === 'commenting-cursor') ? 'auto' : 'none'
                     }}
                     onWheel={(e) => handleWheel(e, stageRef)}
                     onTouchMove={(e) => handleTouchMove(e, stageRef, prevTouchRef)}
