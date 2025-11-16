@@ -125,7 +125,8 @@ function AppContent() {
         emojiSubMode,
         handleSetSubMode,
         objects,
-        handleStamp
+        handleStamp,
+        hasSelectedEmoji
     } = useEmojiTool({ stageRef })
     const { showOverlay, setShowOverlay, overlayPos } = usePointerOverlay()
     const { wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave } =
@@ -159,12 +160,12 @@ function AppContent() {
     }
 
     useEffect(() => {
-        if (activeTool === 'emoji') {
+        if (activeTool === 'emoji' && hasSelectedEmoji) {
             setShowOverlay(true)
         } else {
             setShowOverlay(false)
         }
-    }, [activeTool, setShowOverlay])
+    }, [activeTool, hasSelectedEmoji, setShowOverlay])
 
     useEffect(() => {
         const disableContextMenu = (e: Event) => e.preventDefault()
