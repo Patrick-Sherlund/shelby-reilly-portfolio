@@ -9,11 +9,23 @@ interface UseEmojiToolParams {
 
 const DEFAULT_PREVIEW_OPACITY = 0.6
 
+const HOLD_OVERSHOOT = 0.08
+const SHAKE_SCALE_AMPLITUDE = 0.03
+const SHAKE_ROTATION_AMPLITUDE = 2
+const OVERSHOOT_DURATION_MS = 120
+
+const getHoldStage = (elapsedSeconds: number) => {
+    if (elapsedSeconds < 1) return 0
+    if (elapsedSeconds < 2) return 1
+    if (elapsedSeconds < 3) return 2
+    return 3
+}
+
 const getHoldTransform = (elapsedSeconds: number) => {
     if (elapsedSeconds < 1) return { scale: 1, rotation: 0 }
-    if (elapsedSeconds < 2) return { scale: 1.1, rotation: 10 }
-    if (elapsedSeconds < 3) return { scale: 1.2, rotation: -10 }
-    return { scale: 1.3, rotation: 10 }
+    if (elapsedSeconds < 2) return { scale: 1.15, rotation: -15 }
+    if (elapsedSeconds < 3) return { scale: 1.25, rotation: 15 }
+    return { scale: 1.35, rotation: -15 }
 }
 
 export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams) {
@@ -33,6 +45,8 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
     const [previewOpacity, setPreviewOpacity] = useState(DEFAULT_PREVIEW_OPACITY)
     const pressStartRef = useRef<number | null>(null)
     const rafRef = useRef<number | null>(null)
+    const currentStageRef = useRef<number>(0)
+    const overshootUntilRef = useRef<number | null>(null)
 
     const stampEmojis = [
         require('../assets/images/emoji-wheel/shelby-medal-sticker.png'),
@@ -107,6 +121,8 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
     const resetStampState = useCallback(() => {
         stopAnimation()
         pressStartRef.current = null
+        currentStageRef.current = 0
+        overshootUntilRef.current = null
         setIsStamping(false)
         setPreviewScale(1)
         setPreviewRotation(0)
@@ -115,10 +131,30 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
 
     const animateHold = useCallback(() => {
         if (pressStartRef.current == null) return
-        const elapsedSeconds = (performance.now() - pressStartRef.current) / 1000
-        const { scale, rotation } = getHoldTransform(elapsedSeconds)
-        setPreviewScale((prev) => (prev === scale ? prev : scale))
-        setPreviewRotation((prev) => (prev === rotation ? prev : rotation))
+        const now = performance.now()
+        const elapsedSeconds = (now - pressStartRef.current) / 1000
+        const { scale: baseScale, rotation: baseRotation } = getHoldTransform(elapsedSeconds)
+        const stage = getHoldStage(elapsedSeconds)
+
+        if (stage !== currentStageRef.current) {
+            currentStageRef.current = stage
+            overshootUntilRef.current = now + OVERSHOOT_DURATION_MS
+        }
+
+        const overshootActive = overshootUntilRef.current != null && overshootUntilRef.current > now
+        const overshootScale = overshootActive ? baseScale + HOLD_OVERSHOOT : baseScale
+
+        const shakeActive = elapsedSeconds >= 1
+        const shakeScale =
+            shakeActive ? 1 + Math.sin(now * 0.05) * SHAKE_SCALE_AMPLITUDE : 1
+        const shakeRotation =
+            shakeActive ? Math.sin(now * 0.06) * SHAKE_ROTATION_AMPLITUDE : 0
+
+        const nextScale = overshootScale * shakeScale
+        const nextRotation = baseRotation + shakeRotation
+
+        setPreviewScale((prev) => (prev === nextScale ? prev : nextScale))
+        setPreviewRotation((prev) => (prev === nextRotation ? prev : nextRotation))
         rafRef.current = requestAnimationFrame(animateHold)
     }, [])
 
@@ -135,6 +171,8 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
         if (activeTool === 'emoji' && emojiSubMode === 'stamp' && hasSelectedEmoji) {
             // Begin press-and-hold sequence; placement now occurs on mouseup
             pressStartRef.current = performance.now()
+            currentStageRef.current = 0
+            overshootUntilRef.current = null
             setIsStamping(true)
             setPreviewOpacity(1)
             const { scale, rotation } = getHoldTransform(0)
