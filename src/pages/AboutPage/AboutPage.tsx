@@ -97,7 +97,7 @@ export default function AboutPage() {
     useEffect(() => {
         const swapTimer = setTimeout(() => {
             setShelbyImageSrc(aboutMeShelbyStanding)
-        }, 1200)
+        }, 2000)
 
         return () => clearTimeout(swapTimer)
     }, [])
