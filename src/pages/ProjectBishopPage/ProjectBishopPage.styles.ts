@@ -1,6 +1,6 @@
-import { styled } from '@mui/material/styles'
-import { css } from "@emotion/react";
-import { SxProps } from "@mui/material";
+import {styled} from '@mui/material/styles'
+import {css} from "@emotion/react";
+import {SxProps} from "@mui/material";
 
 export const MainWrapper = styled('div')(() => ({
     width: '100%',
@@ -14,7 +14,7 @@ export const MainWrapper = styled('div')(() => ({
     pointerEvents: 'auto',
 }))
 
-export const DemoSection = styled('div')(({ theme }) => ({
+export const DemoSection = styled('div')(({theme}) => ({
     width: '50%',
     display: 'flex',
     flexDirection: 'column',
@@ -28,8 +28,8 @@ export const DemoSection = styled('div')(({ theme }) => ({
     },
 }))
 
-export const CtrlYBadge = styled('div')<{ $activeTool?: string }>(({ $activeTool }) => {
-    // Only set pointerEvents to none when using tools that need to interact with the Konva stage
+export const CtrlYBadge = styled('div')<{ $activeTool?: string }>(({$activeTool}) => {
+
     const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
 
     return {
@@ -43,8 +43,8 @@ export const CtrlYLogoImage = styled('img')(() => ({
     userSelect: 'none',
 }))
 
-// Container for the two middle sections (left text, right demo)
-export const MidSection = styled('div')(({ theme }) => ({
+
+export const MidSection = styled('div')(({theme}) => ({
     width: '100%',
     height: 'auto',
     display: 'flex',
@@ -62,20 +62,20 @@ export const MidSection = styled('div')(({ theme }) => ({
     },
 }))
 
-// Demo (placeholder) wrapper on the right
-export const DemoWrapper = styled('div')(({ theme }) => ({
+
+export const DemoWrapper = styled('div')(({theme}) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
     pointerEvents: 'auto',
-    position: 'relative', // For absolute positioning of children
+    position: 'relative',
     [theme.breakpoints.down('md')]: {
         justifyContent: 'center',
     },
 }))
 
-// iPad background image
+
 export const IpadImage = styled('img')(() => ({
     width: '100%',
     height: 'auto',
@@ -86,7 +86,7 @@ export const IpadImage = styled('img')(() => ({
     zIndex: 1,
 }))
 
-// Video element for the web-app demo
+
 export const DemoVideo = styled('video')(() => ({
     position: 'absolute',
     top: '50%',
@@ -103,13 +103,13 @@ export const DemoVideo = styled('video')(() => ({
     zIndex: 2,
 }))
 
-// Description column on the left
-export const DescriptionWrapper = styled('div')(({ theme }) => ({
+
+export const DescriptionWrapper = styled('div')(({theme}) => ({
     width: '40%',
     maxWidth: '600px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start', // left align content
+    alignItems: 'flex-start',
     gap: '16px',
     fontFamily: 'Futura, sans-serif',
     fontSize: 'clamp(16px, 2vw, 22px)',
@@ -124,8 +124,8 @@ export const DescriptionWrapper = styled('div')(({ theme }) => ({
     },
 }))
 
-// Project Bishop small logo (replaces title)
-export const ProjectBishopLogo = styled('img')(({ theme }) => ({
+
+export const ProjectBishopLogo = styled('img')(({theme}) => ({
     height: '80px',
     width: 'auto',
     userSelect: 'none',
@@ -136,8 +136,8 @@ export const ProjectBishopLogo = styled('img')(({ theme }) => ({
     },
 }))
 
-// Descriptive paragraph (using LineText styling)
-export const DescriptiveParagraph = styled('div')(({ theme }) => ({
+
+export const DescriptiveParagraph = styled('div')(({theme}) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '28px',
@@ -150,8 +150,8 @@ export const DescriptiveParagraph = styled('div')(({ theme }) => ({
     },
 }))
 
-// Role text (using LineText styling)
-export const RoleText = styled('div')(({ theme }) => ({
+
+export const RoleText = styled('div')(({theme}) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '28px',
@@ -164,8 +164,8 @@ export const RoleText = styled('div')(({ theme }) => ({
     },
 }))
 
-// Dates text (using LineText styling)
-export const DatesText = styled('div')(({ theme }) => ({
+
+export const DatesText = styled('div')(({theme}) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '28px',
@@ -178,13 +178,13 @@ export const DatesText = styled('div')(({ theme }) => ({
     },
 }))
 
-// Title style (keeping for backwards compatibility)
-export const Title = styled('h2')(({ theme }) => ({
+
+export const Title = styled('h2')(({theme}) => ({
     margin: 0,
     fontFamily: 'Futura, sans-serif',
     fontWeight: 500,
     fontSize: '64px',
-    color: '#AD66FF', // Accent color for Project Bishop
+    color: '#AD66FF',
     [theme.breakpoints.down('md')]: {
         fontSize: '48px',
     },
@@ -193,8 +193,8 @@ export const Title = styled('h2')(({ theme }) => ({
     },
 }))
 
-// Individual line under the title
-export const LineText = styled('div')(({ theme }) => ({
+
+export const LineText = styled('div')(({theme}) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '32px',
@@ -207,8 +207,8 @@ export const LineText = styled('div')(({ theme }) => ({
     },
 }))
 
-// Learn More button (using original styling)
-export const LearnMoreButton = styled('button')(({ theme }) => ({
+
+export const LearnMoreButton = styled('button')(({theme}) => ({
     position: 'relative',
     display: 'inline-block',
     cursor: 'pointer',
@@ -224,7 +224,7 @@ export const LearnMoreButton = styled('button')(({ theme }) => ({
     outline: 'none',
     pointerEvents: 'auto',
     marginTop: '24px',
-    // Drop shadow rectangle via ::after
+
     '&::after': {
         content: '"Learn More"',
         position: 'absolute',
@@ -259,8 +259,8 @@ export const LearnMoreButton = styled('button')(({ theme }) => ({
     },
 }))
 
-// Button with drop shadow effect (keeping for backwards compatibility)
-export const CaseStudyButton = styled('button')(({ theme }) => ({
+
+export const CaseStudyButton = styled('button')(({theme}) => ({
     position: 'relative',
     display: 'inline-block',
     cursor: 'pointer',
@@ -274,7 +274,7 @@ export const CaseStudyButton = styled('button')(({ theme }) => ({
     boxSizing: 'border-box',
     outline: 'none',
     pointerEvents: 'auto',
-    // Drop shadow rectangle via ::after
+
     '&::after': {
         content: '"READ CASE STUDY"',
         position: 'absolute',

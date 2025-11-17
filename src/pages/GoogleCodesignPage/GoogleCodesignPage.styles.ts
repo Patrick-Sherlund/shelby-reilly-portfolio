@@ -1,6 +1,6 @@
-import { styled } from '@mui/material/styles'
+import {styled} from '@mui/material/styles'
 
-// Full-page wrapper similar to other pages
+
 export const MainWrapper = styled('div')(() => ({
     width: '100%',
     height: '100%',
@@ -12,9 +12,9 @@ export const MainWrapper = styled('div')(() => ({
     pointerEvents: 'auto',
 }))
 
-// Top-left logo
-export const LogoImage = styled('img')<{ $activeTool?: string }>(({ $activeTool }) => {
-    // Only set pointerEvents to none when using tools that need to interact with the Konva stage
+
+export const LogoImage = styled('img')<{ $activeTool?: string }>(({$activeTool}) => {
+
     const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
 
     return {
@@ -26,7 +26,7 @@ export const LogoImage = styled('img')<{ $activeTool?: string }>(({ $activeTool 
     }
 })
 
-// Container for the two middle sections (left demo, right text)
+
 export const MidSection = styled('div')(() => ({
     width: '100%',
     height: 'auto',
@@ -40,7 +40,7 @@ export const MidSection = styled('div')(() => ({
     pointerEvents: 'none',
 }))
 
-// Demo (placeholder) wrapper on the left
+
 export const DemoWrapper = styled('div')(() => ({
     width: '60%',
     display: 'flex',
@@ -49,7 +49,7 @@ export const DemoWrapper = styled('div')(() => ({
     pointerEvents: 'auto',
 }))
 
-// Placeholder / embed container for the web-app UI
+
 export const DemoPlaceholder = styled('div')(() => ({
     width: '100%',
     maxWidth: '900px',
@@ -85,8 +85,8 @@ export const DemoVideo = styled('video')(() => ({
     zIndex: 2
 }))
 
-// Description column on the right
-export const DescriptionWrapper = styled('div')(({ theme }) => ({
+
+export const DescriptionWrapper = styled('div')(({theme}) => ({
     width: '50%',
     maxWidth: '600px',
     display: 'flex',
@@ -101,7 +101,7 @@ export const DescriptionWrapper = styled('div')(({ theme }) => ({
     pointerEvents: 'auto',
 }))
 
-// Title style
+
 export const Title = styled('h2')(() => ({
     margin: 0,
     fontFamily: 'Futura, sans-serif',
@@ -113,22 +113,22 @@ export const Title = styled('h2')(() => ({
     backgroundClip: 'text',
 }))
 
-// Individual line under the title
-export const LineText = styled('div')(({ theme }) => ({
+
+export const LineText = styled('div')(({theme}) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '32px',
     color: theme.palette.text.primary,
 }))
 
-export const SubLineText = styled('div')(({ theme }) => ({
+export const SubLineText = styled('div')(({theme}) => ({
     fontFamily: 'Futura, sans-serif',
     fontWeight: 400,
     fontSize: '32px',
     color: theme.palette.text.secondary,
 }))
 
-// Button with drop shadow effect
+
 export const CaseStudyButton = styled('button')(() => ({
     position: 'relative',
     display: 'inline-block',
@@ -143,7 +143,7 @@ export const CaseStudyButton = styled('button')(() => ({
     boxSizing: 'border-box',
     outline: 'none',
     pointerEvents: 'auto',
-    // Drop shadow rectangle via ::after
+
     '&::after': {
         content: '"READ CASE STUDY"',
         position: 'absolute',

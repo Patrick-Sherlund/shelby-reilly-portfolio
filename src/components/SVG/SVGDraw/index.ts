@@ -1,1 +1,1 @@
-export { default } from './SVGDraw'
+export {default} from './SVGDraw'

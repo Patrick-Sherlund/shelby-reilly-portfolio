@@ -1,5 +1,5 @@
-import { styled } from '@mui/material/styles'
-import { keyframes } from '@mui/system'
+import {styled} from '@mui/material/styles'
+import {keyframes} from '@mui/system'
 
 const wheelReveal = keyframes`
     0% {
@@ -58,7 +58,7 @@ export const InnerCircle = styled('div')(() => ({
     zIndex: 3
 }))
 
-export const TopHalf = styled('div')<{ active: boolean }>(({ active }) => ({
+export const TopHalf = styled('div')<{ active: boolean }>(({active}) => ({
     position: 'absolute',
     top: 0,
     left: 0,
@@ -71,7 +71,7 @@ export const TopHalf = styled('div')<{ active: boolean }>(({ active }) => ({
     cursor: 'pointer'
 }))
 
-export const BottomHalf = styled('div')<{ active: boolean }>(({ active }) => ({
+export const BottomHalf = styled('div')<{ active: boolean }>(({active}) => ({
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -88,10 +88,10 @@ type EmojiImageProps = {
     isSelected: boolean
 }
 
-export const EmojiImage = styled('img')<EmojiImageProps>(({ isSelected }) => ({
+export const EmojiImage = styled('img')<EmojiImageProps>(({isSelected}) => ({
     maxWidth: '2.5rem',
     maxHeight: '2.5rem',
     width: 'auto',
     height: 'auto',
-    objectFit: 'contain', // ensure it won't crop but will preserve aspect ratio
+    objectFit: 'contain',
 }))

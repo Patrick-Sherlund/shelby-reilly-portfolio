@@ -1,7 +1,7 @@
-import { styled } from '@mui/material/styles'
+import {styled} from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
 
-export const Note = styled(Paper)(({ color }) => ({
+export const Note = styled(Paper)(({color}) => ({
     width: 120,
     height: 120,
     display: 'flex',

@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {
     Box,
-    Paper,
-    TextField,
+    ClickAwayListener,
+    Fade,
     InputAdornment,
     List,
     ListItem,
@@ -10,26 +10,26 @@ import {
     ListItemIcon,
     ListItemText,
     ListSubheader,
-    Fade,
-    useTheme,
+    Paper,
+    TextField,
     Typography,
-    ClickAwayListener,
+    useTheme,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import WebAssetIcon from '@mui/icons-material/WebAsset'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
-import { useSearchContext } from '../../context/SearchContext'
-import { useZoomPanContext } from '../../context/ZoomPanContext'
+import {useSearchContext} from '../../context/SearchContext'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
 
 export default function SearchPalette() {
-    const { open, closeSearch, items, getGroupAnchor } = useSearchContext()
-    const { setStagePos } = useZoomPanContext()
+    const {open, closeSearch, items, getGroupAnchor} = useSearchContext()
+    const {setStagePos} = useZoomPanContext()
     const [query, setQuery] = useState('')
     const [activeIndex, setActiveIndex] = useState(0)
     const theme = useTheme()
     const listContainerRef = React.useRef<HTMLDivElement>(null)
 
-    // Reset when opened / closed
+
     useEffect(() => {
         if (!open) {
             setQuery('')
@@ -37,57 +37,57 @@ export default function SearchPalette() {
         }
     }, [open])
 
-    // Prevent wheel events from propagating to the page when scrolling inside the list
+
     useEffect(() => {
         const listContainer = listContainerRef.current
         if (!listContainer) return
 
         const handleWheel = (e: WheelEvent) => {
-            const { scrollTop, scrollHeight, clientHeight } = listContainer
+            const {scrollTop, scrollHeight, clientHeight} = listContainer
             const isScrollingUp = e.deltaY < 0
             const isScrollingDown = e.deltaY > 0
 
-            // Allow scrolling within the container
+
             const isAtTop = scrollTop === 0
             const isAtBottom = scrollTop + clientHeight >= scrollHeight
 
-            // Prevent page scroll if we're scrolling within bounds
+
             if ((isScrollingDown && !isAtBottom) || (isScrollingUp && !isAtTop)) {
                 e.stopPropagation()
             }
 
-            // If we're at the boundary and trying to scroll further, prevent it entirely
+
             if ((isScrollingDown && isAtBottom) || (isScrollingUp && isAtTop)) {
                 e.preventDefault()
                 e.stopPropagation()
             }
         }
 
-        listContainer.addEventListener('wheel', handleWheel, { passive: false })
+        listContainer.addEventListener('wheel', handleWheel, {passive: false})
         return () => listContainer.removeEventListener('wheel', handleWheel)
     }, [open])
 
     const results = useMemo(() => {
         const filtered = !query
-            ? items.slice(0, 8) // show first few items when no query
+            ? items.slice(0, 8)
             : items.filter((it) => {
-                  const lower = query.toLowerCase()
-                  return (
-                      it.label.toLowerCase().includes(lower) ||
-                      it.keywords.some((kw) => kw.toLowerCase().includes(lower))
-                  )
-              })
+                const lower = query.toLowerCase()
+                return (
+                    it.label.toLowerCase().includes(lower) ||
+                    it.keywords.some((kw) => kw.toLowerCase().includes(lower))
+                )
+            })
         return filtered.slice(0, 20)
     }, [items, query])
 
-    // Group results by page/group for UI
+
     const groupedResults = useMemo(() => {
         const map = new Map<string, typeof results>()
         results.forEach((item) => {
             if (!map.has(item.group)) map.set(item.group, [])
             map.get(item.group)!.push(item)
         })
-        return Array.from(map.entries()) // [group, items[]]
+        return Array.from(map.entries())
     }, [results])
 
     const handleSelect = (index: number) => {
@@ -95,39 +95,39 @@ export default function SearchPalette() {
         if (!flatItem) return
         closeSearch()
 
-        // If the item has a route, navigate to that page
+
         if (flatItem.route) {
             window.location.hash = flatItem.route
             return
         }
 
-        // If the item has a pageIndex, navigate to the home page first (if not already there), then scroll
+
         if (flatItem.pageIndex !== undefined) {
             const currentRoute = window.location.hash
             const isOnHomePage = !currentRoute || currentRoute === '#/' || currentRoute === ''
 
             if (!isOnHomePage) {
-                // Navigate to home page first, then scroll
+
                 window.location.hash = ''
-                // Wait for navigation and page render before scrolling
+
                 setTimeout(() => {
-                    setStagePos({ x: 0, y: -flatItem.pageIndex! * window.innerHeight })
+                    setStagePos({x: 0, y: -flatItem.pageIndex! * window.innerHeight})
                 }, 100)
             } else {
-                // Already on home page, just scroll
-                setStagePos({ x: 0, y: -flatItem.pageIndex * window.innerHeight })
+
+                setStagePos({x: 0, y: -flatItem.pageIndex * window.innerHeight})
             }
             return
         }
 
-        // Otherwise, scroll to the element (legacy behavior)
+
         setTimeout(() => {
             if (flatItem.element) {
                 const anchorData = getGroupAnchor(flatItem.group)
                 if (anchorData) {
-                    setStagePos({ x: 0, y: -anchorData.pageIndex * window.innerHeight })
+                    setStagePos({x: 0, y: -anchorData.pageIndex * window.innerHeight})
                 }
-                flatItem.element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                flatItem.element.scrollIntoView({behavior: 'smooth', block: 'center'})
             }
         }, 0)
     }
@@ -140,10 +140,10 @@ export default function SearchPalette() {
             e.preventDefault()
             setActiveIndex((prev) => {
                 const newIndex = Math.min(prev + 1, results.length - 1)
-                // Scroll the new active item into view
+
                 setTimeout(() => {
                     const activeElement = listContainerRef.current?.querySelector(`[data-index="${newIndex}"]`)
-                    activeElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+                    activeElement?.scrollIntoView({block: 'nearest', behavior: 'smooth'})
                 }, 0)
                 return newIndex
             })
@@ -151,10 +151,10 @@ export default function SearchPalette() {
             e.preventDefault()
             setActiveIndex((prev) => {
                 const newIndex = Math.max(prev - 1, 0)
-                // Scroll the new active item into view
+
                 setTimeout(() => {
                     const activeElement = listContainerRef.current?.querySelector(`[data-index="${newIndex}"]`)
-                    activeElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+                    activeElement?.scrollIntoView({block: 'nearest', behavior: 'smooth'})
                 }, 0)
                 return newIndex
             })
@@ -167,26 +167,26 @@ export default function SearchPalette() {
     const handleGroupClick = (groupName: string) => {
         const anchorData = getGroupAnchor(groupName)
         if (anchorData) {
-            // move stage to correct page
-            setStagePos({ x: 0, y: -anchorData.pageIndex * window.innerHeight })
+
+            setStagePos({x: 0, y: -anchorData.pageIndex * window.innerHeight})
             closeSearch()
             setTimeout(() => {
-                anchorData.element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                anchorData.element.scrollIntoView({behavior: 'smooth', block: 'start'})
             }, 0)
             return
         }
-        // fallback to first item
+
         const item = results.find((r) => r.group === groupName)
         if (!item || !item.element) return
         closeSearch()
         setTimeout(() => {
-            item.element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            item.element?.scrollIntoView({behavior: 'smooth', block: 'center'})
         }, 0)
     }
 
     if (!open) return null
 
-    // Layout constants
+
     const WIDTH = 500
     const LIST_HEIGHT = 240
 
@@ -221,37 +221,42 @@ export default function SearchPalette() {
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
-                                            <SearchIcon />
+                                            <SearchIcon/>
                                         </InputAdornment>
                                     ),
                                 }}
                                 variant="standard"
                             />
-                            <Box sx={{ height: 12 }} />
+                            <Box sx={{height: 12}}/>
                             <Box
                                 ref={listContainerRef}
-                                sx={{ maxHeight: LIST_HEIGHT, overflowY: 'auto' }}
+                                sx={{maxHeight: LIST_HEIGHT, overflowY: 'auto'}}
                             >
                                 {results.length === 0 ? (
-                                    <Typography variant="body2" sx={{ p: 2, textAlign: 'center', opacity: 0.7 }}>
+                                    <Typography variant="body2" sx={{p: 2, textAlign: 'center', opacity: 0.7}}>
                                         No results
                                     </Typography>
                                 ) : (
                                     <List>
                                         {groupedResults.map(([groupName, groupItems]) => (
                                             <React.Fragment key={groupName}>
-                                                <ListSubheader component="div" sx={{ display: 'flex', alignItems:'center', cursor:'pointer' }} onClick={() => handleGroupClick(groupName)}>
-                                                    <FolderOpenIcon sx={{ mr: 1 }} />{groupName}
+                                                <ListSubheader component="div" sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    cursor: 'pointer'
+                                                }} onClick={() => handleGroupClick(groupName)}>
+                                                    <FolderOpenIcon sx={{mr: 1}}/>{groupName}
                                                 </ListSubheader>
                                                 {groupItems.map((item) => {
                                                     const idx = results.findIndex((r) => r.id === item.id)
                                                     return (
                                                         <ListItem disablePadding key={item.id} data-index={idx}>
-                                                            <ListItemButton selected={idx === activeIndex} onClick={() => handleSelect(idx)}>
+                                                            <ListItemButton selected={idx === activeIndex}
+                                                                            onClick={() => handleSelect(idx)}>
                                                                 <ListItemIcon>
-                                                                    <WebAssetIcon />
+                                                                    <WebAssetIcon/>
                                                                 </ListItemIcon>
-                                                                <ListItemText primary={item.label} />
+                                                                <ListItemText primary={item.label}/>
                                                             </ListItemButton>
                                                         </ListItem>
                                                     )

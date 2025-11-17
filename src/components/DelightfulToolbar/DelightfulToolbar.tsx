@@ -1,11 +1,6 @@
-import React, { useRef, useEffect } from 'react'
-import { IconButton } from '@mui/material'
-import {
-    NavWrapper,
-    ToolbarContainer,
-    ToolSection,
-    ToolImage
-} from './DelightfulToolbar.styles'
+import React, {useEffect, useRef} from 'react'
+import {IconButton} from '@mui/material'
+import {NavWrapper, ToolbarContainer, ToolImage, ToolSection} from './DelightfulToolbar.styles'
 import shelbyStickerIcon from '../../assets/images/emoji-wheel/sticker-tab-icon.png'
 import cursorIcon from '../../assets/images/emoji-wheel/cursor-tab-icon.png'
 import commentIcon from '../../assets/images/emoji-wheel/comment-tab-icon.png'
@@ -36,13 +31,13 @@ export default function DelightfulToolbar({
     }, [activeTool, setActiveTool])
 
     const handleSelectTool = (tool: Tool) => {
-        // For emoji tool: only toggle off if picker is open (no emoji selected yet)
+
         if (tool === 'emoji' && activeTool === 'emoji' && !hasSelectedEmoji) {
             setActiveTool('hand')
             return
         }
 
-        // For other tools: toggle off if clicking the same tool
+
         if (activeTool === tool && tool !== 'emoji') {
             setActiveTool('hand')
             return
@@ -63,7 +58,7 @@ export default function DelightfulToolbar({
     return (
         <NavWrapper data-ignore-comment data-ignore-stage>
             <ToolbarContainer>
-                {/* 1) Cursor tool (left corner) */}
+
                 <ToolSection isActive={activeTool === 'hand'} isCursorTool>
                     <IconButton
                         onClick={() => handleSelectTool('hand')}
@@ -78,13 +73,12 @@ export default function DelightfulToolbar({
                         }}
                     >
                         <ToolImage isActive={activeTool === 'hand'}
-                            src={cursorIcon}
-                            alt="Cursor"
+                                   src={cursorIcon}
+                                   alt="Cursor"
                         />
                     </IconButton>
                 </ToolSection>
 
-                {/* 2) commenting-cursor tool (middle) */}
                 <ToolSection isActive={activeTool === 'commenting-cursor'}>
                     <IconButton
                         onClick={() => handleSelectTool('commenting-cursor')}
@@ -99,16 +93,15 @@ export default function DelightfulToolbar({
                         }}
                     >
                         <ToolImage isActive={activeTool === 'commenting-cursor'}
-                            src={commentIcon}
-                            alt="commenting-cursor"
+                                   src={commentIcon}
+                                   alt="commenting-cursor"
                         />
                     </IconButton>
                 </ToolSection>
 
-                {/* 3) Sticker/Emoji tool (right corner) */}
                 <ToolSection
                     isActive={activeTool === 'emoji'}
-                    isStickerTool // <--- This will give the extra width
+                    isStickerTool
                 >
                     <IconButton
                         ref={emojiButtonRef}
@@ -123,10 +116,10 @@ export default function DelightfulToolbar({
                             }
                         }}
                     >
-                        <ToolImage  isActive={activeTool === 'emoji'}
-                            src={shelbyStickerIcon}
-                            alt="Stickers"
-                            sx={{ width: '70px', height: 'auto' }}
+                        <ToolImage isActive={activeTool === 'emoji'}
+                                   src={shelbyStickerIcon}
+                                   alt="Stickers"
+                                   sx={{width: '70px', height: 'auto'}}
                         />
                     </IconButton>
                 </ToolSection>

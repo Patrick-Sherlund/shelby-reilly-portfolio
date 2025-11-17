@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react'
 
 export interface CommentData {
     id: string
@@ -31,7 +31,7 @@ const normalizeComment = (raw: Partial<CommentData>): CommentData => ({
     createdAt: raw.createdAt ?? Date.now(),
 })
 
-export function CommentsProvider({ children }: { children: React.ReactNode }) {
+export function CommentsProvider({children}: { children: React.ReactNode }) {
     const [commentsByRoute, setCommentsByRoute] = useState<Record<string, CommentData[]>>({})
     const [activeCommentId, setActiveCommentId] = useState<string | null>(null)
 
@@ -50,7 +50,7 @@ export function CommentsProvider({ children }: { children: React.ReactNode }) {
                 setCommentsByRoute(normalized)
             }
         } catch {
-            // ignore invalid storage
+
         }
     }, [])
 

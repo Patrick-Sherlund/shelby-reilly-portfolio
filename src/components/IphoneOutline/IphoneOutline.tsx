@@ -1,12 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { styled } from '@mui/material/styles'
+import React, {useEffect, useRef, useState} from 'react'
+import {styled} from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
-import Paper from '@mui/material/Paper'
-import LinearProgress from '@mui/material/LinearProgress'
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline'
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined'
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined'
@@ -16,7 +11,7 @@ import BulkInventoryScreen from './screens/BulkInventoryScreen'
 import BattalionsScreen from './screens/BattalionsScreen'
 import MoveItemsScreen from './screens/MoveItemsScreen'
 
-// Wrapper holds the phone image and the overlay UI
+
 const PhoneWrapper = styled('div')(() => ({
     position: 'relative',
     width: '246px',
@@ -24,7 +19,7 @@ const PhoneWrapper = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    pointerEvents: 'none', // allow parent interaction
+    pointerEvents: 'none',
 }))
 
 const PhoneImg = styled('img')(() => ({
@@ -46,7 +41,7 @@ const ScreenOverlay = styled(Box)(() => ({
     flexDirection: 'column',
 }))
 
-export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number }) {
+export default function IphoneOutline({initialTab = 0}: { initialTab?: number }) {
     const [navValue, setNavValue] = React.useState(initialTab)
     const [overlayStyle, setOverlayStyle] = useState<any>({})
     const imgRef = useRef<HTMLImageElement>(null)
@@ -70,7 +65,7 @@ export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number 
         if (img.complete) {
             update()
         } else {
-            img.addEventListener('load', update, { once: true })
+            img.addEventListener('load', update, {once: true})
         }
         window.addEventListener('resize', update)
         return () => {
@@ -80,24 +75,45 @@ export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number 
 
     return (
         <PhoneWrapper>
-            <PhoneImg ref={imgRef} src={`${process.env.PUBLIC_URL}/images/iphone-outline.png`} alt="iPhone outline" />
+            <PhoneImg ref={imgRef} src={`${process.env.PUBLIC_URL}/images/iphone-outline.png`} alt="iPhone outline"/>
             <ScreenOverlay
                 style={overlayStyle}
                 onWheel={(e) => e.stopPropagation()}
                 onPointerDown={(e) => e.stopPropagation()}
             >
-                <Box sx={{ flex: 1, overflow: 'auto', p: 1, position:'relative' }}>
-                    {navValue === 0 && <BattalionsScreen />}
-                    {navValue === 1 && <BulkInventoryScreen />}
-                    {navValue === 2 && <MoveItemsScreen />}
+                <Box sx={{flex: 1, overflow: 'auto', p: 1, position: 'relative'}}>
+                    {navValue === 0 && <BattalionsScreen/>}
+                    {navValue === 1 && <BulkInventoryScreen/>}
+                    {navValue === 2 && <MoveItemsScreen/>}
                     {navValue === 0 && (
                         <>
-                        {/* Spacer to push legend to bottom */}
-                        <Box sx={{ flexGrow: 1, pb: 6 }} />
-                        {/* Legend only for battalions */}
-                        <Box sx={{ alignSelf: 'flex-end', mb: 1.5, display:'flex', flexDirection:'column', gap:1, fontFamily:'Inter, sans-serif', fontSize:8, fontWeight:700, color:'#403F3E' }}>
-                            {[{label:'0-80%',color:'#FF5247'},{label:'81-99%',color:'#FFCF27'},{label:'100%',color:'#0EDC6D'}].map((item)=>(<Box key={item.label} sx={{display:'flex',alignItems:'center',gap:1}}><Box sx={{width:20,height:20,bgcolor:item.color,borderRadius:0.5}}/><Typography sx={{fontSize:8,fontWeight:700,color:'#403F3E'}}>{item.label}</Typography></Box>))}
-                        </Box>
+
+                            <Box sx={{flexGrow: 1, pb: 6}}/>
+
+                            <Box sx={{
+                                alignSelf: 'flex-end',
+                                mb: 1.5,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                fontFamily: 'Inter, sans-serif',
+                                fontSize: 8,
+                                fontWeight: 700,
+                                color: '#403F3E'
+                            }}>
+                                {[{label: '0-80%', color: '#FF5247'}, {
+                                    label: '81-99%',
+                                    color: '#FFCF27'
+                                }, {label: '100%', color: '#0EDC6D'}].map((item) => (
+                                    <Box key={item.label} sx={{display: 'flex', alignItems: 'center', gap: 1}}><Box
+                                        sx={{
+                                            width: 20,
+                                            height: 20,
+                                            bgcolor: item.color,
+                                            borderRadius: 0.5
+                                        }}/><Typography
+                                        sx={{fontSize: 8, fontWeight: 700, color: '#403F3E'}}>{item.label}</Typography></Box>))}
+                            </Box>
                         </>
                     )}
                 </Box>
@@ -113,9 +129,9 @@ export default function IphoneOutline({ initialTab = 0 }: { initialTab?: number 
                         },
                     }}
                 >
-                    <BottomNavigationAction label="Sets" icon={<WorkOutlineIcon />} />
-                    <BottomNavigationAction label="Bulk" icon={<Inventory2OutlinedIcon />} />
-                    <BottomNavigationAction label="Remove" icon={<HighlightOffOutlinedIcon />} />
+                    <BottomNavigationAction label="Sets" icon={<WorkOutlineIcon/>}/>
+                    <BottomNavigationAction label="Bulk" icon={<Inventory2OutlinedIcon/>}/>
+                    <BottomNavigationAction label="Remove" icon={<HighlightOffOutlinedIcon/>}/>
                 </BottomNavigation>
             </ScreenOverlay>
         </PhoneWrapper>

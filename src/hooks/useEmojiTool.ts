@@ -1,6 +1,6 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import Konva from 'konva'
-import { Tool, BoardItem, EmojiSubMode } from '../types'
+import {BoardItem, EmojiSubMode, Tool} from '../types'
 
 interface UseEmojiToolParams {
     stageRef: React.RefObject<Konva.Stage>
@@ -22,22 +22,22 @@ const getHoldStage = (elapsedSeconds: number) => {
 }
 
 const getHoldTransform = (elapsedSeconds: number) => {
-    if (elapsedSeconds < 1) return { scale: 1, rotation: 0 }
-    if (elapsedSeconds < 2) return { scale: 1.5, rotation: -15 }
-    if (elapsedSeconds < 3) return { scale: 2, rotation: 15 }
-    return { scale: 2.5, rotation: -15 }
+    if (elapsedSeconds < 1) return {scale: 1, rotation: 0}
+    if (elapsedSeconds < 2) return {scale: 1.5, rotation: -15}
+    if (elapsedSeconds < 3) return {scale: 2, rotation: 15}
+    return {scale: 2.5, rotation: -15}
 }
 
-export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams) {
+export function useEmojiTool({stageRef, currentRoute = ''}: UseEmojiToolParams) {
     const [activeTool, setActiveTool] = useState<Tool>(null)
     const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
     const [selectedEmoji, setSelectedEmoji] = useState(
         require('../assets/images/emoji-wheel/fire-sticker.png')
     )
     const [hasSelectedEmoji, setHasSelectedEmoji] = useState(false)
-    const [emojiButtonRect, setEmojiButtonRect] = useState({ x: 0, y: 0, width: 0, height: 0 })
+    const [emojiButtonRect, setEmojiButtonRect] = useState({x: 0, y: 0, width: 0, height: 0})
     const [emojiSubMode, setEmojiSubMode] = useState<EmojiSubMode>('stamp')
-    // Store objects per route: { route: BoardItem[] }
+
     const [objectsByRoute, setObjectsByRoute] = useState<Record<string, BoardItem[]>>({})
     const [isStamping, setIsStamping] = useState(false)
     const [previewScale, setPreviewScale] = useState(1)
@@ -87,10 +87,10 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
         setActiveTool(tool)
         if (tool === 'emoji') {
             setEmojiPickerOpen(true)
-            // Reset the selection state when emoji tool is opened
+
             setHasSelectedEmoji(false)
             ensureEmojiSize(selectedEmoji as string)
-            // Reset to default cursor when emoji tool is first selected
+
             document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`
         } else if (tool === 'commenting-cursor') {
             setEmojiPickerOpen(false)
@@ -110,7 +110,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
         setHasSelectedEmoji(true)
         setEmojiPickerOpen(false)
         ensureEmojiSize(emoji)
-        // After selecting an emoji, update cursor based on submode
+
         if (emojiSubMode === 'stamp') {
             document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/stamp-cursor.png) 0 32, auto`
         } else {
@@ -120,7 +120,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
 
     const handleSetSubMode = useCallback((mode: EmojiSubMode) => {
         setEmojiSubMode(mode)
-        // Only update cursor if an emoji has been selected
+
         if (hasSelectedEmoji) {
             if (mode === 'stamp') {
                 document.body.style.cursor = `url(${process.env.PUBLIC_URL}/images/stamp-cursor.png) 0 32, auto`
@@ -152,7 +152,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
         if (pressStartRef.current == null) return
         const now = performance.now()
         const elapsedSeconds = (now - pressStartRef.current) / 1000
-        const { scale: baseScale, rotation: baseRotation } = getHoldTransform(elapsedSeconds)
+        const {scale: baseScale, rotation: baseRotation} = getHoldTransform(elapsedSeconds)
         const stage = getHoldStage(elapsedSeconds)
 
         if (stage !== currentStageRef.current) {
@@ -178,7 +178,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
     }, [])
 
     const handleStamp = () => {
-        // If emoji tool is active but no emoji selected yet, close picker and reset to hand tool
+
         if (activeTool === 'emoji' && !hasSelectedEmoji) {
             setEmojiPickerOpen(false)
             setActiveTool('hand')
@@ -186,15 +186,15 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
             return
         }
 
-        // Only allow stamping if user has selected an emoji from the picker
+
         if (activeTool === 'emoji' && emojiSubMode === 'stamp' && hasSelectedEmoji) {
-            // Begin press-and-hold sequence; placement now occurs on mouseup
+
             pressStartRef.current = performance.now()
             currentStageRef.current = 0
             overshootUntilRef.current = null
             setIsStamping(true)
             setPreviewOpacity(1)
-            const { scale, rotation } = getHoldTransform(0)
+            const {scale, rotation} = getHoldTransform(0)
             setPreviewScale(scale)
             setPreviewRotation(rotation)
             stopAnimation()
@@ -209,7 +209,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
         const elapsedSeconds = pressStartRef.current
             ? (performance.now() - pressStartRef.current) / 1000
             : 0
-        const { scale, rotation } = getHoldTransform(elapsedSeconds)
+        const {scale, rotation} = getHoldTransform(elapsedSeconds)
         if (pointer) {
             const newObj: BoardItem = {
                 id: Date.now().toString(),
@@ -253,7 +253,7 @@ export function useEmojiTool({ stageRef, currentRoute = '' }: UseEmojiToolParams
 
     useEffect(() => () => stopAnimation(), [stopAnimation])
 
-    // Get objects for current route
+
     const objects = objectsByRoute[currentRoute] || []
 
     return {

@@ -1,39 +1,39 @@
-import React, { useRef } from 'react'
+import React, {useRef} from 'react'
 import {
-    MainWrapper,
-    DemoSection,
     CtrlYBadge,
     CtrlYLogoImage,
-    MidSection,
-    DemoWrapper,
-    IpadImage,
-    DemoVideo,
-    DescriptionWrapper,
-    ProjectBishopLogo,
-    DescriptiveParagraph,
-    RoleText,
     DatesText,
-    LearnMoreButton
+    DemoSection,
+    DemoVideo,
+    DemoWrapper,
+    DescriptionWrapper,
+    DescriptiveParagraph,
+    IpadImage,
+    LearnMoreButton,
+    MainWrapper,
+    MidSection,
+    ProjectBishopLogo,
+    RoleText
 } from './ProjectBishopPage.styles'
-import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
+import {useZoomPanInteraction} from '../../hooks/useZoomPanInteraction'
 import ipad from '../../assets/images/tablet.png';
 import bishopLogoSmall from '../../assets/images/bishop_logo_small.png';
-import { useZoomPanContext } from '../../context/ZoomPanContext'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
 
 export default function ProjectBishopPage() {
-    // Refs for interaction areas
+
     const demoRef = useRef<HTMLDivElement>(null)
     const descRef = useRef<HTMLDivElement>(null)
 
     const demoInteraction = useZoomPanInteraction(demoRef)
     const descInteraction = useZoomPanInteraction(descRef)
-    const { activeTool } = useZoomPanContext()
+    const {activeTool} = useZoomPanContext()
 
     return (
         <MainWrapper>
-            {/* Middle section */}
+
             <MidSection>
-                {/* Left – Description */}
+
                 <DescriptionWrapper
                     ref={descRef}
                     onMouseDown={descInteraction.handleMouseDown}
@@ -50,9 +50,9 @@ export default function ProjectBishopPage() {
 
                     <DescriptiveParagraph>
                         Making search and rescue faster,
-                        <br />
+                        <br/>
                         safer, and more effective with AI,
-                        <br />
+                        <br/>
                         drones, and User Centered Design.
                     </DescriptiveParagraph>
 
@@ -60,14 +60,15 @@ export default function ProjectBishopPage() {
                     <DatesText>2024 – 2025</DatesText>
 
                     <LearnMoreButton
-                        onClick={() => { window.location.hash = '#/bishop-project' }}
+                        onClick={() => {
+                            window.location.hash = '#/bishop-project'
+                        }}
                         data-testid="pb-cta"
                     >
                         Learn More
                     </LearnMoreButton>
                 </DescriptionWrapper>
 
-                {/* Right – CTRL+Y logo and Web app demo video */}
                 <DemoSection>
                     <CtrlYBadge data-testid="ctrl-y-badge" $activeTool={activeTool}>
                         <CtrlYLogoImage
@@ -96,7 +97,7 @@ export default function ProjectBishopPage() {
                             disablePictureInPicture
                             controlsList="nodownload nofullscreen noremoteplayback"
                         >
-                            <source src={`${process.env.PUBLIC_URL}/videos/bishop_demo.mp4`} type="video/mp4" />
+                            <source src={`${process.env.PUBLIC_URL}/videos/bishop_demo.mp4`} type="video/mp4"/>
                         </DemoVideo>
                     </DemoWrapper>
                 </DemoSection>

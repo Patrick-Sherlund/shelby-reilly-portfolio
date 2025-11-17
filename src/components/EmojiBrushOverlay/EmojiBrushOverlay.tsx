@@ -1,5 +1,5 @@
 import React from 'react'
-import { OverlayContainer, EmojiPreview } from './EmojiBrushOverlay.styles'
+import {EmojiPreview, OverlayContainer} from './EmojiBrushOverlay.styles'
 
 type Props = {
     emoji: string
@@ -12,18 +12,18 @@ type Props = {
 }
 
 export default function EmojiBrushOverlay({
-    emoji,
-    visible,
-    x,
-    y,
-    scale = 1,
-    rotation = 0,
-    opacity = 0.6
-}: Props) {
+                                              emoji,
+                                              visible,
+                                              x,
+                                              y,
+                                              scale = 1,
+                                              rotation = 0,
+                                              opacity = 0.6
+                                          }: Props) {
     if (!emoji || !visible) return null
 
     return (
-        <OverlayContainer style={{ top: y, left: x }}>
+        <OverlayContainer style={{top: y, left: x}}>
             <EmojiPreview
                 src={emoji}
                 alt="emoji-preview"

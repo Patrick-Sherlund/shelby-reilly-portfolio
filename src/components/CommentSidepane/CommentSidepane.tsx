@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react'
-import { styled } from '@mui/material/styles'
+import React, {useEffect, useMemo} from 'react'
+import {styled} from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
@@ -7,8 +7,8 @@ import Box from '@mui/material/Box'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
-import { useComments } from '../../context/CommentsContext'
-import { useZoomPanContext } from '../../context/ZoomPanContext'
+import {useComments} from '../../context/CommentsContext'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
 
 type Props = {
     open: boolean
@@ -20,7 +20,7 @@ type Props = {
 const PANEL_WIDTH = 300
 const COLLAPSED_WIDTH = 80
 
-const Panel = styled('aside')<{ $open: boolean; $collapsed: boolean }>(({ $open, $collapsed }) => {
+const Panel = styled('aside')<{ $open: boolean; $collapsed: boolean }>(({$open, $collapsed}) => {
     const width = $collapsed ? COLLAPSED_WIDTH : PANEL_WIDTH
     return {
         position: 'fixed',
@@ -61,7 +61,7 @@ const CollapsedList = styled('div')({
     flexDirection: 'column'
 })
 
-const Row = styled('button')<{ $active: boolean; $collapsed: boolean }>(({ $active, $collapsed }) => ({
+const Row = styled('button')<{ $active: boolean; $collapsed: boolean }>(({$active, $collapsed}) => ({
     width: '100%',
     background: $active ? 'rgba(255,255,255,0.08)' : 'transparent',
     border: 'none',
@@ -129,13 +129,13 @@ const formatTimeAgo = (timestamp: number) => {
 }
 
 export function CommentSidepane({
-    open,
-    currentRoute,
-    collapsed,
-    onCollapseToggle,
-}: Props) {
-    const { getCommentsForRoute, deleteComment, activeCommentId, setActiveCommentId } = useComments()
-    const { stageScale, setStagePos, clampStagePosition } = useZoomPanContext()
+                                    open,
+                                    currentRoute,
+                                    collapsed,
+                                    onCollapseToggle,
+                                }: Props) {
+    const {getCommentsForRoute, deleteComment, activeCommentId, setActiveCommentId} = useComments()
+    const {stageScale, setStagePos, clampStagePosition} = useZoomPanContext()
 
     const comments = getCommentsForRoute(currentRoute)
     const ordered = useMemo(
@@ -155,7 +155,7 @@ export function CommentSidepane({
         setActiveCommentId(commentId)
         setStagePos((prev) => {
             const centeredY = clampStagePosition(window.innerHeight / 2 - target.y * stageScale)
-            return { x: prev.x, y: centeredY }
+            return {x: prev.x, y: centeredY}
         })
     }
 
@@ -169,27 +169,30 @@ export function CommentSidepane({
                 {!collapsed ? (
                     <>
                         <Header>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
-                                <ChatBubbleOutlineIcon sx={{ color: '#FFFFFF', flexShrink: 0 }} />
-                                <Typography sx={{ fontWeight: 700, fontSize: 14, color: '#FFFFFF', whiteSpace: 'nowrap' }}>
+                            <Box sx={{display: 'flex', alignItems: 'center', gap: 8, minWidth: 0}}>
+                                <ChatBubbleOutlineIcon sx={{color: '#FFFFFF', flexShrink: 0}}/>
+                                <Typography
+                                    sx={{fontWeight: 700, fontSize: 14, color: '#FFFFFF', whiteSpace: 'nowrap'}}>
                                     Comments
                                 </Typography>
                                 <Divider
                                     orientation="vertical"
                                     flexItem
-                                    sx={{ borderColor: 'rgba(255,255,255,0.16)' }}
+                                    sx={{borderColor: 'rgba(255,255,255,0.16)'}}
                                 />
-                                <Typography sx={{ fontSize: 12, opacity: 0.7, whiteSpace: 'nowrap' }}>
+                                <Typography sx={{fontSize: 12, opacity: 0.7, whiteSpace: 'nowrap'}}>
                                     {comments.length} on this page
                                 </Typography>
                             </Box>
-                            <IconButton onClick={onCollapseToggle} sx={{ color: '#FFFFFF' }} aria-label={collapsed ? 'Expand comments' : 'Collapse comments'}>
-                                {collapsed ? <KeyboardArrowLeftIcon /> : <KeyboardArrowLeftIcon sx={{ transform: 'rotate(180deg)' }} />}
+                            <IconButton onClick={onCollapseToggle} sx={{color: '#FFFFFF'}}
+                                        aria-label={collapsed ? 'Expand comments' : 'Collapse comments'}>
+                                {collapsed ? <KeyboardArrowLeftIcon/> :
+                                    <KeyboardArrowLeftIcon sx={{transform: 'rotate(180deg)'}}/>}
                             </IconButton>
                         </Header>
                         <List
                             onWheel={(e) => {
-                                // Prevent Konva stage from hijacking scroll when hovering the pane
+
                                 e.stopPropagation()
                             }}
                         >
@@ -203,12 +206,12 @@ export function CommentSidepane({
                                     $active={activeCommentId === comment.id}
                                     $collapsed={collapsed}
                                 >
-                                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                                    <Box sx={{flex: 1, minWidth: 0}}>
                                         <Meta>
-                                            <Typography sx={{ fontWeight: 800, fontSize: 13, opacity: 0.85 }}>
+                                            <Typography sx={{fontWeight: 800, fontSize: 13, opacity: 0.85}}>
                                                 #{idx + 1}
                                             </Typography>
-                                            <Typography sx={{ fontWeight: 700, fontSize: 13 }}>
+                                            <Typography sx={{fontWeight: 700, fontSize: 13}}>
                                                 {comment.userName || 'Anonymous'}
                                             </Typography>
                                             <span aria-hidden>•</span>
@@ -224,25 +227,25 @@ export function CommentSidepane({
                                             handleDelete(comment.id)
                                         }}
                                     >
-                                        <DeleteOutlineIcon fontSize="small" />
+                                        <DeleteOutlineIcon fontSize="small"/>
                                     </DeleteButton>
                                 </Row>
                             ))}
                         </List>
                     </>
                 ) : (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    <Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
                         <Row
                             $active={false}
                             $collapsed={collapsed}
                             onClick={onCollapseToggle}
                             aria-label="Expand comments"
                         >
-                            <ChatBubbleOutlineIcon sx={{ color: '#FFFFFF', fontSize: 26 }} />
+                            <ChatBubbleOutlineIcon sx={{color: '#FFFFFF', fontSize: 26}}/>
                         </Row>
                         <CollapsedList
                             onWheel={(e) => {
-                                // Prevent Konva stage from hijacking scroll when hovering the pane
+
                                 e.stopPropagation()
                             }}
                         >
@@ -256,7 +259,7 @@ export function CommentSidepane({
                                     $active={activeCommentId === comment.id}
                                     $collapsed={collapsed}
                                 >
-                                    <Typography sx={{ fontSize: 26, fontWeight: 800 }}>
+                                    <Typography sx={{fontSize: 26, fontWeight: 800}}>
                                         #{idx + 1}
                                     </Typography>
                                 </Row>

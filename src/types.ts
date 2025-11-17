@@ -1,6 +1,3 @@
-
-
-
 export type Tool = 'hand' | 'commenting-cursor' | 'emoji' | null
 
 

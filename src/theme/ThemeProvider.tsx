@@ -1,6 +1,6 @@
-import React, { useState, ReactNode, createContext, useContext } from 'react'
-import { ThemeProvider, CssBaseline } from '@mui/material'
-import { lightTheme, darkTheme } from './theme'
+import React, {createContext, ReactNode, useContext, useState} from 'react'
+import {CssBaseline, ThemeProvider} from '@mui/material'
+import {darkTheme, lightTheme} from './theme'
 import GlobalFonts from './GlobalFonts'
 
 type Props = {
@@ -15,15 +15,17 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType>({
     mode: 'light',
-    toggleTheme: () => {},
-    setMode: () => {}
+    toggleTheme: () => {
+    },
+    setMode: () => {
+    }
 })
 
 export function useThemeMode() {
     return useContext(ThemeContext)
 }
 
-export default function ThemeProviderWrapper({ children }: Props) {
+export default function ThemeProviderWrapper({children}: Props) {
     const [mode, setMode] = useState<'light' | 'dark'>('dark')
     const theme = mode === 'light' ? lightTheme : darkTheme
 
@@ -32,10 +34,10 @@ export default function ThemeProviderWrapper({ children }: Props) {
     }
 
     return (
-        <ThemeContext.Provider value={{ mode, toggleTheme, setMode }}>
+        <ThemeContext.Provider value={{mode, toggleTheme, setMode}}>
             <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <GlobalFonts />
+                <CssBaseline/>
+                <GlobalFonts/>
                 {children}
             </ThemeProvider>
         </ThemeContext.Provider>

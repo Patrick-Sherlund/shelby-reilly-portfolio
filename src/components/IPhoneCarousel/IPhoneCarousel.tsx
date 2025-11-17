@@ -1,18 +1,12 @@
-// IPhoneCarousel.tsx
-import React, { useRef, useState, useEffect } from 'react'
-import {
-    CarouselContainer,
-    CarouselTrack,
-    IPhoneWrapper,
-    IPhoneImage
-} from './IPhoneCarousel.styles'
+import React, {useEffect, useRef, useState} from 'react'
+import {CarouselContainer, CarouselTrack, IPhoneImage, IPhoneWrapper} from './IPhoneCarousel.styles'
 
 interface IPhoneCarouselProps {
     images: string[]
     height?: number | string
 }
 
-export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselProps) {
+export default function IPhoneCarousel({images, height = 600}: IPhoneCarouselProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const trackRef = useRef<HTMLDivElement>(null)
     const [scrollPosition, setScrollPosition] = useState(0)
@@ -20,70 +14,65 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
     const [startX, setStartX] = useState(0)
     const [scrollLeft, setScrollLeft] = useState(0)
 
-    // Create an extended array for infinite scroll effect
-    // We'll render: [...images, ...images, ...images] to allow seamless looping
+
     const extendedImages = [...images, ...images, ...images]
 
-    // Exact heights for each position
-    const CENTER_HEIGHT = 640 // Center iPhone height
-    const SIDE_HEIGHT = 531 // ±1 position height
-    const OUTER_HEIGHT = 452 // ±2 position height
 
-    // Image aspect ratio: 594 / 1287 ≈ 0.4616
+    const CENTER_HEIGHT = 640
+    const SIDE_HEIGHT = 531
+    const OUTER_HEIGHT = 452
+
+
     const ASPECT_RATIO = 594 / 1287
 
-    // Calculate widths at each height
-    const CENTER_WIDTH = CENTER_HEIGHT * ASPECT_RATIO // ≈ 295px
-    const SIDE_WIDTH = SIDE_HEIGHT * ASPECT_RATIO // ≈ 245px
-    const OUTER_WIDTH = OUTER_HEIGHT * ASPECT_RATIO // ≈ 209px
 
-    // Use a fixed spacing unit for completely consistent positioning
-    // This is the distance between each iPhone's center point
-    // Tight spacing to eliminate gaps while maintaining overlap
-    const spacingUnit = 180 // Fixed spacing between centers (tighter to prevent gaps)
-    const itemWidth = spacingUnit // Use spacing unit as item width for calculations
+    const CENTER_WIDTH = CENTER_HEIGHT * ASPECT_RATIO
+    const SIDE_WIDTH = SIDE_HEIGHT * ASPECT_RATIO
+    const OUTER_WIDTH = OUTER_HEIGHT * ASPECT_RATIO
+
+
+    const spacingUnit = 180
+    const itemWidth = spacingUnit
 
     useEffect(() => {
-        // Start at the middle set of images, centered
-        // We want iPhone at index images.length (middle of the 3 sets) to be at viewport center
+
+
         const container = containerRef.current
         if (!container) return
 
         const containerWidth = container.offsetWidth
         const centerX = containerWidth / 2
 
-        // Position the middle iPhone (index = images.length) at the center
-        // The iPhone's left edge is at: index * itemWidth - scrollPosition
-        // We want that position to be: centerX - (itemWidth / 2) so the iPhone is centered
+
         const middleImageIndex = images.length
         const initialPosition = middleImageIndex * itemWidth - centerX + itemWidth / 2
 
-        setScrollPosition(initialPosition +10)
+        setScrollPosition(initialPosition + 10)
     }, [images.length, itemWidth])
 
-    // Handle wheel scroll for HORIZONTAL scrolling ONLY
+
     useEffect(() => {
         const container = containerRef.current
         if (!container) return
 
         const handleWheel = (e: WheelEvent) => {
-            // Only handle horizontal scroll (deltaX), ignore vertical scroll (deltaY)
+
             if (Math.abs(e.deltaX) > 0) {
                 e.preventDefault()
 
                 setScrollPosition(prev => {
                     const newPos = prev + e.deltaX
 
-                    // Infinite scroll logic
+
                     const singleSetWidth = images.length * itemWidth
                     const minPos = 0
                     const maxPos = singleSetWidth * 2
 
-                    // If we've scrolled past the end of the middle set, jump back
+
                     if (newPos >= maxPos) {
                         return newPos - singleSetWidth
                     }
-                    // If we've scrolled before the start of the middle set, jump forward
+
                     if (newPos <= minPos) {
                         return newPos + singleSetWidth
                     }
@@ -93,11 +82,11 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
             }
         }
 
-        container.addEventListener('wheel', handleWheel, { passive: false })
+        container.addEventListener('wheel', handleWheel, {passive: false})
         return () => container.removeEventListener('wheel', handleWheel)
     }, [images.length])
 
-    // Mouse drag handlers
+
     const handleMouseDown = (e: React.MouseEvent) => {
         setIsDragging(true)
         setStartX(e.pageX - (containerRef.current?.offsetLeft || 0))
@@ -108,12 +97,12 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
         if (!isDragging) return
         e.preventDefault()
         const x = e.pageX - (containerRef.current?.offsetLeft || 0)
-        const walk = (x - startX) * 2 // Multiply for faster scroll
+        const walk = (x - startX) * 2
 
         setScrollPosition(prev => {
             const newPos = scrollLeft - walk
 
-            // Infinite scroll logic
+
             const singleSetWidth = images.length * itemWidth
             const minPos = 0
             const maxPos = singleSetWidth * 2
@@ -139,47 +128,43 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
         setIsDragging(false)
     }
 
-    // Calculate height with smooth linear interpolation between positions
+
     const getHeight = (index: number) => {
         if (!containerRef.current) return CENTER_HEIGHT
 
         const containerWidth = containerRef.current.offsetWidth
         const centerX = containerWidth / 2
 
-        // Calculate the position of this iPhone's center
+
         const itemPosition = index * itemWidth - scrollPosition + itemWidth / 2
 
-        // Distance from center of viewport (in pixels)
+
         const distanceFromCenter = itemPosition - centerX
 
-        // Calculate exact position in "slots" (0 = center, ±1 = first side, ±2 = outer)
+
         const slotPosition = distanceFromCenter / itemWidth
         const absSlot = Math.abs(slotPosition)
 
-        // Smooth linear interpolation between heights using continuous function
-        // This ensures no jumps at slot boundaries
+
         if (absSlot <= 2.0) {
-            // Create a completely smooth interpolation from 0 to 2
-            // At 0: CENTER_HEIGHT (640)
-            // At 1: SIDE_HEIGHT (531)
-            // At 2: OUTER_HEIGHT (452)
+
 
             if (absSlot <= 1.0) {
-                // Between center (0) and first side (1)
+
                 const t = absSlot
                 return CENTER_HEIGHT + (SIDE_HEIGHT - CENTER_HEIGHT) * t
             } else {
-                // Between first side (1) and outer (2)
+
                 const t = absSlot - 1.0
                 return SIDE_HEIGHT + (OUTER_HEIGHT - SIDE_HEIGHT) * t
             }
         } else {
-            // Beyond ±2, keep at outer size
+
             return OUTER_HEIGHT
         }
     }
 
-    // Calculate z-index based on distance from center
+
     const getZIndex = (index: number) => {
         if (!containerRef.current) return 1
 
@@ -191,8 +176,7 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
         const slotPosition = distanceFromCenter / itemWidth
         const absSlot = Math.abs(slotPosition)
 
-        // Center has highest z-index, decreases as we move away
-        // Use continuous z-index based on distance for smooth transitions
+
         return Math.round(100 - absSlot * 10)
     }
 
@@ -211,10 +195,10 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
                     const containerWidth = containerRef.current?.offsetWidth || 1400
                     const centerX = containerWidth / 2
 
-                    // Find the center iPhone index
+
                     const centerIndex = Math.round((scrollPosition + centerX - itemWidth / 2) / itemWidth)
 
-                    // Only render iPhones within range (center ±2)
+
                     const distanceFromCenter = Math.abs(index - centerIndex)
                     if (distanceFromCenter > 2) {
                         return null
@@ -224,32 +208,30 @@ export default function IPhoneCarousel({ images, height = 600 }: IPhoneCarouselP
                     const zIndex = getZIndex(index)
                     const actualWidth = height * ASPECT_RATIO
 
-                    // Calculate the base position for this iPhone
+
                     const xPosition = index * itemWidth - scrollPosition
 
-                    // Determine all positions where this iPhone should be rendered
-                    // to create the wrapping effect
+
                     const renderPositions: number[] = []
 
-                    // Always include the primary position
+
                     renderPositions.push(xPosition)
 
-                    // Check if iPhone is partially cut off on the left edge
-                    // If part of it is off-screen to the left, render the wrapped version on the right
+
                     const leftEdge = xPosition
                     const rightEdge = xPosition + actualWidth
 
                     if (leftEdge < 0 && rightEdge > 0) {
-                        // Part of this iPhone is cut off on the left
-                        // Render it wrapped to the right side
+
+
                         const singleSetWidth = images.length * itemWidth
                         renderPositions.push(xPosition + singleSetWidth)
                     }
 
-                    // Check if iPhone is partially cut off on the right edge
+
                     if (leftEdge < containerWidth && rightEdge > containerWidth) {
-                        // Part of this iPhone is cut off on the right
-                        // Render it wrapped to the left side
+
+
                         const singleSetWidth = images.length * itemWidth
                         renderPositions.push(xPosition - singleSetWidth)
                     }

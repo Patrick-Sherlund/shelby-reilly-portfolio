@@ -1,24 +1,15 @@
+import React, {useEffect, useState} from 'react'
+import {BottomHalf, EmojiImage, EmojiSlice, InnerCircle, PickerContainer, TopHalf} from './EmojiPicker.styles'
 
-import React, { useState, useEffect } from 'react'
-import IconButton from '@mui/material/IconButton'
-import {
-    BottomHalf,
-    EmojiImage,
-    EmojiSlice,
-    InnerCircle,
-    PickerContainer,
-    TopHalf
-} from './EmojiPicker.styles'
-
-import { ReactComponent as WandEmoji } from '../../assets/images/emoji-wheel/wand-emoji.svg'
-import { ReactComponent as StampEmoji } from '../../assets/images/emoji-wheel/stamp-emoji.svg'
+import {ReactComponent as WandEmoji} from '../../assets/images/emoji-wheel/wand-emoji.svg'
+import {ReactComponent as StampEmoji} from '../../assets/images/emoji-wheel/stamp-emoji.svg'
 
 type EmojiSubMode = 'stamp' | 'wand'
 
 type EmojiOffset = {
-    scale?: number // Scale multiplier (e.g., 1.2 for 20% larger)
-    angleOffset?: number // Rotation offset in degrees
-    distanceOffset?: number // Additional distance from center in rem
+    scale?: number
+    angleOffset?: number
+    distanceOffset?: number
 }
 
 type Props = {
@@ -30,20 +21,20 @@ type Props = {
     anchorRect: { x: number; y: number; width: number; height: number }
     subMode: EmojiSubMode
     setSubMode: (mode: EmojiSubMode) => void
-    emojiOffsets?: Record<string, EmojiOffset> // Key is emoji filename
+    emojiOffsets?: Record<string, EmojiOffset>
 }
 
 export default function EmojiPicker({
-    visible,
-    stampEmojis,
-    smileyEmojis,
-    selected,
-    onSelect,
-    anchorRect,
-    subMode,
-    setSubMode,
-    emojiOffsets = {}
-}: Props) {
+                                        visible,
+                                        stampEmojis,
+                                        smileyEmojis,
+                                        selected,
+                                        onSelect,
+                                        anchorRect,
+                                        subMode,
+                                        setSubMode,
+                                        emojiOffsets = {}
+                                    }: Props) {
     const [isAnimating, setIsAnimating] = useState(false)
 
     useEffect(() => {
@@ -61,13 +52,13 @@ export default function EmojiPicker({
     const centerLeft = anchorRect.x + anchorRect.width / 2 + window.scrollX
     const centerTop = anchorRect.y + anchorRect.height / 2 + window.scrollY - 90
 
-    // Helper function to extract filename from emoji path
+
     const getEmojiKey = (emojiPath: string | any): string => {
-        // Convert to string in case it's a require() object
+
         const pathStr = typeof emojiPath === 'string' ? emojiPath : String(emojiPath)
         const parts = pathStr.split('/')
         const filename = parts[parts.length - 1]
-        // Remove file extension and webpack hash (e.g., .aef6f19801208a6a9541)
+
         const cleanName = filename.replace(/\.[a-f0-9]+\.(png|jpg|jpeg|gif|svg)$/i, '.$1').replace(/\.(png|jpg|jpeg|gif|svg)$/i, '')
         return cleanName
     }
@@ -75,7 +66,7 @@ export default function EmojiPicker({
     return (
         <PickerContainer
             data-ignore-stage
-            style={{ left: centerLeft, top: centerTop }}
+            style={{left: centerLeft, top: centerTop}}
             className={isAnimating ? 'animating' : ''}
         >
             {emojisToShow.map((emoji, i) => {
@@ -101,7 +92,7 @@ export default function EmojiPicker({
                         }}
                         onClick={() => onSelect(emoji)}
                     >
-                        <EmojiImage src={emoji} alt="emoji" isSelected={emoji === selected} />
+                        <EmojiImage src={emoji} alt="emoji" isSelected={emoji === selected}/>
                     </EmojiSlice>
                 )
             })}
@@ -110,14 +101,14 @@ export default function EmojiPicker({
                     active={subMode === 'wand'}
                     onClick={() => setSubMode('wand')}
                 >
-                    <WandEmoji width={"24px"} height={"24px"} />
+                    <WandEmoji width={"24px"} height={"24px"}/>
 
                 </TopHalf>
                 <BottomHalf
                     active={subMode === 'stamp'}
                     onClick={() => setSubMode('stamp')}
                 >
-                    <StampEmoji width={"24px"} height={"24px"} />
+                    <StampEmoji width={"24px"} height={"24px"}/>
 
                 </BottomHalf>
             </InnerCircle>

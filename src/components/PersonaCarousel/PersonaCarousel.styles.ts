@@ -1,6 +1,5 @@
-// PersonaCarousel.styles.ts
-import { styled } from '@mui/material/styles'
-import { keyframes } from '@mui/system'
+import {styled} from '@mui/material/styles'
+import {keyframes} from '@mui/system'
 
 interface PersonaCardProps {
     $offsetTop: boolean
@@ -19,7 +18,7 @@ const scrollLeft = keyframes`
     }
 `
 
-export const CarouselContainer = styled('div')(({ theme }) => ({
+export const CarouselContainer = styled('div')(({theme}) => ({
     position: 'relative',
     width: '100vw',
     marginLeft: 'calc(-50vw + 50%)',
@@ -50,7 +49,7 @@ export const CarouselBackground = styled('img')(() => ({
     userSelect: 'none'
 }))
 
-export const CarouselTrack = styled('div')<CarouselTrackProps>(({ $isPaused }) => ({
+export const CarouselTrack = styled('div')<CarouselTrackProps>(({$isPaused}) => ({
     position: 'relative',
     zIndex: 2,
     display: 'flex',
@@ -63,7 +62,7 @@ export const CarouselTrack = styled('div')<CarouselTrackProps>(({ $isPaused }) =
     paddingLeft: '40px'
 }))
 
-export const PersonaCard = styled('img')<PersonaCardProps>(({ theme, $offsetTop }) => ({
+export const PersonaCard = styled('img')<PersonaCardProps>(({theme, $offsetTop}) => ({
     flex: '0 0 auto',
     width: '560px',
     height: 'auto',
@@ -73,7 +72,7 @@ export const PersonaCard = styled('img')<PersonaCardProps>(({ theme, $offsetTop 
     WebkitUserDrag: 'none',
     pointerEvents: 'auto',
     cursor: 'pointer',
-    // Alternate vertical offset
+
     transform: $offsetTop ? 'translateY(-40px)' : 'translateY(40px)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     [theme.breakpoints.down('md')]: {

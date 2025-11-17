@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react'
+import React, {createContext, useContext} from 'react'
 import Konva from 'konva'
 
 export interface ZoomPanContextValue {
@@ -15,7 +15,7 @@ export interface ZoomPanContextValue {
     activeTool?: string
 }
 
-// Provide an undefined default – consumers must sit under a provider
+
 export const ZoomPanContext = createContext<ZoomPanContextValue | undefined>(
     undefined
 )

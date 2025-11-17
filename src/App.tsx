@@ -1,42 +1,41 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import Konva from 'konva'
-import { Stage, Layer, Rect } from 'react-konva'
-import { styled } from '@mui/material/styles'
+import {Layer, Rect, Stage} from 'react-konva'
+import {styled} from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import StickyNote from './components/StickyNote/StickyNote'
 import DelightfulToolbar from './components/DelightfulToolbar/DelightfulToolbar'
 import EmojiPicker from './components/EmojiPicker/EmojiPicker'
 import EmojiBrushOverlay from './components/EmojiBrushOverlay/EmojiBrushOverlay'
 import EmojiObject from './components/EmojiObject/EmojiObject'
 import IntroductionPage from './pages/IntroductionPage/IntroductionPage'
-import { usePointerOverlay } from './hooks/usePointerOverlay'
-import { useZoomPan } from './hooks/useZoomPan'
-import { useWandEmojis, WAND_LIFETIME, WAND_TRAVEL_DISTANCE } from './hooks/useWandEmojis'
-import { useEmojiTool } from './hooks/useEmojiTool'
+import {usePointerOverlay} from './hooks/usePointerOverlay'
+import {useZoomPan} from './hooks/useZoomPan'
+import {useWandEmojis, WAND_LIFETIME, WAND_TRAVEL_DISTANCE} from './hooks/useWandEmojis'
+import {useEmojiTool} from './hooks/useEmojiTool'
 import FloatingTopNav from "./components/FloatingTopNav/FloatingTopNav";
 import ZoomControls from './components/ZoomControls/ZoomControls'
-import { ZoomPanContext } from './context/ZoomPanContext'
-import { useDisableBrowserZoom } from './hooks/useDisableBrowserZoom'
+import {ZoomPanContext} from './context/ZoomPanContext'
+import {useDisableBrowserZoom} from './hooks/useDisableBrowserZoom'
 import CursorChat from './components/CursorChat/CursorChat'
 import FastWaveCursor from './components/FastWaveCursor/FastWaveCursor'
 import CommentingLayer from './components/CommentingLayer/CommentingLayer'
 import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
 import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
 import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
-import { GlobalStyles } from '@mui/material'
+import {GlobalStyles} from '@mui/material'
 import SearchPalette from './components/SearchPalette/SearchPalette'
-import { CommentSidepane } from './components/CommentSidepane/CommentSidepane'
-import { CommentsProvider, useComments } from './context/CommentsContext'
+import {CommentSidepane} from './components/CommentSidepane/CommentSidepane'
+import {CommentsProvider, useComments} from './context/CommentsContext'
 import MedTrackerProjectPage from './pages/MedTrackerProjectPage/MedTrackerProjectPage'
 import BishopProjectPage from './pages/BishopProjectPage/BishopProjectPage'
 import GoogleCodesignProjectPage from './pages/GoogleCodesignProjectPage/GoogleCodesignProjectPage'
 import AboutPage from './pages/AboutPage/AboutPage'
-import { CursorSimulatorProvider, useCursorSimulator } from './context/CursorSimulatorContext'
-import { CursorSimulator } from './components/CursorSimulator/CursorSimulator'
-import { BackButton as ProjectBackButton } from './pages/MedTrackerProjectPage/MedTrackerProjectPage.styles'
-import { useThemeMode } from './theme/ThemeProvider'
+import {CursorSimulatorProvider, useCursorSimulator} from './context/CursorSimulatorContext'
+import {CursorSimulator} from './components/CursorSimulator/CursorSimulator'
+import {BackButton as ProjectBackButton} from './pages/MedTrackerProjectPage/MedTrackerProjectPage.styles'
+import {useThemeMode} from './theme/ThemeProvider'
 
-const AppContainer = styled(Box)(({ theme }) => ({
+const AppContainer = styled(Box)(({theme}) => ({
     width: '100vw',
     height: '100vh',
     overflow: 'hidden',
@@ -56,8 +55,8 @@ const PageWrapper = styled('div')<{
     translateY: number
     scale: number
     $activeTool?: string
-}>(({ baseY, translateX, translateY, scale, $activeTool }) => {
-    // Only disable pointer events when using tools that need to interact with the Konva stage
+}>(({baseY, translateX, translateY, scale, $activeTool}) => {
+
     const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor'
 
     return {
@@ -82,23 +81,23 @@ function AppContent() {
         time: number;
     } | null>(null)
 
-    const { waypoints, startCursor } = useCursorSimulator()
-    const { setMode: setThemeMode } = useThemeMode()
+    const {waypoints, startCursor} = useCursorSimulator()
+    const {setMode: setThemeMode} = useThemeMode()
 
-    // --- Viewport-safe sizing for mobile toolbars / browser chrome ---
+
     const [viewport, setViewport] = useState<{ w: number; h: number }>({
         w: window.innerWidth,
         h: window.innerHeight
     })
 
-    // Calculate normalized speed for cursor (same logic as IntroductionPage)
+
     const diag = Math.hypot(viewport.w, viewport.h)
     const norm = Math.min(1.0, Math.max(0.72, diag / 1450))
     useEffect(() => {
-        const update = () => setViewport({ w: window.innerWidth, h: window.innerHeight })
+        const update = () => setViewport({w: window.innerWidth, h: window.innerHeight})
         window.addEventListener('resize', update)
         window.addEventListener('orientationchange', update)
-        // iOS address bar hide/show
+
         window.addEventListener('focus', update)
         window.addEventListener('blur', update)
         return () => {
@@ -146,10 +145,10 @@ function AppContent() {
         previewScale,
         previewRotation,
         previewOpacity
-    } = useEmojiTool({ stageRef, currentRoute })
-    const { setActiveCommentId } = useComments()
-    const { showOverlay, setShowOverlay, overlayPos } = usePointerOverlay()
-    const { wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave } =
+    } = useEmojiTool({stageRef, currentRoute})
+    const {setActiveCommentId} = useComments()
+    const {showOverlay, setShowOverlay, overlayPos} = usePointerOverlay()
+    const {wandEmojis, handleStageMouseDown, handleStageMouseUp, handleStageMouseLeave} =
         useWandEmojis({
             stageRef,
             activeTool,
@@ -164,7 +163,9 @@ function AppContent() {
     const scrolledWhileZoomedRef = useRef(false)
     const prevScaleRef = useRef(1)
     const prevPosYRef = useRef(stagePos.y)
-    const handleBackToHome = () => { window.location.hash = '' }
+    const handleBackToHome = () => {
+        window.location.hash = ''
+    }
     const prevToolRef = useRef<string | null>(null)
 
     const dragBoundFunc = (pos: { x: number; y: number }) => ({
@@ -199,17 +200,15 @@ function AppContent() {
 
     useDisableBrowserZoom()
 
-    // Global wheel handler for when cursor/hand tool is active OR when commenting tool is active
-    // (Stage has pointerEvents: none for hand tool, and CommentingLayer blocks wheel events for commenting tool)
+
     useEffect(() => {
-        // Don't add wheel handler on project pages (they have normal scrolling)
+
         const isProjectPage = currentRoute === '#/medtracker-project' ||
-                              currentRoute === '#/bishop-project' ||
-                              currentRoute === '#/googlecodesign-project'
+            currentRoute === '#/bishop-project' ||
+            currentRoute === '#/googlecodesign-project'
         if (isProjectPage) return
 
-        // Active when cursor/hand tool is selected OR when commenting tool is active
-        // (both need global wheel handling because Stage won't receive events)
+
         const needsGlobalWheel = activeTool === 'hand' || activeTool === null || activeTool === 'commenting-cursor'
         if (!needsGlobalWheel) return
 
@@ -218,9 +217,9 @@ function AppContent() {
 
             const deltaY = e.deltaY
 
-            // Check if Ctrl/Cmd key is pressed
+
             if (e.ctrlKey || e.metaKey) {
-                // Zoom when Ctrl/Cmd is pressed
+
                 if (!stageRef.current) return
 
                 const oldScale = stageScale
@@ -233,7 +232,7 @@ function AppContent() {
 
                 if (newScale === oldScale) return
 
-                const pointerPosition = { x: e.clientX, y: e.clientY }
+                const pointerPosition = {x: e.clientX, y: e.clientY}
                 const stage = stageRef.current
                 const mousePointTo = {
                     x: (pointerPosition.x - stage.x()) / oldScale,
@@ -248,16 +247,16 @@ function AppContent() {
                 setStageScale(newScale)
                 setStagePos(newPos)
             } else {
-                // Regular scrolling behavior when no modifier keys are pressed
+
                 setStagePos((prev) => {
                     const newY = clampStagePosition(prev.y - deltaY)
                     const newX = activeTool === 'commenting-cursor' ? prev.x - e.deltaX : prev.x
-                    return { x: newX, y: newY }
+                    return {x: newX, y: newY}
                 })
             }
         }
 
-        window.addEventListener('wheel', handleGlobalWheel, { passive: false })
+        window.addEventListener('wheel', handleGlobalWheel, {passive: false})
         return () => {
             window.removeEventListener('wheel', handleGlobalWheel)
         }
@@ -284,7 +283,7 @@ function AppContent() {
         const clampedIndex = Math.max(0, Math.min(3, approxIndex))
         const targetY = -clampedIndex * pageH
         setStageScale(1)
-        setStagePos({ x: 0, y: targetY })
+        setStagePos({x: 0, y: targetY})
     }
 
     useEffect(() => {
@@ -321,19 +320,19 @@ function AppContent() {
     useEffect(() => {
         if (currentRoute === '#/about') {
             setStageScale(1)
-            setStagePos({ x: 0, y: 0 })
+            setStagePos({x: 0, y: 0})
         }
     }, [currentRoute, setStagePos, setStageScale])
 
-    // Automatically switch to dark mode and reset cursor on case study pages
+
     useEffect(() => {
         const isCaseStudyPage = currentRoute === '#/medtracker-project' ||
-                                currentRoute === '#/bishop-project' ||
-                                currentRoute === '#/googlecodesign-project'
+            currentRoute === '#/bishop-project' ||
+            currentRoute === '#/googlecodesign-project'
 
         if (isCaseStudyPage) {
             setThemeMode('dark')
-            // Ensure toolbar switches back to default cursor when entering case studies
+
             handleToolChange('hand')
         }
     }, [currentRoute, setThemeMode, handleToolChange])
@@ -353,8 +352,8 @@ function AppContent() {
                 zoomOut,
                 activeTool
             }}>
-                <MedTrackerProjectPage />
-                <SearchPalette />
+                <MedTrackerProjectPage/>
+                <SearchPalette/>
             </ZoomPanContext.Provider>
         )
     }
@@ -374,8 +373,8 @@ function AppContent() {
                 zoomOut,
                 activeTool
             }}>
-                <BishopProjectPage />
-                <SearchPalette />
+                <BishopProjectPage/>
+                <SearchPalette/>
             </ZoomPanContext.Provider>
         )
     }
@@ -395,8 +394,8 @@ function AppContent() {
                 zoomOut,
                 activeTool
             }}>
-                <GoogleCodesignProjectPage />
-                <SearchPalette />
+                <GoogleCodesignProjectPage/>
+                <SearchPalette/>
             </ZoomPanContext.Provider>
         )
     }
@@ -427,8 +426,8 @@ function AppContent() {
                         '*': {
                             WebkitTapHighlightColor: 'transparent'
                         }
-                    }} />
-                    <FloatingTopNav />
+                    }}/>
+                    <FloatingTopNav/>
                     <ProjectBackButton onClick={handleBackToHome}>← Back to Portfolio</ProjectBackButton>
                     <DelightfulToolbar
                         activeTool={activeTool}
@@ -446,35 +445,35 @@ function AppContent() {
                         subMode={emojiSubMode}
                         setSubMode={handleSetSubMode}
                         emojiOffsets={{
-                        'pikachu-sticker': {
-                            angleOffset: 4
-                        },
-                        'shelby-rodeo-sticker': {
-                            angleOffset: 4,
-                            scale: 1.3
-                        },
-                        'shrekby-sticker': {
-                            angleOffset: 2,
-                            scale: 1.2
-                        },
-                        'shelby-goddess-sticker': {
-                            angleOffset: 0,
-                            scale: 1.2,
-                            distanceOffset: -.2
-                        },
-                        'pat-plotting-sticker': {
-                            angleOffset: -3,
-                            scale: 1.3,
-                        },
-                        'shelby-medal-sticker': {
-                            scale: 1.2,
-                        },
-                        'shelby-laptop-sticker': {
-                            angleOffset: 5,
-                            scale: 1.6,
-                            distanceOffset: -.6
-                        }
-                    }}
+                            'pikachu-sticker': {
+                                angleOffset: 4
+                            },
+                            'shelby-rodeo-sticker': {
+                                angleOffset: 4,
+                                scale: 1.3
+                            },
+                            'shrekby-sticker': {
+                                angleOffset: 2,
+                                scale: 1.2
+                            },
+                            'shelby-goddess-sticker': {
+                                angleOffset: 0,
+                                scale: 1.2,
+                                distanceOffset: -.2
+                            },
+                            'pat-plotting-sticker': {
+                                angleOffset: -3,
+                                scale: 1.3,
+                            },
+                            'shelby-medal-sticker': {
+                                scale: 1.2,
+                            },
+                            'shelby-laptop-sticker': {
+                                angleOffset: 5,
+                                scale: 1.6,
+                                distanceOffset: -.6
+                            }
+                        }}
                     />
                     <EmojiBrushOverlay
                         emoji={selectedEmoji}
@@ -577,14 +576,15 @@ function AppContent() {
                         </Layer>
                     </Stage>
 
-                    <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                        <AboutPage />
+                    <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}
+                                 $activeTool={activeTool}>
+                        <AboutPage/>
                     </PageWrapper>
 
-                    <CursorChat />
-                    <FastWaveCursor />
-                    <CommentingLayer activeTool={activeTool} currentRoute={currentRoute} />
-                    <SearchPalette />
+                    <CursorChat/>
+                    <FastWaveCursor/>
+                    <CommentingLayer activeTool={activeTool} currentRoute={currentRoute}/>
+                    <SearchPalette/>
                     <CommentSidepane
                         open={isCommentMode}
                         currentRoute={currentRoute}
@@ -622,7 +622,7 @@ function AppContent() {
                 activeTool
             }}>
                 <AppContainer>
-                    {/* Mobile polish without touching desktop */}
+
                     <GlobalStyles styles={{
                         img: {
                             WebkitUserDrag: 'none',
@@ -633,8 +633,8 @@ function AppContent() {
                         '*': {
                             WebkitTapHighlightColor: 'transparent'
                         }
-                    }} />
-                    <FloatingTopNav />
+                    }}/>
+                    <FloatingTopNav/>
                     <ZoomControls
                         scale={stageScale}
                         pos={stagePos}
@@ -789,23 +789,27 @@ function AppContent() {
                         </Layer>
                     </Stage>
 
-                    <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                        <IntroductionPage />
+                    <PageWrapper baseY={0} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}
+                                 $activeTool={activeTool}>
+                        <IntroductionPage/>
                     </PageWrapper>
-                    <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                        <MedTrackerPage />
+                    <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}
+                                 $activeTool={activeTool}>
+                        <MedTrackerPage/>
                     </PageWrapper>
-                    <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                        <ProjectBishopPage />
+                    <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y}
+                                 scale={stageScale} $activeTool={activeTool}>
+                        <ProjectBishopPage/>
                     </PageWrapper>
-                    <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale} $activeTool={activeTool}>
-                        <GoogleCodesignPage />
+                    <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y}
+                                 scale={stageScale} $activeTool={activeTool}>
+                        <GoogleCodesignPage/>
                     </PageWrapper>
 
-                    <CursorChat />
-                    <FastWaveCursor />
-                    <CommentingLayer activeTool={activeTool} currentRoute={currentRoute} />
-                    <SearchPalette />
+                    <CursorChat/>
+                    <FastWaveCursor/>
+                    <CommentingLayer activeTool={activeTool} currentRoute={currentRoute}/>
+                    <SearchPalette/>
                     <CommentSidepane
                         open={isCommentMode}
                         currentRoute={currentRoute}
@@ -832,7 +836,7 @@ export default function App() {
     return (
         <CursorSimulatorProvider>
             <CommentsProvider>
-                <AppContent />
+                <AppContent/>
             </CommentsProvider>
         </CursorSimulatorProvider>
     )

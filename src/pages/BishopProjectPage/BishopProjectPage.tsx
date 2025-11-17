@@ -1,98 +1,91 @@
-// BishopProjectPage.tsx
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Box from '@mui/material/Box'
 import FloatingTopNav from "../../components/FloatingTopNav/FloatingTopNav"
-import { GlobalStyles, Typography } from '@mui/material'
+import {GlobalStyles, Typography} from '@mui/material'
 import {
-    ProjectPageContainer,
-    BoardContent,
-    ContentWrapper,
     BackButton,
-    HeroSection,
-    HeroLogo,
-    HeroBannerWrapper,
-    HeroBannerRight,
-    HeroBanner,
-    HeroContent,
-    HeroDevices,
-    SectionDivider,
-    ChallengeSection,
-    ChallengeTitle,
-    ChallengeSubtitle,
-    ChallengeGrid,
-    ChallengeCard,
-    ChallengeCardTitle,
-    ChallengeCardContent,
-    HurricaneImage,
-    VisionSection,
-    VisionTitle,
-    VisionText,
+    BoardContent,
     BoldText,
-    VisionIconsContainer,
-    VisionIcon,
-    ResearchSection,
-    ResearchTitle,
-    ResearchGrid,
-    ResearchCard,
-    ResearchCardTitle,
-    ResearchCardContent,
-    DesignSection,
-    DesignTitle,
-    DesignSubtitle,
-    DesignSubtitleText,
-    DesignCarouselWrapper,
+    ChallengeCard,
+    ChallengeCardContent,
+    ChallengeCardTitle,
+    ChallengeGrid,
+    ChallengeSection,
+    ChallengeSubtitle,
+    ChallengeTitle,
+    ContentWrapper,
+    DataDesignContent,
+    DataDesignImage,
+    DataDesignImageWrapper,
+    DataDesignSection,
     DesignCarouselContainer,
     DesignCarouselRow,
-    DesignSlide,
-    DesignImage,
-    DataDesignSection,
-    DataDesignTitle,
-    DataDesignSubtitle,
-    DataDesignContent,
-    DataDesignImageWrapper,
-    DataDesignImage,
-    DesignDecisionsSection,
-    DesignDecisionsTitle,
-    DesignDecisionsSubtitle,
-    DesignDecisionsContent,
-    DesignDecisionsImageWrapper,
-    DesignDecisionsImage,
-    DesignDecisionsList,
+    DesignCarouselWrapper,
     DesignDecisionItem,
-    DesignDecisionItemTitle,
     DesignDecisionItemDescription,
-    SolutionSection,
-    SolutionTitle,
-    SolutionVideoWrapper,
-    SolutionTabletImage,
-    SolutionVideo,
-    ImpactSection,
-    ImpactTitle,
-    ImpactStatement,
+    DesignDecisionItemTitle,
+    DesignDecisionsContent,
+    DesignDecisionsImage,
+    DesignDecisionsImageWrapper,
+    DesignDecisionsList,
+    DesignDecisionsSection,
+    DesignImage,
+    DesignSection,
+    DesignSlide,
+    DesignSubtitle,
+    DesignSubtitleText,
+    DesignTitle,
+    HeroBanner,
+    HeroBannerRight,
+    HeroBannerWrapper,
+    HeroContent,
+    HeroDevices,
+    HeroLogo,
+    HeroSection,
     ImpactHighlight,
-    LearningsSection,
-    LearningsTitle,
-    LearningsGrid,
+    ImpactSection,
+    ImpactStatement,
+    ImpactTitle,
     LearningCard,
+    LearningCardContent,
     LearningCardTitle,
     LearningEmoji,
-    LearningCardContent,
-    ThankYouSection,
-    ThankYouTitle,
-    ThankYouCard,
-    ThankYouCardTitle,
-    ThankYouCardText,
-    ThankYouImage,
+    LearningsGrid,
+    LearningsSection,
+    LearningsTitle,
+    LinkButton,
+    LinksContainer,
     LinksSection,
     LinksTitle,
-    LinksContainer,
-    LinkButton,
+    ProjectPageContainer,
+    ResearchCard,
+    ResearchCardContent,
+    ResearchCardTitle,
+    ResearchGrid,
+    ResearchSection,
+    ResearchTitle,
+    SectionDivider,
+    SolutionSection,
+    SolutionTabletImage,
+    SolutionTitle,
+    SolutionVideo,
+    SolutionVideoWrapper,
+    ThankYouCard,
+    ThankYouCardText,
+    ThankYouCardTitle,
+    ThankYouImage,
+    ThankYouSection,
+    ThankYouTitle,
+    VisionIcon,
+    VisionIconsContainer,
+    VisionSection,
+    VisionText,
+    VisionTitle,
 } from './BishopProjectPage.styles'
 
 import bishopLogo from '../../assets/images/bishop-logo.png'
 import bishopHeroBanner from '../../assets/images/bishop-hero-banner.png'
 import bishopDevices from '../../assets/images/bishop_devices.png'
-import bishopHurricaneImage from '../../assets/images/bishop_hurricane_image.png'
 import droneIcon from '../../assets/images/drone-white.svg'
 import sparkleIcon from '../../assets/images/sparkle-white.svg'
 import handshakeIcon from '../../assets/images/handshake-white.svg'
@@ -114,17 +107,19 @@ import tabletImage from '../../assets/images/tablet.png'
 import thankYou1 from '../../assets/images/thank_you_1.png'
 
 export default function BishopProjectPage() {
-    const handleBackClick = () => { window.location.hash = '' }
+    const handleBackClick = () => {
+        window.location.hash = ''
+    }
 
     const [droneHover, setDroneHover] = useState(false)
     const [sparkleHover, setSparkleHover] = useState(false)
     const [handshakeHover, setHandshakeHover] = useState(false)
 
-    // Design carousel hover state
+
     const [isPausedTop, setIsPausedTop] = useState(false)
     const [isPausedBottom, setIsPausedBottom] = useState(false)
 
-    // Design images - 4 on top row, 4 on bottom row
+
     const topRowImages = [
         designIteration1,
         designIteration2,
@@ -141,7 +136,7 @@ export default function BishopProjectPage() {
 
     return (
         <ProjectPageContainer>
-            {/* Root scroll stays on body/viewport; no nested scroll containers */}
+
             <GlobalStyles styles={{
                 'html, body, #root': {
                     height: 'auto',
@@ -149,34 +144,34 @@ export default function BishopProjectPage() {
                     overflowY: 'auto',
                     overflowX: 'hidden'
                 }
-            }} />
+            }}/>
 
             <BoardContent>
                 <ContentWrapper>
-                    {/* HERO */}
+
                     <HeroSection>
                         <HeroBannerWrapper>
-                            <HeroBanner src={bishopHeroBanner} alt="hero banner" />
-                            <HeroBannerRight />
+                            <HeroBanner src={bishopHeroBanner} alt="hero banner"/>
+                            <HeroBannerRight/>
                         </HeroBannerWrapper>
 
                         <HeroContent>
-                            <HeroLogo src={bishopLogo} alt="Bishop logo" />
+                            <HeroLogo src={bishopLogo} alt="Bishop logo"/>
 
-                            <Box sx={{ marginTop: '3rem' }}>
-                                <Typography sx={{ fontSize: '1.25rem', textAlign: "center" }}>
+                            <Box sx={{marginTop: '3rem'}}>
+                                <Typography sx={{fontSize: '1.25rem', textAlign: "center"}}>
                                     AI-powered drone search & rescue platform
                                 </Typography>
 
-                                <Typography sx={{ fontSize: '1.25rem', textAlign: "center" }}>
+                                <Typography sx={{fontSize: '1.25rem', textAlign: "center"}}>
                                     designed for speed, safety, and hope.
                                 </Typography>
                             </Box>
 
                             <Box sx={{
                                 display: 'flex',
-                                flexDirection: { xs: 'column', sm: 'row' },
-                                gap: { xs: 3, sm: 6, md: 12 },
+                                flexDirection: {xs: 'column', sm: 'row'},
+                                gap: {xs: 3, sm: 6, md: 12},
                                 marginTop: 12,
                                 marginBottom: 4,
                                 marginX: "auto",
@@ -187,39 +182,54 @@ export default function BishopProjectPage() {
                                 justifyContent: 'center',
                                 flexWrap: 'wrap'
                             }}>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'flex-start' } }}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: {xs: 'center', sm: 'flex-start'}
+                                }}>
                                     <Typography fontWeight={'200'}>Role</Typography>
                                     <Typography fontWeight={'600'}>UX Designer</Typography>
                                 </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'flex-start' } }}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: {xs: 'center', sm: 'flex-start'}
+                                }}>
                                     <Typography fontWeight={'200'}>Team</Typography>
                                     <Typography fontWeight={'600'}>1 Eng, 1 Design</Typography>
                                 </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'flex-start' } }}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: {xs: 'center', sm: 'flex-start'}
+                                }}>
                                     <Typography fontWeight={'200'}>Timeline</Typography>
                                     <Typography fontWeight={'600'}>6 months</Typography>
                                 </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'flex-start' } }}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: {xs: 'center', sm: 'flex-start'}
+                                }}>
                                     <Typography fontWeight={'200'}>Tools/Skills</Typography>
                                     <Typography fontWeight={'600'}>AI, ML, UX, Video</Typography>
                                 </Box>
                             </Box>
 
-                            <SectionDivider />
+                            <SectionDivider/>
                         </HeroContent>
 
-                        <Box sx={{ marginY: 6, width: '80%', display: 'flex', justifyContent: 'center' }}>
-                            <HeroDevices src={bishopDevices} alt="Bishop devices" />
+                        <Box sx={{marginY: 6, width: '80%', display: 'flex', justifyContent: 'center'}}>
+                            <HeroDevices src={bishopDevices} alt="Bishop devices"/>
                         </Box>
                     </HeroSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* THE CHALLENGE */}
                     <ChallengeSection>
                         <ChallengeTitle>The Challenge</ChallengeTitle>
                         <ChallengeSubtitle>
-                            locating people efficiently during<br />
+                            locating people efficiently during<br/>
                             search and rescue missions
                         </ChallengeSubtitle>
 
@@ -241,20 +251,20 @@ export default function BishopProjectPage() {
                             <ChallengeCard>
                                 <ChallengeCardTitle>Urgency</ChallengeCardTitle>
                                 <ChallengeCardContent>
-                                    National Association for Search and Rescue reports the chance of finding someone alive plummets after 72 hrs
+                                    National Association for Search and Rescue reports the chance of finding someone
+                                    alive plummets after 72 hrs
                                 </ChallengeCardContent>
                             </ChallengeCard>
                         </ChallengeGrid>
                     </ChallengeSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* THE VISION */}
                     <VisionSection>
                         <VisionTitle>The Vision</VisionTitle>
 
                         <VisionText>
-                            <BoldText>AI-powered</BoldText> drone search & rescue platform<br />
+                            <BoldText>AI-powered</BoldText> drone search & rescue platform<br/>
                             designed for <BoldText>speed, safety, and hope.</BoldText>
                         </VisionText>
 
@@ -283,9 +293,8 @@ export default function BishopProjectPage() {
                         </VisionIconsContainer>
                     </VisionSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* RESEARCH */}
                     <ResearchSection>
                         <ResearchTitle>Research</ResearchTitle>
 
@@ -313,9 +322,8 @@ export default function BishopProjectPage() {
                         </ResearchGrid>
                     </ResearchSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* DESIGN */}
                     <DesignSection>
                         <DesignTitle>Design</DesignTitle>
 
@@ -326,9 +334,9 @@ export default function BishopProjectPage() {
 
                         <DesignCarouselWrapper>
                             <DesignCarouselContainer>
-                                {/* Top row - scrolls left */}
-                                <DesignCarouselRow style={{ animationPlayState: isPausedTop ? 'paused' : 'running' }}>
-                                    {/* Duplicate images for infinite scroll effect */}
+
+                                <DesignCarouselRow style={{animationPlayState: isPausedTop ? 'paused' : 'running'}}>
+
                                     {[...topRowImages, ...topRowImages].map((img, idx) => (
                                         <DesignSlide
                                             key={`top-${idx}`}
@@ -344,9 +352,8 @@ export default function BishopProjectPage() {
                                     ))}
                                 </DesignCarouselRow>
 
-                                {/* Bottom row - scrolls right, offset */}
-                                <DesignCarouselRow style={{ animationPlayState: isPausedBottom ? 'paused' : 'running' }}>
-                                    {/* Duplicate images for infinite scroll effect */}
+                                <DesignCarouselRow style={{animationPlayState: isPausedBottom ? 'paused' : 'running'}}>
+
                                     {[...bottomRowImages, ...bottomRowImages].map((img, idx) => (
                                         <DesignSlide
                                             key={`bottom-${idx}`}
@@ -365,12 +372,12 @@ export default function BishopProjectPage() {
                         </DesignCarouselWrapper>
                     </DesignSection>
 
-                    {/* DATA → DESIGN */}
                     <DataDesignSection>
 
                         <DesignSubtitle>
                             Data → Design
-                            <DesignSubtitleText>Clarifying data and actions needed in the interface for the best user experience. Designing the interface based on that.</DesignSubtitleText>
+                            <DesignSubtitleText>Clarifying data and actions needed in the interface for the best user
+                                experience. Designing the interface based on that.</DesignSubtitleText>
                         </DesignSubtitle>
 
                         <DataDesignContent>
@@ -392,9 +399,9 @@ export default function BishopProjectPage() {
                         </DataDesignContent>
                     </DataDesignSection>
 
-                    {/* DESIGN DECISIONS */}
+
                     <DesignDecisionsSection>
-                        
+
 
                         <DesignSubtitle>
                             Design Decisions
@@ -448,9 +455,9 @@ export default function BishopProjectPage() {
                         </DesignDecisionsContent>
                     </DesignDecisionsSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* SOLUTION */}
+
                     <SolutionSection>
                         <SolutionTitle>Solution</SolutionTitle>
 
@@ -467,25 +474,26 @@ export default function BishopProjectPage() {
                                 disablePictureInPicture
                                 controlsList="nodownload nofullscreen noremoteplayback"
                             >
-                                <source src={`${process.env.PUBLIC_URL}/videos/bishop_demo.mp4`} type="video/mp4" />
+                                <source src={`${process.env.PUBLIC_URL}/videos/bishop_demo.mp4`} type="video/mp4"/>
                             </SolutionVideo>
                         </SolutionVideoWrapper>
                     </SolutionSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* IMPACT */}
+
                     <ImpactSection>
                         <ImpactTitle>Impact</ImpactTitle>
 
                         <ImpactStatement>
-                            SAR operators can now utilize Bishop to detect humans up to <ImpactHighlight>3,700× faster</ImpactHighlight> than manual scanning
+                            SAR operators can now utilize Bishop to detect humans up to <ImpactHighlight>3,700×
+                            faster</ImpactHighlight> than manual scanning
                         </ImpactStatement>
                     </ImpactSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* LEARNINGS */}
+
                     <LearningsSection>
                         <LearningsTitle>Learnings</LearningsTitle>
 
@@ -532,16 +540,19 @@ export default function BishopProjectPage() {
                         </LearningsGrid>
                     </LearningsSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* THANK YOU */}
+
                     <ThankYouSection>
                         <ThankYouTitle>Thank you!</ThankYouTitle>
 
                         <ThankYouCard>
                             <ThankYouCardTitle>Big thanks to our stakeholder and my cofounders!</ThankYouCardTitle>
                             <ThankYouCardText>
-                                This project wouldnt have been possible without the continued codesign with our stakeholders and users. Thank you to Kyle Norfords! Thank you to Patrick Sherlund, my cofounder, for going through the agile dev/research/design cycle a million times with me and always being down to work through anything!
+                                This project wouldnt have been possible without the continued codesign with our
+                                stakeholders and users. Thank you to Kyle Norfords! Thank you to Patrick Sherlund, my
+                                cofounder, for going through the agile dev/research/design cycle a million times with me
+                                and always being down to work through anything!
                             </ThankYouCardText>
                         </ThankYouCard>
 
@@ -552,9 +563,9 @@ export default function BishopProjectPage() {
                         />
                     </ThankYouSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* LINKS */}
+
                     <LinksSection>
                         <LinksTitle>Links</LinksTitle>
 
@@ -580,7 +591,7 @@ export default function BishopProjectPage() {
             </BoardContent>
 
             <BackButton onClick={handleBackClick}>← Back to Portfolio</BackButton>
-            <FloatingTopNav />
+            <FloatingTopNav/>
         </ProjectPageContainer>
     )
 }

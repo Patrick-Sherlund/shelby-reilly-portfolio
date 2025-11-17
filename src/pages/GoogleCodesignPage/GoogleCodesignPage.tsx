@@ -1,21 +1,21 @@
-import React, { useRef } from 'react'
+import React, {useRef} from 'react'
 import {
-    MainWrapper,
-    LogoImage,
-    MidSection,
-    DemoWrapper,
+    CaseStudyButton,
     DemoPlaceholder,
-    MacBookImage,
     DemoVideo,
+    DemoWrapper,
     DescriptionWrapper,
-    Title,
     LineText,
+    LogoImage,
+    MacBookImage,
+    MainWrapper,
+    MidSection,
     SubLineText,
-    CaseStudyButton
+    Title
 } from './GoogleCodesignPage.styles'
-import { useZoomPanInteraction } from '../../hooks/useZoomPanInteraction'
+import {useZoomPanInteraction} from '../../hooks/useZoomPanInteraction'
 import macbook from "../../assets/images/macbook.png"
-import { useZoomPanContext } from '../../context/ZoomPanContext'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
 
 export default function GoogleCodesignPage() {
     const demoRef = useRef<HTMLDivElement>(null)
@@ -23,9 +23,11 @@ export default function GoogleCodesignPage() {
 
     const demoInteraction = useZoomPanInteraction(demoRef)
     const descInteraction = useZoomPanInteraction(descRef)
-    const { activeTool } = useZoomPanContext()
+    const {activeTool} = useZoomPanContext()
 
-    const handleCaseStudyClick = () => { window.location.hash = '#/googlecodesign-project' }
+    const handleCaseStudyClick = () => {
+        window.location.hash = '#/googlecodesign-project'
+    }
 
     return (
         <MainWrapper>
@@ -56,7 +58,7 @@ export default function GoogleCodesignPage() {
                             disablePictureInPicture
                             controlsList="nodownload nofullscreen noremoteplayback"
                         >
-                            <source src={`${process.env.PUBLIC_URL}/videos/codesign_demo.mp4`} type="video/mp4" />
+                            <source src={`${process.env.PUBLIC_URL}/videos/codesign_demo.mp4`} type="video/mp4"/>
                         </DemoVideo>
                     </DemoPlaceholder>
                 </DemoWrapper>
@@ -68,11 +70,12 @@ export default function GoogleCodesignPage() {
                     onMouseLeave={descInteraction.handleMouseLeave}
                 >
                     <Title>Codesign</Title>
-                    <LineText>Web Component-based Prototyping Tool bridging the gap between design and engineering</LineText>
+                    <LineText>Web Component-based Prototyping Tool bridging the gap between design and
+                        engineering</LineText>
                     <SubLineText>UX Designer</SubLineText>
                     <SubLineText>2021</SubLineText>
 
-                    <div style={{ marginTop: '32px' }}>
+                    <div style={{marginTop: '32px'}}>
                         <CaseStudyButton onClick={handleCaseStudyClick}>
                             READ CASE STUDY
                         </CaseStudyButton>

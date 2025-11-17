@@ -1,5 +1,4 @@
-// IPhoneCarousel.styles.ts
-import { styled } from '@mui/material/styles'
+import {styled} from '@mui/material/styles'
 
 interface CarouselContainerProps {
     $height: number | string
@@ -11,11 +10,11 @@ interface IPhoneWrapperProps {
     $zIndex: number
 }
 
-export const CarouselContainer = styled('div')<CarouselContainerProps>(({ $height, $isDragging }) => ({
+export const CarouselContainer = styled('div')<CarouselContainerProps>(({$height, $isDragging}) => ({
     position: 'relative',
     width: '100%',
     height: typeof $height === 'number' ? `${$height}px` : $height,
-    overflow: 'hidden', // Hide overflow to enable wrapping effect
+    overflow: 'hidden',
     cursor: $isDragging ? 'grabbing' : 'grab',
     userSelect: 'none',
     display: 'flex',
@@ -29,7 +28,7 @@ export const CarouselTrack = styled('div')(() => ({
     height: '100%'
 }))
 
-export const IPhoneWrapper = styled('div')<IPhoneWrapperProps>(({ $height, $zIndex }) => ({
+export const IPhoneWrapper = styled('div')<IPhoneWrapperProps>(({$height, $zIndex}) => ({
     position: 'absolute',
     height: `${$height}px`,
     width: 'auto',
@@ -41,7 +40,7 @@ export const IPhoneWrapper = styled('div')<IPhoneWrapperProps>(({ $height, $zInd
     top: '50%',
     left: -50,
     willChange: 'transform, height'
-    // No transition - instant height changes for smoothness
+
 }))
 
 export const IPhoneImage = styled('img')(() => ({

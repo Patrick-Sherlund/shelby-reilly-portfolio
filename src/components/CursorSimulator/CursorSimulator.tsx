@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
-import { useZoomPanContext } from '../../context/ZoomPanContext'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
 
 export type Side = 'left' | 'right' | 'top' | 'bottom'
 export type Anchor =
@@ -94,8 +94,8 @@ function getOffscreenPosition(
     stageYOffset: number = 0,
     scale: number = 1
 ) {
-    // Convert viewport coordinates to stage space
-    // Formula: (viewportCoord - stageOffset) / scale
+
+
     let viewportX = 0
     let viewportY = 0
 
@@ -126,9 +126,8 @@ function getAnchorPosition(
     stageXOffset: number = 0,
     scale: number = 1
 ) {
-    // rect gives us viewport coordinates (already scaled by the stage)
-    // We need to convert back to "stage space" (unscaled coordinates)
-    // Formula: (viewportCoord - stageOffset) / scale
+
+
     const left = (rect.left - stageXOffset) / scale
     const right = (rect.right - stageXOffset) / scale
     const top = (rect.top - stageYOffset) / scale
@@ -192,13 +191,13 @@ function ChatBubble({
 }
 
 function NameLabel({
-    x,
-    y,
-    cursorWidth,
-    cursorHeight,
-    typing,
-    bgColor = '#5263FF'
-}: {
+                       x,
+                       y,
+                       cursorWidth,
+                       cursorHeight,
+                       typing,
+                       bgColor = '#5263FF'
+                   }: {
     x: number
     y: number
     cursorWidth: number
@@ -206,7 +205,7 @@ function NameLabel({
     typing: boolean
     bgColor?: string
 }) {
-    const CHAT_HEIGHT = 28 // approximate chat bubble min-height
+    const CHAT_HEIGHT = 28
     const offsetY = cursorHeight / 2 + 10 + (typing ? CHAT_HEIGHT + 4 : 0)
     return (
         <div
@@ -240,7 +239,7 @@ export function CursorSimulator({
                                     onComplete,
                                     offScreenSpeed
                                 }: CursorSimulatorProps) {
-    const { stagePos, stageScale } = useZoomPanContext()
+    const {stagePos, stageScale} = useZoomPanContext()
     const [position, setPosition] = useState(() => getOffscreenPosition(startSide))
     const [visible, setVisible] = useState(false)
     const [index, setIndex] = useState(0)
@@ -493,7 +492,7 @@ export function CursorSimulator({
         const w = waypoints[i]
         if (!w) return
         const rect = w.element.getBoundingClientRect()
-        // Pass stagePos and stageScale to get correct position accounting for zoom/pan
+
         const anchorPos = getAnchorPosition(rect, w.anchor || 'center', stagePos.y, stagePos.x, stageScale)
         const stPos = {x: position.x, y: position.y}
         const distVal = distance(stPos, anchorPos)
@@ -545,8 +544,7 @@ export function CursorSimulator({
 
     if (!visible) return null
 
-    // Apply the stage position and scale to convert from stage space to viewport coordinates
-    // Formula: viewportCoord = (stageCoord * scale) + stageOffset
+
     const adjustedX = (position.x * stageScale) + stagePos.x
     const adjustedY = (position.y * stageScale) + stagePos.y
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Group, Rect, Text } from 'react-konva'
+import React, {useState} from 'react'
+import {Group, Rect, Text} from 'react-konva'
 import Konva from 'konva'
 
 type StickyNoteProps = {
@@ -8,8 +8,8 @@ type StickyNoteProps = {
     stageRef: React.RefObject<Konva.Stage>
 }
 
-export default function StickyNote({ text, color, stageRef }: StickyNoteProps) {
-    const [pos, setPos] = useState({ x: 80, y: 80 })
+export default function StickyNote({text, color, stageRef}: StickyNoteProps) {
+    const [pos, setPos] = useState({x: 80, y: 80})
 
     const handleDragStart = (e: any) => {
         e.cancelBubble = true
@@ -20,7 +20,7 @@ export default function StickyNote({ text, color, stageRef }: StickyNoteProps) {
 
     const handleDragEnd = (e: any) => {
         e.cancelBubble = true
-        setPos({ x: e.target.x(), y: e.target.y() })
+        setPos({x: e.target.x(), y: e.target.y()})
         if (stageRef.current) {
             stageRef.current.draggable(true)
         }

@@ -1,138 +1,135 @@
-// GoogleCodesignProjectPage.tsx
-import React from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import FloatingTopNav from "../../components/FloatingTopNav/FloatingTopNav"
-import { GlobalStyles } from '@mui/material'
+import {GlobalStyles} from '@mui/material'
 import {
-    ProjectPageContainer,
-    BoardContent,
-    ContentWrapper,
-    BackButton,
-    HeroSection,
-    HeroLogo,
-    HeroBannerWrapper,
-    HeroBanner,
-    HeroContent,
-    HeroDescription,
-    HeroSubtext,
-    InfoSection,
-    InfoSparkleLeft,
-    InfoSparkleRight,
-    InfoItem,
-    InfoLabel,
-    InfoValue,
-    SectionDivider,
-    PreviewImageSection,
-    PreviewImage,
-    ProcessSection,
-    ProcessTitle,
-    ProcessContent,
-    ProcessRow,
-    ProcessLabel,
-    ProcessDescription,
-    ProcessIllustration,
-    ResearchSectionContainer,
-    ResearchHeader,
-    ResearchTitleWrapper,
-    ResearchSquiggle,
-    ResearchTitleText,
-    ResearchMainContent,
-    ResearchParagraph,
-    CompetitiveAnalysisBox,
-    CompetitiveAnalysisContent,
-    CompetitiveAnalysisTitle,
-    CompetitiveAnalysisSubtitle,
-    CompetitiveAnalysisList,
-    CompetitiveImageWrapper,
-    CompetitiveImage,
     AffinityMappingBox,
     AffinityMappingContent,
-    AffinityMappingTitle,
-    AffinityMappingImageWrapper,
     AffinityMappingImage,
-    OverallFindingsBox,
-    OverallFindingsContent,
-    OverallFindingsTitle,
-    OverallFindingsText,
-    FindingsImageWrapper,
-    FindingsImage,
-    IdeationSectionContainer,
-    IdeationHeader,
-    IdeationTitleWrapper,
-    IdeationSquiggle,
-    IdeationTitleText,
-    IdeationContent,
-    IdeationParagraph,
-    IdeationLink,
-    GoogleLetter,
-    VideoContainer,
-    IdeationVideo,
-    IdeationSubtitle,
-    SprintOutcomeSection,
-    SprintOutcomeTitle,
-    SprintOutcomeText,
-    SprintOutcomeHighlight,
-    SprintOutcomeFlows,
-    SprintOutcomeExample,
-    SprintOutcomeImageWrapper,
-    SprintOutcomeImage,
-    DesignSectionContainer,
+    AffinityMappingImageWrapper,
+    AffinityMappingTitle,
+    BackButton,
+    BoardContent,
+    CompetitiveAnalysisBox,
+    CompetitiveAnalysisContent,
+    CompetitiveAnalysisList,
+    CompetitiveAnalysisSubtitle,
+    CompetitiveAnalysisTitle,
+    CompetitiveImage,
+    CompetitiveImageWrapper,
+    ConclusionBanner,
+    ConclusionBannerWrapper,
+    ConclusionButton,
+    ConclusionButtonsContainer,
+    ConclusionContent,
+    ConclusionHeader,
+    ConclusionList,
+    ConclusionListItem,
+    ConclusionParagraph,
+    ConclusionSectionContainer,
+    ConclusionSquiggle,
+    ConclusionSubsection,
+    ConclusionSubtitle,
+    ConclusionTitleText,
+    ConclusionTitleWrapper,
+    ContentWrapper,
     DesignHeader,
-    DesignTitleWrapper,
-    DesignSquiggle,
-    DesignTitleText,
     DesignMainContent,
     DesignParagraph,
+    DesignSectionContainer,
+    DesignSquiggle,
     DesignSubsectionBox,
     DesignSubsectionContent,
-    DesignSubsectionTitle,
-    DesignSubsectionLabel,
-    DesignSubsectionText,
-    DesignSubsectionRow,
-    DesignSubsectionImageWrapper,
     DesignSubsectionImage,
+    DesignSubsectionImageWrapper,
+    DesignSubsectionLabel,
     DesignSubsectionList,
-    PrototypeBannerSection,
-    PrototypeBannerContainer,
-    PrototypeBannerBg,
-    PrototypeOverlay,
-    EvaluationSectionContainer,
-    EvaluationHeader,
-    EvaluationTitleWrapper,
-    EvaluationSquiggle,
-    EvaluationTitleText,
+    DesignSubsectionRow,
+    DesignSubsectionText,
+    DesignSubsectionTitle,
+    DesignTitleText,
+    DesignTitleWrapper,
     EvaluationContent,
+    EvaluationExampleSection,
+    EvaluationHeader,
+    EvaluationImage,
     EvaluationParagraph,
     EvaluationResultsSection,
-    ResultsColumn,
-    ResultsTitle,
-    ResultsList,
-    ResultItem,
-    ResultItemTitle,
-    ResultItemScore,
-    ResultsText,
-    EvaluationExampleSection,
-    ExampleTitle,
-    ExampleText,
-    ExampleLink,
+    EvaluationSectionContainer,
+    EvaluationSquiggle,
+    EvaluationTitleText,
+    EvaluationTitleWrapper,
     ExampleImageBox,
     ExampleImageLabel,
     ExampleImageSubtext,
-    EvaluationImage,
-    ConclusionSectionContainer,
-    ConclusionHeader,
-    ConclusionTitleWrapper,
-    ConclusionSquiggle,
-    ConclusionTitleText,
-    ConclusionContent,
-    ConclusionSubsection,
-    ConclusionSubtitle,
-    ConclusionParagraph,
-    ConclusionList,
-    ConclusionListItem,
-    ConclusionBannerWrapper,
-    ConclusionBanner,
-    ConclusionButtonsContainer,
-    ConclusionButton,
+    ExampleLink,
+    ExampleText,
+    ExampleTitle,
+    FindingsImage,
+    FindingsImageWrapper,
+    GoogleLetter,
+    HeroBanner,
+    HeroBannerWrapper,
+    HeroContent,
+    HeroDescription,
+    HeroLogo,
+    HeroSection,
+    HeroSubtext,
+    IdeationContent,
+    IdeationHeader,
+    IdeationLink,
+    IdeationParagraph,
+    IdeationSectionContainer,
+    IdeationSquiggle,
+    IdeationSubtitle,
+    IdeationTitleText,
+    IdeationTitleWrapper,
+    IdeationVideo,
+    InfoItem,
+    InfoLabel,
+    InfoSection,
+    InfoSparkleLeft,
+    InfoSparkleRight,
+    InfoValue,
+    OverallFindingsBox,
+    OverallFindingsContent,
+    OverallFindingsText,
+    OverallFindingsTitle,
+    PreviewImage,
+    PreviewImageSection,
+    ProcessContent,
+    ProcessDescription,
+    ProcessLabel,
+    ProcessRow,
+    ProcessSection,
+    ProcessTitle,
+    ProjectPageContainer,
+    PrototypeBannerBg,
+    PrototypeBannerContainer,
+    PrototypeBannerSection,
+    PrototypeOverlay,
+    ResearchHeader,
+    ResearchMainContent,
+    ResearchParagraph,
+    ResearchSectionContainer,
+    ResearchSquiggle,
+    ResearchTitleText,
+    ResearchTitleWrapper,
+    ResultItem,
+    ResultItemScore,
+    ResultItemTitle,
+    ResultsColumn,
+    ResultsList,
+    ResultsText,
+    ResultsTitle,
+    SectionDivider,
+    SprintOutcomeExample,
+    SprintOutcomeHighlight,
+    SprintOutcomeImage,
+    SprintOutcomeImageWrapper,
+    SprintOutcomeSection,
+    SprintOutcomeText,
+    SprintOutcomeTitle,
+    VideoContainer,
 } from './GoogleCodesignProjectPage.styles'
 
 import codesignLogo from '../../assets/images/codesign-logo.png'
@@ -140,7 +137,6 @@ import codesignHeroBanner from '../../assets/images/codesign-hero-banner.png'
 import codesignSparkleLeft from '../../assets/images/codesign-sparkle-left.png'
 import codesignSparkleRight from '../../assets/images/codesign-sparkle-right.png'
 import codesignPreview from '../../assets/images/codesign-preview.png'
-import cutieIllustration from '../../assets/images/cutie-illustration.png'
 import squiggleBlip from '../../assets/images/squigle-blip.svg'
 import competitiveIndustries from '../../assets/images/codesign-competitive-industries.png'
 import codesignWorkflows from '../../assets/images/codesign-workflows.png'
@@ -175,12 +171,13 @@ import prototype12 from '../../assets/images/codesign-prototype/codesign-prototy
 import prototype13 from '../../assets/images/codesign-prototype/codesign-prototype-13.png'
 import prototype14 from '../../assets/images/codesign-prototype/codesign-prototype-14.png'
 import PersonaCarousel from '../../components/PersonaCarousel/PersonaCarousel'
-import { useRef, useEffect, useState } from 'react'
 import SVGDraw from '../../components/SVG/SVGDraw'
-import { ReactComponent as CutieIllustrationSVG } from '../../assets/images/cutie-illustration.svg'
+import {ReactComponent as CutieIllustrationSVG} from '../../assets/images/cutie-illustration.svg'
 
 export default function GoogleCodesignProjectPage() {
-    const handleBackClick = () => { window.location.hash = '' }
+    const handleBackClick = () => {
+        window.location.hash = ''
+    }
     const [visiblePrototypes, setVisiblePrototypes] = useState<Set<number>>(new Set())
     const prototypeRefs = useRef<(HTMLImageElement | null)[]>([])
 
@@ -219,7 +216,7 @@ export default function GoogleCodesignProjectPage() {
 
     return (
         <ProjectPageContainer>
-            {/* Root scroll stays on body/viewport; no nested scroll containers */}
+
             <GlobalStyles styles={`
                 @font-face {
                     font-family: 'Google Sans';
@@ -274,42 +271,42 @@ export default function GoogleCodesignProjectPage() {
                 * {
                     font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
                 }
-            `} />
+            `}/>
 
             <BoardContent>
                 <ContentWrapper>
-                    {/* HERO */}
+
                     <HeroSection>
                         <HeroBannerWrapper>
-                            <HeroBanner src={codesignHeroBanner} alt="Codesign hero banner" />
+                            <HeroBanner src={codesignHeroBanner} alt="Codesign hero banner"/>
                         </HeroBannerWrapper>
 
                         <HeroContent>
-                            <HeroLogo src={codesignLogo} alt="Codesign logo" />
+                            <HeroLogo src={codesignLogo} alt="Codesign logo"/>
 
                             <HeroDescription>
-                                Codesign is <strong>Web Component-based Prototyping Tool.</strong><br />
+                                Codesign is <strong>Web Component-based Prototyping Tool.</strong><br/>
                                 Similar to Figma but components can be <strong>design or code.</strong>
                             </HeroDescription>
 
                             <HeroSubtext>
-                                Codesign has 3 different marketplaces but users are barely using<br />
-                                them. With user numbers increasing and 2 new asset types coming<br />
+                                Codesign has 3 different marketplaces but users are barely using<br/>
+                                them. With user numbers increasing and 2 new asset types coming<br/>
                                 to Codesign Marketplaces, it's time to improve usability.
                             </HeroSubtext>
 
                             <InfoSection>
-                                <InfoSparkleLeft src={codesignSparkleLeft} alt="" />
-                                <InfoSparkleRight src={codesignSparkleRight} alt="" />
+                                <InfoSparkleLeft src={codesignSparkleLeft} alt=""/>
+                                <InfoSparkleRight src={codesignSparkleRight} alt=""/>
 
                                 <InfoItem>
                                     <InfoLabel>Role</InfoLabel>
-                                    <InfoValue>End-to-end<br />Product Designer</InfoValue>
+                                    <InfoValue>End-to-end<br/>Product Designer</InfoValue>
                                 </InfoItem>
 
                                 <InfoItem>
                                     <InfoLabel>Team</InfoLabel>
-                                    <InfoValue>7 Eng, 1 PM<br />2 Designers</InfoValue>
+                                    <InfoValue>7 Eng, 1 PM<br/>2 Designers</InfoValue>
                                 </InfoItem>
 
                                 <InfoItem>
@@ -319,29 +316,28 @@ export default function GoogleCodesignProjectPage() {
 
                                 <InfoItem>
                                     <InfoLabel>Tools/Skills</InfoLabel>
-                                    <InfoValue>UX/UI, User Research<br />Google Design Sprint</InfoValue>
+                                    <InfoValue>UX/UI, User Research<br/>Google Design Sprint</InfoValue>
                                 </InfoItem>
                             </InfoSection>
                         </HeroContent>
                     </HeroSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* PREVIEW IMAGE */}
                     <PreviewImageSection>
-                        <PreviewImage src={codesignPreview} alt="Codesign preview" />
+                        <PreviewImage src={codesignPreview} alt="Codesign preview"/>
                     </PreviewImageSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* PROCESS */}
                     <ProcessSection>
                         <ProcessTitle>PROCESS</ProcessTitle>
 
                         <ProcessContent>
                             <ProcessRow>
                                 <ProcessLabel>Research</ProcessLabel>
-                                <ProcessDescription>Competitive Analysis, Current State Audit, User Interviews</ProcessDescription>
+                                <ProcessDescription>Competitive Analysis, Current State Audit, User
+                                    Interviews</ProcessDescription>
                             </ProcessRow>
 
                             <ProcessRow>
@@ -360,7 +356,7 @@ export default function GoogleCodesignProjectPage() {
                             </ProcessRow>
                         </ProcessContent>
 
-                        <div style={{ display: 'block', margin: '0 auto', width: '300px' }}>
+                        <div style={{display: 'block', margin: '0 auto', width: '300px'}}>
                             <SVGDraw
                                 width={300}
                                 height="auto"
@@ -371,18 +367,17 @@ export default function GoogleCodesignProjectPage() {
                                 preserveStroke={true}
                                 preserveColors={true}
                             >
-                                <CutieIllustrationSVG />
+                                <CutieIllustrationSVG/>
                             </SVGDraw>
                         </div>
                     </ProcessSection>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* RESEARCH */}
                     <ResearchSectionContainer>
                         <ResearchHeader>
                             <ResearchTitleWrapper>
-                                <ResearchSquiggle src={squiggleBlip} alt="" />
+                                <ResearchSquiggle src={squiggleBlip} alt=""/>
                                 <ResearchTitleText>RESEARCH</ResearchTitleText>
                             </ResearchTitleWrapper>
 
@@ -391,10 +386,14 @@ export default function GoogleCodesignProjectPage() {
                                     The focus in this phase is getting to know the app, users, and problem space.
                                 </ResearchParagraph>
                                 <ResearchParagraph>
-                                    Through competitive analysis and current state analysis, we started to pick up on 3 core focus areas.
+                                    Through competitive analysis and current state analysis, we started to pick up on 3
+                                    core focus areas.
                                 </ResearchParagraph>
                                 <ResearchParagraph>
-                                    With these focus areas in mind, we interviewed 8 Google Users (UXE,IxD,UXR) and 6 Designers outside of Google. The goal here was to go in depth about how users <strong>navigated marketplaces</strong> in their current design tools and identify <strong>pain points and gain points.</strong>
+                                    With these focus areas in mind, we interviewed 8 Google Users (UXE,IxD,UXR) and 6
+                                    Designers outside of Google. The goal here was to go in depth about how
+                                    users <strong>navigated marketplaces</strong> in their current design tools and
+                                    identify <strong>pain points and gain points.</strong>
                                 </ResearchParagraph>
                             </ResearchMainContent>
                         </ResearchHeader>
@@ -422,7 +421,7 @@ export default function GoogleCodesignProjectPage() {
                                 <AffinityMappingTitle>Affinity Mapping Categories</AffinityMappingTitle>
                                 <CompetitiveAnalysisList>
                                     <div>Users are looking for</div>
-                                    <div style={{ fontWeight: 600 }}>Clarity, Discoverability, Predictability</div>
+                                    <div style={{fontWeight: 600}}>Clarity, Discoverability, Predictability</div>
                                 </CompetitiveAnalysisList>
                             </AffinityMappingContent>
                             <AffinityMappingImageWrapper>
@@ -454,11 +453,10 @@ export default function GoogleCodesignProjectPage() {
                         backgroundImage={personaBackground}
                     />
 
-                    {/* IDEATION */}
                     <IdeationSectionContainer>
                         <IdeationHeader>
                             <IdeationTitleWrapper>
-                                <IdeationSquiggle src={purpleSquiggle} alt="" />
+                                <IdeationSquiggle src={purpleSquiggle} alt=""/>
                                 <IdeationTitleText>IDEATION</IdeationTitleText>
                             </IdeationTitleWrapper>
 
@@ -468,19 +466,23 @@ export default function GoogleCodesignProjectPage() {
                                 </IdeationParagraph>
 
                                 <IdeationParagraph>
-                                    We quickly planned and executed a 3 day long <IdeationLink href="https://www.figma.com/design/6O5pdrMjNgZyf9HUjVLHCs/Design-Sprint--Google-Codesign-Marketplace?t=9UwSIsBxKm6xV4hn-0" target="_blank" rel="noopener noreferrer">
-                                        <GoogleLetter $color="#4285F4">G</GoogleLetter>
-                                        <GoogleLetter $color="#EA4335">o</GoogleLetter>
-                                        <GoogleLetter $color="#FBBC04">o</GoogleLetter>
-                                        <GoogleLetter $color="#4285F4">g</GoogleLetter>
-                                        <GoogleLetter $color="#34A853">l</GoogleLetter>
-                                        <GoogleLetter $color="#EA4335">e</GoogleLetter>
-                                        {' '}Design Sprint
-                                    </IdeationLink> with the team, users, and stakeholders.
+                                    We quickly planned and executed a 3 day long <IdeationLink
+                                    href="https://www.figma.com/design/6O5pdrMjNgZyf9HUjVLHCs/Design-Sprint--Google-Codesign-Marketplace?t=9UwSIsBxKm6xV4hn-0"
+                                    target="_blank" rel="noopener noreferrer">
+                                    <GoogleLetter $color="#4285F4">G</GoogleLetter>
+                                    <GoogleLetter $color="#EA4335">o</GoogleLetter>
+                                    <GoogleLetter $color="#FBBC04">o</GoogleLetter>
+                                    <GoogleLetter $color="#4285F4">g</GoogleLetter>
+                                    <GoogleLetter $color="#34A853">l</GoogleLetter>
+                                    <GoogleLetter $color="#EA4335">e</GoogleLetter>
+                                    {' '}Design Sprint
+                                </IdeationLink> with the team, users, and stakeholders.
                                 </IdeationParagraph>
 
                                 <IdeationParagraph>
-                                    The goal of the sprint was to walk away with wireframes that would lead creation of a better experience for marketplace for publishing, version control, as well as search.
+                                    The goal of the sprint was to walk away with wireframes that would lead creation of
+                                    a better experience for marketplace for publishing, version control, as well as
+                                    search.
                                 </IdeationParagraph>
                             </IdeationContent>
                         </IdeationHeader>
@@ -496,15 +498,18 @@ export default function GoogleCodesignProjectPage() {
                         </VideoContainer>
 
                         <IdeationSubtitle>
-                            We had a good time and learned a lot. Here's a little glimpse. <IdeationLink href="#">More here.</IdeationLink>
+                            We had a good time and learned a lot. Here's a little glimpse. <IdeationLink href="#">More
+                            here.</IdeationLink>
                         </IdeationSubtitle>
 
                         <SprintOutcomeSection>
                             <SprintOutcomeTitle>Sprint Outcome</SprintOutcomeTitle>
 
                             <SprintOutcomeText>
-                                We diverged to ideate then came back together and left the sprint on the same page with a path forward which created{' '}
-                                <SprintOutcomeHighlight>4 newly defined flows: Starting a project, Marketplace search, Component Publishing, and Component Updates.</SprintOutcomeHighlight>
+                                We diverged to ideate then came back together and left the sprint on the same page with
+                                a path forward which created{' '}
+                                <SprintOutcomeHighlight>4 newly defined flows: Starting a project, Marketplace search,
+                                    Component Publishing, and Component Updates.</SprintOutcomeHighlight>
                             </SprintOutcomeText>
 
                             <SprintOutcomeExample>
@@ -519,33 +524,37 @@ export default function GoogleCodesignProjectPage() {
                             </SprintOutcomeImageWrapper>
                         </SprintOutcomeSection>
                     </IdeationSectionContainer>
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* DESIGN */}
                     <DesignSectionContainer>
                         <DesignHeader>
                             <DesignTitleWrapper>
-                                <DesignSquiggle src={greenSquiggle} alt="" />
+                                <DesignSquiggle src={greenSquiggle} alt=""/>
                                 <DesignTitleText>DESIGN</DesignTitleText>
                             </DesignTitleWrapper>
 
                             <DesignMainContent>
                                 <DesignParagraph>
-                                    After identifying the flows where we could have the most user impact we moved forward to wireframes, mockups, and prototyping.
+                                    After identifying the flows where we could have the most user impact we moved
+                                    forward to wireframes, mockups, and prototyping.
                                 </DesignParagraph>
                                 <DesignParagraph>
-                                    During this phase we had weekly design reviews with the <span style={{ color: '#4285F4' }}>G</span><span style={{ color: '#EA4335' }}>o</span><span style={{ color: '#FBBC04' }}>o</span><span style={{ color: '#4285F4' }}>g</span><span style={{ color: '#34A853' }}>l</span><span style={{ color: '#EA4335' }}>e</span> Codesign team including Eng, Prod, Design.
+                                    During this phase we had weekly design reviews with the <span
+                                    style={{color: '#4285F4'}}>G</span><span style={{color: '#EA4335'}}>o</span><span
+                                    style={{color: '#FBBC04'}}>o</span><span style={{color: '#4285F4'}}>g</span><span
+                                    style={{color: '#34A853'}}>l</span><span
+                                    style={{color: '#EA4335'}}>e</span> Codesign team including Eng, Prod, Design.
                                 </DesignParagraph>
                                 <DesignParagraph>
-                                    It was a whirlwind of rapid prototyping. We were moving so quickly that one of our Google team members told us "I can't believe how much you guys are getting done" 💪
+                                    It was a whirlwind of rapid prototyping. We were moving so quickly that one of our
+                                    Google team members told us "I can't believe how much you guys are getting done" 💪
                                 </DesignParagraph>
                             </DesignMainContent>
                         </DesignHeader>
 
-                        {/* Wireframes */}
                         <DesignSubsectionBox>
                             <DesignSubsectionImageWrapper>
-                                <DesignSubsectionImage src={designWireframes} alt="Wireframes" />
+                                <DesignSubsectionImage src={designWireframes} alt="Wireframes"/>
                             </DesignSubsectionImageWrapper>
                             <DesignSubsectionContent>
                                 <DesignSubsectionTitle>Wireframes</DesignSubsectionTitle>
@@ -568,7 +577,6 @@ export default function GoogleCodesignProjectPage() {
                             </DesignSubsectionContent>
                         </DesignSubsectionBox>
 
-                        {/* Mockups */}
                         <DesignSubsectionBox>
                             <DesignSubsectionContent>
                                 <DesignSubsectionTitle>Mockups</DesignSubsectionTitle>
@@ -578,7 +586,8 @@ export default function GoogleCodesignProjectPage() {
                                 </DesignSubsectionRow>
                                 <DesignSubsectionRow>
                                     <DesignSubsectionLabel>Focus</DesignSubsectionLabel>
-                                    <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search, Component Publishing, and Component Updates)</DesignSubsectionText>
+                                    <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search,
+                                        Component Publishing, and Component Updates)</DesignSubsectionText>
                                 </DesignSubsectionRow>
                                 <div>
                                     <DesignSubsectionLabel>Example ➡️</DesignSubsectionLabel>
@@ -591,24 +600,26 @@ export default function GoogleCodesignProjectPage() {
                                 </div>
                             </DesignSubsectionContent>
                             <DesignSubsectionImageWrapper>
-                                <DesignSubsectionImage src={designMockups} alt="Mockups" />
+                                <DesignSubsectionImage src={designMockups} alt="Mockups"/>
                             </DesignSubsectionImageWrapper>
                         </DesignSubsectionBox>
 
-                        {/* Prototypes */}
+
                         <DesignSubsectionBox>
                             <DesignSubsectionImageWrapper>
-                                <DesignSubsectionImage src={designPrototypes} alt="Prototypes" />
+                                <DesignSubsectionImage src={designPrototypes} alt="Prototypes"/>
                             </DesignSubsectionImageWrapper>
                             <DesignSubsectionContent>
                                 <DesignSubsectionTitle>Prototypes</DesignSubsectionTitle>
                                 <DesignSubsectionRow>
                                     <DesignSubsectionLabel>Goal</DesignSubsectionLabel>
-                                    <DesignSubsectionText>Testing Predictability, Consistency, Ease of Use</DesignSubsectionText>
+                                    <DesignSubsectionText>Testing Predictability, Consistency, Ease of
+                                        Use</DesignSubsectionText>
                                 </DesignSubsectionRow>
                                 <DesignSubsectionRow>
                                     <DesignSubsectionLabel>Focus</DesignSubsectionLabel>
-                                    <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search, Component Publishing, and Component Updates)</DesignSubsectionText>
+                                    <DesignSubsectionText>Flow 1,2,3,4 (Starting a project, Marketplace search,
+                                        Component Publishing, and Component Updates)</DesignSubsectionText>
                                 </DesignSubsectionRow>
                                 <div>
                                     <DesignSubsectionLabel>⬅️ Example</DesignSubsectionLabel>
@@ -626,7 +637,7 @@ export default function GoogleCodesignProjectPage() {
 
                     <PrototypeBannerSection>
                         <PrototypeBannerContainer>
-                            <PrototypeBannerBg src={prototypeBg} alt="Prototype Background" />
+                            <PrototypeBannerBg src={prototypeBg} alt="Prototype Background"/>
 
                             <PrototypeOverlay
                                 ref={(el) => (prototypeRefs.current[0] = el)}
@@ -798,17 +809,19 @@ export default function GoogleCodesignProjectPage() {
                         </PrototypeBannerContainer>
                     </PrototypeBannerSection>
 
-                    {/* EVALUATION */}
+
                     <EvaluationSectionContainer>
                         <EvaluationHeader>
                             <EvaluationTitleWrapper>
-                                <EvaluationSquiggle src={blueSquiggle} alt="" />
+                                <EvaluationSquiggle src={blueSquiggle} alt=""/>
                                 <EvaluationTitleText>EVALUATION</EvaluationTitleText>
                             </EvaluationTitleWrapper>
 
                             <EvaluationContent>
                                 <EvaluationParagraph>
-                                    After identifying the user needs of clarity, discoverability, and predictability in our initial testing, then building out the 4 flows to account for those needs, it is now time to test out the prototypes.
+                                    After identifying the user needs of clarity, discoverability, and predictability in
+                                    our initial testing, then building out the 4 flows to account for those needs, it is
+                                    now time to test out the prototypes.
                                 </EvaluationParagraph>
 
                                 <EvaluationParagraph>
@@ -821,7 +834,7 @@ export default function GoogleCodesignProjectPage() {
                             </EvaluationContent>
                         </EvaluationHeader>
 
-                        <EvaluationImage src={evaluationImage1} alt="Codesign Marketplace evaluation flows" />
+                        <EvaluationImage src={evaluationImage1} alt="Codesign Marketplace evaluation flows"/>
 
                         <EvaluationResultsSection>
                             <ResultsColumn>
@@ -851,8 +864,9 @@ export default function GoogleCodesignProjectPage() {
                                 <ResultsText>
                                     We decided to focus efforts on flows 1 & 2 for the second round of testing.
                                 </ResultsText>
-                                <ResultsText style={{ marginTop: '16px' }}>
-                                    Flows 3&4 only underwent one testing round due to the high usability scores and our need to prioritize user time.
+                                <ResultsText style={{marginTop: '16px'}}>
+                                    Flows 3&4 only underwent one testing round due to the high usability scores and our
+                                    need to prioritize user time.
                                 </ResultsText>
                             </ResultsColumn>
                         </EvaluationResultsSection>
@@ -860,27 +874,31 @@ export default function GoogleCodesignProjectPage() {
                         <EvaluationExampleSection>
                             <ExampleTitle>Example</ExampleTitle>
                             <ExampleText>
-                                We we made usability tweaks to all 4 flows.<br />
-                                Below is 1 portion of designs that I took the lead on. For more <ExampleLink target='_blank' href="https://docs.google.com/presentation/d/1lEyUje8HDCOtqq-gOQUrQ3E0DX50e55oNg_7pHaMXGY/edit">go here.</ExampleLink>
+                                We we made usability tweaks to all 4 flows.<br/>
+                                Below is 1 portion of designs that I took the lead on. For more <ExampleLink
+                                target='_blank'
+                                href="https://docs.google.com/presentation/d/1lEyUje8HDCOtqq-gOQUrQ3E0DX50e55oNg_7pHaMXGY/edit">go
+                                here.</ExampleLink>
                             </ExampleText>
 
                             <ExampleImageBox>
                                 <ExampleImageLabel>Example ⬇️</ExampleImageLabel>
                                 <ExampleImageSubtext>Codesign Marketplace</ExampleImageSubtext>
-                                <ExampleImageSubtext>Change to allow for multi-select of components from marketplace view and detail view</ExampleImageSubtext>
+                                <ExampleImageSubtext>Change to allow for multi-select of components from marketplace
+                                    view and detail view</ExampleImageSubtext>
                             </ExampleImageBox>
 
-                            <EvaluationImage src={evaluationImage2} alt="Codesign Marketplace multi-select example" />
+                            <EvaluationImage src={evaluationImage2} alt="Codesign Marketplace multi-select example"/>
                         </EvaluationExampleSection>
                     </EvaluationSectionContainer>
 
-                    <SectionDivider />
+                    <SectionDivider/>
 
-                    {/* CONCLUSION */}
+
                     <ConclusionSectionContainer>
                         <ConclusionHeader>
                             <ConclusionTitleWrapper>
-                                <ConclusionSquiggle src={squiggleBlip} alt="" />
+                                <ConclusionSquiggle src={squiggleBlip} alt=""/>
                                 <ConclusionTitleText>CONCLUSION</ConclusionTitleText>
                             </ConclusionTitleWrapper>
 
@@ -888,10 +906,14 @@ export default function GoogleCodesignProjectPage() {
                                 <ConclusionSubsection>
                                     <ConclusionSubtitle>Overall</ConclusionSubtitle>
                                     <ConclusionParagraph>
-                                        We were able to take an open ended brief, identify user needs and pain points, identify the flows and feature work needed to address those pains and execute from there.
+                                        We were able to take an open ended brief, identify user needs and pain points,
+                                        identify the flows and feature work needed to address those pains and execute
+                                        from there.
                                     </ConclusionParagraph>
                                     <ConclusionParagraph>
-                                        Of course our final metrics show that we were able to reach our goals, but it was also great to have our stakeholders invested and congratulatory on our work done for Codesign.
+                                        Of course our final metrics show that we were able to reach our goals, but it
+                                        was also great to have our stakeholders invested and congratulatory on our work
+                                        done for Codesign.
                                     </ConclusionParagraph>
                                 </ConclusionSubsection>
 
@@ -899,7 +921,8 @@ export default function GoogleCodesignProjectPage() {
                                     <ConclusionSubtitle>Next Steps</ConclusionSubtitle>
                                     <ConclusionList>
                                         <ConclusionListItem>Expand to other types of assets</ConclusionListItem>
-                                        <ConclusionListItem>Analytics dashboard with component usage details for design contributors</ConclusionListItem>
+                                        <ConclusionListItem>Analytics dashboard with component usage details for design
+                                            contributors</ConclusionListItem>
                                         <ConclusionListItem>Adding component groups and favorites</ConclusionListItem>
                                     </ConclusionList>
                                 </ConclusionSubsection>
@@ -907,28 +930,37 @@ export default function GoogleCodesignProjectPage() {
                                 <ConclusionSubsection>
                                     <ConclusionSubtitle>Learnings</ConclusionSubtitle>
                                     <ConclusionList>
-                                        <ConclusionListItem>It's always best to come to design review with 3 options or less</ConclusionListItem>
-                                        <ConclusionListItem>Watching the users actions &gt; Listening to their responses</ConclusionListItem>
-                                        <ConclusionListItem>How to pivot during a design sprint and encourage confidence</ConclusionListItem>
+                                        <ConclusionListItem>It's always best to come to design review with 3 options or
+                                            less</ConclusionListItem>
+                                        <ConclusionListItem>Watching the users actions &gt; Listening to their
+                                            responses</ConclusionListItem>
+                                        <ConclusionListItem>How to pivot during a design sprint and encourage
+                                            confidence</ConclusionListItem>
                                     </ConclusionList>
                                 </ConclusionSubsection>
 
                                 <ConclusionSubsection>
                                     <ConclusionSubtitle>Thank you</ConclusionSubtitle>
                                     <ConclusionParagraph>
-                                        Thank you to the Codesign Users for their time, the Codesign team for the mentorship, and my teammate Guru for teaching me new figma-isms. 👩‍💻 And... Thank you for taking the time to check out my work!
+                                        Thank you to the Codesign Users for their time, the Codesign team for the
+                                        mentorship, and my teammate Guru for teaching me new figma-isms. 👩‍💻 And...
+                                        Thank you for taking the time to check out my work!
                                     </ConclusionParagraph>
                                 </ConclusionSubsection>
                             </ConclusionContent>
                         </ConclusionHeader>
 
                         <ConclusionBannerWrapper>
-                            <ConclusionBanner src={conclusionBanner} alt="Codesign prototype screenshots" />
+                            <ConclusionBanner src={conclusionBanner} alt="Codesign prototype screenshots"/>
                             <ConclusionButtonsContainer>
-                                <ConclusionButton href="https://www.figma.com/proto/9GkFUccLaG4OcDgoqlzeUy?node-id=1605-6829&t=WufZgx0NQqJRKphg-6" target="_blank" rel="noopener noreferrer">
+                                <ConclusionButton
+                                    href="https://www.figma.com/proto/9GkFUccLaG4OcDgoqlzeUy?node-id=1605-6829&t=WufZgx0NQqJRKphg-6"
+                                    target="_blank" rel="noopener noreferrer">
                                     View Prototype
                                 </ConclusionButton>
-                                <ConclusionButton href="https://docs.google.com/presentation/d/1lEyUje8HDCOtqq-gOQUrQ3E0DX50e55oNg_7pHaMXGY" target="_blank" rel="noopener noreferrer">
+                                <ConclusionButton
+                                    href="https://docs.google.com/presentation/d/1lEyUje8HDCOtqq-gOQUrQ3E0DX50e55oNg_7pHaMXGY"
+                                    target="_blank" rel="noopener noreferrer">
                                     View Design Sprint Slides
                                 </ConclusionButton>
                             </ConclusionButtonsContainer>
@@ -940,7 +972,7 @@ export default function GoogleCodesignProjectPage() {
 
 
             <BackButton onClick={handleBackClick}>← Back to Portfolio</BackButton>
-            <FloatingTopNav />
+            <FloatingTopNav/>
         </ProjectPageContainer>
     )
 }

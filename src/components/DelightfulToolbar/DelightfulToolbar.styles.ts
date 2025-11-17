@@ -1,9 +1,8 @@
-import { styled } from '@mui/material/styles'
+import {styled} from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
-import { isAccessor } from 'typescript'
 
-// Wrapper to position the toolbar at the bottom, center of the screen
+
 export const NavWrapper = styled(Box)(() => ({
     position: 'fixed',
     bottom: 20,
@@ -15,8 +14,8 @@ export const NavWrapper = styled(Box)(() => ({
     pointerEvents: 'auto'
 }))
 
-// The container (Paper) for all tools
-export const ToolbarContainer = styled(Paper)(({ theme }) => ({
+
+export const ToolbarContainer = styled(Paper)(({theme}) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -24,7 +23,7 @@ export const ToolbarContainer = styled(Paper)(({ theme }) => ({
     height: 'max-content',
     borderRadius: 20,
     gap: 0,
-    // No right padding: each tool sets its own required width
+
     boxShadow:
         theme.palette.mode === 'light'
             ? '0 2px 8px rgba(0,0,0,0.15)'
@@ -37,12 +36,12 @@ export const ToolbarContainer = styled(Paper)(({ theme }) => ({
     cursor: `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`,
 }))
 
-// Each section takes up exactly 1/3 of the toolbar width
+
 export const ToolSection = styled('div')<{
     isActive: boolean
     isCursorTool?: boolean
     isStickerTool?: boolean
-}>(({ isActive, isCursorTool, isStickerTool }) => ({
+}>(({isActive, isCursorTool, isStickerTool}) => ({
     position: 'relative',
     flex: '1 1 33.333%',
     minWidth: 0,
@@ -65,7 +64,7 @@ export const ToolSection = styled('div')<{
     } : {}
 }))
 
-// The actual image. We use maxWidth & maxHeight so it scales within the container
+
 export const ToolImage = styled('img')<{
     isActive?: boolean
 }>(({isActive}) => ({

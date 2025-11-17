@@ -1,20 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { styled } from '@mui/material/styles'
+import React, {useEffect, useRef, useState} from 'react'
+import {styled} from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import Divider from '@mui/material/Divider'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
-import { Tool } from '../../types'
-import { useZoomPanContext } from '../../context/ZoomPanContext'
-import { CommentData, useComments } from '../../context/CommentsContext'
+import {Tool} from '../../types'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
+import {CommentData, useComments} from '../../context/CommentsContext'
 
 interface Props {
     activeTool: Tool
     currentRoute?: string
 }
 
-// Styled Components
-const TOOLBAR_SPACE = 100 // approximate space reserved for toolbar at bottom (px)
-const Overlay = styled('div')<{ enabled: boolean }>(({ enabled }) => ({
+
+const TOOLBAR_SPACE = 100
+const Overlay = styled('div')<{ enabled: boolean }>(({enabled}) => ({
     position: 'fixed',
     top: 0,
     left: 0,
@@ -24,8 +24,8 @@ const Overlay = styled('div')<{ enabled: boolean }>(({ enabled }) => ({
     pointerEvents: enabled ? 'auto' : 'none',
 }))
 
-// Generic bubble shape (bottom-left corner subtly squared to mimic Figma comment bubble)
-const BUBBLE_SIZE = 25 // 1.25x previous 20px
+
+const BUBBLE_SIZE = 25
 const BUBBLE_RADIUS = BUBBLE_SIZE / 2
 
 const BubbleBase = styled('div')({
@@ -40,13 +40,13 @@ const BubbleBase = styled('div')({
     fontWeight: 600,
 })
 
-// Blue bubble for the in-progress (normal) comment marker
+
 const BlueBubble = styled(BubbleBase)({
     backgroundColor: '#0B99FF',
     color: '#fff',
 })
 
-// Small inner circle that holds the letter (centered inside the bubble)
+
 const LetterCircle = styled('div')({
     width: 14,
     height: 14,
@@ -61,8 +61,8 @@ const LetterCircle = styled('div')({
     flexShrink: 0,
 })
 
-// Dark bubble for existing user comments
-const UserBubble = styled(BubbleBase)(({ theme }) => ({
+
+const UserBubble = styled(BubbleBase)(({theme}) => ({
     backgroundColor: '#222222',
     boxShadow: '0 0 0 0.75px #FFFFFF',
     color: '#FFFFFF',
@@ -71,7 +71,7 @@ const UserBubble = styled(BubbleBase)(({ theme }) => ({
     pointerEvents: 'auto',
 }))
 
-const CommentBoxWrapper = styled('div')(({ theme }) => ({
+const CommentBoxWrapper = styled('div')(({theme}) => ({
     position: 'absolute',
     display: 'flex',
     flexDirection: 'column',
@@ -113,19 +113,19 @@ const SubmitButton = styled(IconButton)({
     },
 })
 
-export default function CommentingLayer({ activeTool, currentRoute = '' }: Props) {
-    const { getCommentsForRoute, addComment, activeCommentId, setActiveCommentId } = useComments()
+export default function CommentingLayer({activeTool, currentRoute = ''}: Props) {
+    const {getCommentsForRoute, addComment, activeCommentId, setActiveCommentId} = useComments()
     const [editing, setEditing] = useState<CommentData | null>(null)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const [hoveredId, setHoveredId] = useState<string | null>(null)
 
-    // Access zoom / pan / stage information
-    const { stageScale, stagePos } = useZoomPanContext()
 
-    // Get comments for current route
+    const {stageScale, stagePos} = useZoomPanContext()
+
+
     const comments = getCommentsForRoute(currentRoute)
 
-    // Focus textarea when it appears
+
     useEffect(() => {
         if (editing && textareaRef.current) {
             textareaRef.current.focus()
@@ -144,9 +144,9 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
     }, [activeCommentId, activeTool, setActiveCommentId])
 
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        // When editing exists and user clicks outside the box, cancel editing without creating a new one
+
         if (editing) {
-            // If click is inside current comment UI, ignore (handled below) else cancel
+
             if (!(e.target as HTMLElement).closest('[data-ignore-comment]')) {
                 setEditing(null)
             }
@@ -155,13 +155,13 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
 
         if (activeTool !== 'commenting-cursor') return
 
-        // Ignore clicks on toolbar-generated UI
+
         if ((e.target as HTMLElement).closest('[data-ignore-comment]')) {
             return
         }
 
-        const { clientX, clientY } = e
-        // Transform screen coords to stage coords
+        const {clientX, clientY} = e
+
         const stageX = (clientX - stagePos.x) / stageScale
         const stageY = (clientY - stagePos.y) / stageScale
 
@@ -203,7 +203,7 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
         }
     }
 
-    // Helper to format relative time (seconds/minutes/hours/days/months/years ago)
+
     const timeAgo = (timestamp: number) => {
         const seconds = Math.floor((Date.now() - timestamp) / 1000)
         if (seconds < 60) return `${seconds} second${seconds === 1 ? '' : 's'} ago`
@@ -221,13 +221,13 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
 
     return (
         <Overlay enabled={activeTool === 'commenting-cursor' || editing !== null} onClick={handleOverlayClick}>
-            {/* Existing comment markers */}
+
             {comments.map((c) => {
                 const screenX = stagePos.x + c.x * stageScale
                 const screenY = stagePos.y + c.y * stageScale
                 const isHovered = hoveredId === c.id || activeCommentId === c.id
 
-                // When hovered, bubble should expand to the right without shifting left border
+
                 const leftPosition = isHovered ? screenX - BUBBLE_SIZE / 2 : screenX
 
                 return (
@@ -255,12 +255,12 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
                         onMouseLeave={() => setHoveredId(null)}
                     >
                         {!isHovered && (
-                            <span style={{ fontSize: 12, fontWeight: 700 }}>
+                            <span style={{fontSize: 12, fontWeight: 700}}>
                                 {c.userName.charAt(0).toUpperCase()}
                             </span>
                         )}
                         {isHovered && (
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <div style={{display: 'flex', flexDirection: 'column'}}>
                                 <div
                                     style={{
                                         display: 'flex',
@@ -272,7 +272,7 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
                                     <span
                                         style={{
                                             fontWeight: 700,
-                                            fontSize: 16, // 2px larger than comment text (14)
+                                            fontSize: 16,
                                         }}
                                     >
                                         {c.userName}
@@ -301,41 +301,40 @@ export default function CommentingLayer({ activeTool, currentRoute = '' }: Props
                 )
             })}
 
-            {/* Editing marker and box */}
             {editing && (
                 <>
                     {(() => {
                         const screenX = stagePos.x + editing.x * stageScale
                         const screenY = stagePos.y + editing.y * stageScale
                         return (
-                        <>
-                            <BlueBubble
-                                style={{ left: screenX, top: screenY }}
-                                data-ignore-comment
-                            />
-                            <CommentBoxWrapper
-                                style={{ left: screenX + 20, top: screenY - 10 }}
-                                data-ignore-comment
-                            >
-                                <StyledTextarea
-                                    placeholder="Add a comment"
-                                    value={editing.text}
-                                    onChange={(e) => {
-                                        setEditing({ ...editing, text: e.target.value })
-                                        autoResize()
-                                    }}
-                                    onKeyDown={handleKeyDown}
-                                    ref={textareaRef}
+                            <>
+                                <BlueBubble
+                                    style={{left: screenX, top: screenY}}
                                     data-ignore-comment
                                 />
-                                <Divider style={{ margin: '2px 0', backgroundColor: '#F0F0F0' }} data-ignore-comment />
-                                <SubmitRow data-ignore-comment>
-                                    <SubmitButton size="small" onClick={handleSubmit} data-ignore-comment>
-                                        <ArrowUpwardIcon sx={{ color: '#fff', fontSize: 16 }} />
-                                    </SubmitButton>
-                                </SubmitRow>
-                            </CommentBoxWrapper>
-                        </>
+                                <CommentBoxWrapper
+                                    style={{left: screenX + 20, top: screenY - 10}}
+                                    data-ignore-comment
+                                >
+                                    <StyledTextarea
+                                        placeholder="Add a comment"
+                                        value={editing.text}
+                                        onChange={(e) => {
+                                            setEditing({...editing, text: e.target.value})
+                                            autoResize()
+                                        }}
+                                        onKeyDown={handleKeyDown}
+                                        ref={textareaRef}
+                                        data-ignore-comment
+                                    />
+                                    <Divider style={{margin: '2px 0', backgroundColor: '#F0F0F0'}} data-ignore-comment/>
+                                    <SubmitRow data-ignore-comment>
+                                        <SubmitButton size="small" onClick={handleSubmit} data-ignore-comment>
+                                            <ArrowUpwardIcon sx={{color: '#fff', fontSize: 16}}/>
+                                        </SubmitButton>
+                                    </SubmitRow>
+                                </CommentBoxWrapper>
+                            </>
                         )
                     })()}
                 </>

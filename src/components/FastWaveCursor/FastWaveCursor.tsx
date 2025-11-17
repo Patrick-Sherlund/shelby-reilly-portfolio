@@ -1,24 +1,24 @@
-import { useEffect, useRef } from 'react'
-import { useZoomPanContext } from '../../context/ZoomPanContext'
+import {useEffect, useRef} from 'react'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
 
 export default function FastWaveCursor() {
     const lastPos = useRef<{ x: number; y: number; t: number } | null>(null)
     const resetTimeout = useRef<number | null>(null)
     const lastFast = useRef<{ dirX: number; dirY: number; t: number } | null>(null)
 
-    const { activeTool } = useZoomPanContext()
+    const {activeTool} = useZoomPanContext()
 
     useEffect(() => {
         const REGULAR = `url(${process.env.PUBLIC_URL}/images/regular-cursor.png) 16 16, auto`
         const WAVE = `url(${process.env.PUBLIC_URL}/images/wave.png) 16 16, auto`
 
-        // Trigger when two consecutive fast moves in opposite directions occur within WINDOW_MS
-        const SPEED_THRESHOLD = 0.8 // px per ms (~800 px/s)
+
+        const SPEED_THRESHOLD = 0.8
         const WINDOW_MS = 120
         const RESET_MS = 500
 
         const handleMove = (e: MouseEvent) => {
-            // Only trigger wave animation when using the hand/cursor tool
+
             if (activeTool !== 'hand' && activeTool !== null) {
                 return
             }
@@ -40,7 +40,7 @@ export default function FastWaveCursor() {
                             const timeSince = now - lastFast.current.t
                             const dot = dirX * lastFast.current.dirX + dirY * lastFast.current.dirY
                             if (dot < -0.5 && timeSince < WINDOW_MS) {
-                                // Opposite fast move detected within window
+
                                 document.body.style.cursor = WAVE
                                 if (resetTimeout.current) window.clearTimeout(resetTimeout.current)
                                 resetTimeout.current = window.setTimeout(() => {
@@ -48,15 +48,15 @@ export default function FastWaveCursor() {
                                 }, RESET_MS)
                                 lastFast.current = null
                             } else {
-                                lastFast.current = { dirX, dirY, t: now }
+                                lastFast.current = {dirX, dirY, t: now}
                             }
                         } else {
-                            lastFast.current = { dirX, dirY, t: now }
+                            lastFast.current = {dirX, dirY, t: now}
                         }
                     }
                 }
             }
-            lastPos.current = { x: e.clientX, y: e.clientY, t: now }
+            lastPos.current = {x: e.clientX, y: e.clientY, t: now}
         }
         window.addEventListener('mousemove', handleMove)
         return () => {

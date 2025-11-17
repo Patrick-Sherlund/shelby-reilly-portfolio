@@ -1,43 +1,43 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import Polaroid from '../../components/Polaroid/Polaroid'
 import {
-  MainWrapper,
-  ContentWrapper,
-  TitleSectionContainer,
-  TitleSectionInner,
-  TitleChip,
-  MainContentArea,
-  PresentationSection,
-  TextContentSection,
-  AboutTextCard,
-  SectionTitle,
-  Paragraph,
-  ParagraphShort,
-  CompanyNamesOne,
-  CompanyNamesTwo,
-  CompanyNamesThree,
-  CompanyNamesFour,
-  IconTextRow,
-  ShelbyImageContainer,
-  BottomSection,
-  HobbiesContentSection,
-  HobbiesTitle,
-  HobbiesFooter,
-  BlueSquiggleImage,
-  PolaroidSection,
-  PresentationImage,
-  ShelbyStandingImage,
-  YellowSquiggle,
-  BulletList,
-  BulletItem,
-  IconWrapper,
-  ContentBlock
+    AboutTextCard,
+    BlueSquiggleImage,
+    BottomSection,
+    BulletItem,
+    BulletList,
+    CompanyNamesFour,
+    CompanyNamesOne,
+    CompanyNamesThree,
+    CompanyNamesTwo,
+    ContentBlock,
+    ContentWrapper,
+    HobbiesContentSection,
+    HobbiesFooter,
+    HobbiesTitle,
+    IconTextRow,
+    IconWrapper,
+    MainContentArea,
+    MainWrapper,
+    Paragraph,
+    ParagraphShort,
+    PolaroidSection,
+    PresentationImage,
+    PresentationSection,
+    SectionTitle,
+    ShelbyImageContainer,
+    ShelbyStandingImage,
+    TextContentSection,
+    TitleChip,
+    TitleSectionContainer,
+    TitleSectionInner,
+    YellowSquiggle
 } from './AboutPage.styles'
-import { useSearchContext } from '../../context/SearchContext'
-import { useZoomPanContext } from '../../context/ZoomPanContext'
-import { DEFAULT_SCROLL_PAGES } from '../../hooks/useZoomPan'
+import {useSearchContext} from '../../context/SearchContext'
+import {useZoomPanContext} from '../../context/ZoomPanContext'
+import {DEFAULT_SCROLL_PAGES} from '../../hooks/useZoomPan'
 
-// Import images from assets
+
 import squigleBlip from '../../assets/images/squigle-blip.svg'
 import blueSquiggle from '../../assets/images/blue-squiggle.svg'
 import magicWand from '../../assets/images/magic-wand.svg'
@@ -46,272 +46,269 @@ import aboutMeShelbyStanding from '../../assets/images/about-me-shelby-standing-
 import aboutMeShelbyStandingAlt from '../../assets/images/about-me-shelby-standing-3.png'
 
 export default function AboutPage() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const [shelbyImageSrc, setShelbyImageSrc] = useState(aboutMeShelbyStandingAlt)
-  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set())
-  const imageRefs = useRef<(HTMLImageElement | HTMLDivElement | null)[]>([])
+    const sectionRef = useRef<HTMLDivElement>(null)
+    const [shelbyImageSrc, setShelbyImageSrc] = useState(aboutMeShelbyStandingAlt)
+    const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set())
+    const imageRefs = useRef<(HTMLImageElement | HTMLDivElement | null)[]>([])
 
-  const { registerItem, unregisterItem, registerGroupAnchor } = useSearchContext()
-  const zoomPanContext = useZoomPanContext()
+    const {registerItem, unregisterItem, registerGroupAnchor} = useSearchContext()
+    const zoomPanContext = useZoomPanContext()
 
-  // --- responsive runtime flags ---
-  const isClient = typeof window !== 'undefined'
-  const vw = isClient ? window.innerWidth : 1200
-  const vh = isClient ? window.innerHeight : 800
-  const isMobile = vw < 900
 
-  /* --- Register search items --- */
-  useEffect(() => {
-    if (sectionRef.current) {
-      registerGroupAnchor('About Me', sectionRef.current, 0)
-    }
+    const isClient = typeof window !== 'undefined'
+    const vw = isClient ? window.innerWidth : 1200
+    const vh = isClient ? window.innerHeight : 800
+    const isMobile = vw < 900
 
-    return () => {}
-  }, [registerGroupAnchor])
 
-  useEffect(() => {
-    if (!isClient) {
-      return
-    }
-
-    const updateScrollBounds = () => {
-      if (!sectionRef.current) {
-        return
-      }
-      const pageHeight = sectionRef.current.getBoundingClientRect().height
-      const viewportHeight = window.innerHeight || 1
-      const extraPages = Math.max(0, pageHeight / viewportHeight - 1)
-      zoomPanContext.setMaxScrollPages(Math.max(extraPages + 0.1, 0))
-    }
-
-    updateScrollBounds()
-    window.addEventListener('resize', updateScrollBounds)
-
-    return () => {
-      window.removeEventListener('resize', updateScrollBounds)
-      zoomPanContext.setMaxScrollPages(DEFAULT_SCROLL_PAGES)
-    }
-  }, [zoomPanContext, isClient])
-
-  useEffect(() => {
-    const swapTimer = setTimeout(() => {
-      setShelbyImageSrc(aboutMeShelbyStanding)
-    }, 1200)
-
-    return () => clearTimeout(swapTimer)
-  }, [])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = imageRefs.current.indexOf(entry.target as HTMLImageElement | HTMLDivElement)
-            if (index !== -1) {
-              setVisibleImages((prev) => new Set([...prev, index]))
-            }
-          }
-        })
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '0px 0px -10% 0px'
-      }
-    )
-
-    imageRefs.current.forEach((ref) => {
-      if (ref) {
-        observer.observe(ref)
-      }
-    })
-
-    return () => {
-      imageRefs.current.forEach((ref) => {
-        if (ref) {
-          observer.unobserve(ref)
+    useEffect(() => {
+        if (sectionRef.current) {
+            registerGroupAnchor('About Me', sectionRef.current, 0)
         }
-      })
-    }
-  }, [])
 
-  return (
-    <MainWrapper ref={sectionRef}>
-      <ContentWrapper>
-        {/* Title Section - positioned at top left */}
-        <TitleSectionContainer isMobile={isMobile}>
-          <TitleSectionInner>
-            <TitleChip isMobile={isMobile}>
-              Hi, I'm Shelby!
-            </TitleChip>
-            <TitleChip isMobile={isMobile}>
-              About me 👇
-            </TitleChip>
-          </TitleSectionInner>
-        </TitleSectionContainer>
+        return () => {
+        }
+    }, [registerGroupAnchor])
 
-        {/* Main Content Area */}
-        <MainContentArea isMobile={isMobile}>
-          {/* Left Section - Presentation Image */}
-          <PresentationSection isMobile={isMobile}>
-            <YellowSquiggle
-              ref={(el) => (imageRefs.current[0] = el)}
-              src={squigleBlip}
-              alt=""
-              $isVisible={visibleImages.has(0)}
-              $delay={0.1}
-            />
-            <PresentationImage
-              src={aboutMePresentation}
-              alt="Shelby presenting at a conference"
-            />
-          </PresentationSection>
+    useEffect(() => {
+        if (!isClient) {
+            return
+        }
 
-          {/* Right Section - Text Content with overlapping Shelby Image */}
-          <TextContentSection>
-            <AboutTextCard>
-              <SectionTitle isMobile={isMobile}>
-                I'm a Senior Product Designer.
-              </SectionTitle>
+        const updateScrollBounds = () => {
+            if (!sectionRef.current) {
+                return
+            }
+            const pageHeight = sectionRef.current.getBoundingClientRect().height
+            const viewportHeight = window.innerHeight || 1
+            const extraPages = Math.max(0, pageHeight / viewportHeight - 1)
+            zoomPanContext.setMaxScrollPages(Math.max(extraPages + 0.1, 0))
+        }
 
-              <ContentBlock>
-              <Paragraph>
-                I specialize in <strong>simplifying complex systems</strong> and creating{' '}
-                <strong>experiences users love.</strong>
-              </Paragraph>
-              </ContentBlock>
+        updateScrollBounds()
+        window.addEventListener('resize', updateScrollBounds)
 
-              <ContentBlock>
-              <ParagraphShort>
-                <strong>Previous projects:</strong>{' '}
-                <CompanyNamesOne>Apple,</CompanyNamesOne>
-                <CompanyNamesTwo> Google</CompanyNamesTwo>,
-                <CompanyNamesThree> VMware</CompanyNamesThree>,
-                <CompanyNamesFour> US Air Force</CompanyNamesFour>.
-              </ParagraphShort>
-              </ContentBlock>
+        return () => {
+            window.removeEventListener('resize', updateScrollBounds)
+            zoomPanContext.setMaxScrollPages(DEFAULT_SCROLL_PAGES)
+        }
+    }, [zoomPanContext, isClient])
 
-              <ContentBlock>
-              <Paragraph>
-                I completed my <strong>Masters in Human Computer Interaction at Georgia Tech</strong>{' '}
-                where I worked as a lab Assistant in the{' '}
-                <strong>GVU Prototyping & Usability Labs.</strong>
-              </Paragraph>
-              </ContentBlock>
+    useEffect(() => {
+        const swapTimer = setTimeout(() => {
+            setShelbyImageSrc(aboutMeShelbyStanding)
+        }, 1200)
 
-              <ContentBlock>
-              <IconTextRow>
+        return () => clearTimeout(swapTimer)
+    }, [])
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const index = imageRefs.current.indexOf(entry.target as HTMLImageElement | HTMLDivElement)
+                        if (index !== -1) {
+                            setVisibleImages((prev) => new Set([...prev, index]))
+                        }
+                    }
+                })
+            },
+            {
+                threshold: 0.1,
+                rootMargin: '0px 0px -10% 0px'
+            }
+        )
+
+        imageRefs.current.forEach((ref) => {
+            if (ref) {
+                observer.observe(ref)
+            }
+        })
+
+        return () => {
+            imageRefs.current.forEach((ref) => {
+                if (ref) {
+                    observer.unobserve(ref)
+                }
+            })
+        }
+    }, [])
+
+    return (
+        <MainWrapper ref={sectionRef}>
+            <ContentWrapper>
+
+                <TitleSectionContainer isMobile={isMobile}>
+                    <TitleSectionInner>
+                        <TitleChip isMobile={isMobile}>
+                            Hi, I'm Shelby!
+                        </TitleChip>
+                        <TitleChip isMobile={isMobile}>
+                            About me 👇
+                        </TitleChip>
+                    </TitleSectionInner>
+                </TitleSectionContainer>
+
+                <MainContentArea isMobile={isMobile}>
+
+                    <PresentationSection isMobile={isMobile}>
+                        <YellowSquiggle
+                            ref={(el) => (imageRefs.current[0] = el)}
+                            src={squigleBlip}
+                            alt=""
+                            $isVisible={visibleImages.has(0)}
+                            $delay={0.1}
+                        />
+                        <PresentationImage
+                            src={aboutMePresentation}
+                            alt="Shelby presenting at a conference"
+                        />
+                    </PresentationSection>
+
+                    <TextContentSection>
+                        <AboutTextCard>
+                            <SectionTitle isMobile={isMobile}>
+                                I'm a Senior Product Designer.
+                            </SectionTitle>
+
+                            <ContentBlock>
+                                <Paragraph>
+                                    I specialize in <strong>simplifying complex systems</strong> and creating{' '}
+                                    <strong>experiences users love.</strong>
+                                </Paragraph>
+                            </ContentBlock>
+
+                            <ContentBlock>
+                                <ParagraphShort>
+                                    <strong>Previous projects:</strong>{' '}
+                                    <CompanyNamesOne>Apple,</CompanyNamesOne>
+                                    <CompanyNamesTwo> Google</CompanyNamesTwo>,
+                                    <CompanyNamesThree> VMware</CompanyNamesThree>,
+                                    <CompanyNamesFour> US Air Force</CompanyNamesFour>.
+                                </ParagraphShort>
+                            </ContentBlock>
+
+                            <ContentBlock>
+                                <Paragraph>
+                                    I completed my <strong>Masters in Human Computer Interaction at Georgia
+                                    Tech</strong>{' '}
+                                    where I worked as a lab Assistant in the{' '}
+                                    <strong>GVU Prototyping & Usability Labs.</strong>
+                                </Paragraph>
+                            </ContentBlock>
+
+                            <ContentBlock>
+                                <IconTextRow>
                 <span>
                   <IconWrapper
-                  src={magicWand}
-                  alt=""
-                  aria-hidden="true"
-                /> Outside of work, I co-run a <strong>nonprofit</strong> focused on modernizing
+                      src={magicWand}
+                      alt=""
+                      aria-hidden="true"
+                  /> Outside of work, I co-run a <strong>nonprofit</strong> focused on modernizing
                   tools for emergency services <strong>using AI/ML/Computer Vision.</strong>
                 </span>
-              </IconTextRow>
-              </ContentBlock>
-            </AboutTextCard>
+                                </IconTextRow>
+                            </ContentBlock>
+                        </AboutTextCard>
 
-            {/* Shelby Standing Image - overlapping on the right */}
-            <ShelbyImageContainer isMobile={isMobile}>
-              <ShelbyStandingImage
-                ref={(el) => (imageRefs.current[1] = el)}
-                src={shelbyImageSrc}
-                alt="Shelby Reilly"
-                $isVisible={visibleImages.has(1)}
-                $delay={0.2}
-              />
-            </ShelbyImageContainer>
-          </TextContentSection>
-        </MainContentArea>
+                        <ShelbyImageContainer isMobile={isMobile}>
+                            <ShelbyStandingImage
+                                ref={(el) => (imageRefs.current[1] = el)}
+                                src={shelbyImageSrc}
+                                alt="Shelby Reilly"
+                                $isVisible={visibleImages.has(1)}
+                                $delay={0.2}
+                            />
+                        </ShelbyImageContainer>
+                    </TextContentSection>
+                </MainContentArea>
 
-        {/* Bottom Section - Hobbies + Polaroids */}
-        <BottomSection isMobile={isMobile}>
-          {/* Left - Hobbies Content with Blue Squiggle */}
-          <HobbiesContentSection isMobile={isMobile}>
-            <AboutTextCard>
-              <HobbiesTitle isMobile={isMobile}>
-                When I'm not in Figma (rare, bc figma&lt;3), find me:
-              </HobbiesTitle>
+                <BottomSection isMobile={isMobile}>
 
-              <BulletList>
-                <BulletItem>
-                  🌍 <strong>Traveling</strong> Currently at 41 countries and counting
-                </BulletItem>
-                <BulletItem>
-                  🌊 <strong>In the water</strong> Sailing, Scuba, or Swimming
-                </BulletItem>
-                <BulletItem>
-                  🦮 <strong>Exploring Austin</strong> with my dog, Rodeo
-                </BulletItem>
-                <BulletItem>
-                  👩‍💻 Turning life into mini design projects, from <strong>vibe-coding all my crazy website ideas</strong> to executing next-level <strong>gardening</strong> projects
-                </BulletItem>
-              </BulletList>
+                    <HobbiesContentSection isMobile={isMobile}>
+                        <AboutTextCard>
+                            <HobbiesTitle isMobile={isMobile}>
+                                When I'm not in Figma (rare, bc figma&lt;3), find me:
+                            </HobbiesTitle>
 
-              <HobbiesFooter isMobile={isMobile}>
-                These things keep me curious, grounded, and remind me that{' '}
-                <strong>good design should make life easier.</strong>
-              </HobbiesFooter>
-            </AboutTextCard>
+                            <BulletList>
+                                <BulletItem>
+                                    🌍 <strong>Traveling</strong> Currently at 41 countries and counting
+                                </BulletItem>
+                                <BulletItem>
+                                    🌊 <strong>In the water</strong> Sailing, Scuba, or Swimming
+                                </BulletItem>
+                                <BulletItem>
+                                    🦮 <strong>Exploring Austin</strong> with my dog, Rodeo
+                                </BulletItem>
+                                <BulletItem>
+                                    👩‍💻 Turning life into mini design projects, from <strong>vibe-coding all my crazy
+                                    website ideas</strong> to executing next-level <strong>gardening</strong> projects
+                                </BulletItem>
+                            </BulletList>
 
-            {/* Blue Squiggle at bottom right of content */}
-            <BlueSquiggleImage
-              ref={(el) => (imageRefs.current[2] = el)}
-              src={blueSquiggle}
-              alt=""
-              $isVisible={visibleImages.has(2)}
-              $delay={0.05}
-            />
-          </HobbiesContentSection>
+                            <HobbiesFooter isMobile={isMobile}>
+                                These things keep me curious, grounded, and remind me that{' '}
+                                <strong>good design should make life easier.</strong>
+                            </HobbiesFooter>
+                        </AboutTextCard>
 
-          {/* Right - Polaroid Photos */}
-          <PolaroidSection isMobile={isMobile}>
-            <Polaroid
-              ref={(el) => (imageRefs.current[3] = el)}
-              src={`${process.env.PUBLIC_URL}/images/polaroid/ctrly.png`}
-              alt="Ctrl+Y"
-              title="Ctrl+Y"
-              date="Nov 2024 - Current"
-              width={isMobile ? 162 : 200}
-              rotationDeg={5.75}
-              zIndex={3}
-              top={isMobile ? 0 : 20}
-              left={isMobile ? 0 : 0}
-              $isVisible={visibleImages.has(3)}
-              $delay={0.1}
-            />
-            <Polaroid
-              ref={(el) => (imageRefs.current[4] = el)}
-              src={`${process.env.PUBLIC_URL}/images/polaroid/dpod.png`}
-              alt="dPod"
-              title="dPod"
-              date="Aug 2019 - Dec 2019"
-              width={isMobile ? 162 : 184}
-              rotationDeg={-10}
-              zIndex={2}
-              top={isMobile ? 20 : 40}
-              left={isMobile ? 20 : 200}
-              $isVisible={visibleImages.has(4)}
-              $delay={0.15}
-            />
-            <Polaroid
-              ref={(el) => (imageRefs.current[5] = el)}
-              src={`${process.env.PUBLIC_URL}/images/polaroid/hoop.png`}
-              alt="LED Basketball Hoop"
-              title="LED Basketball Hoop"
-              date="Sept [wk] 2022"
-              width={isMobile ? 162 : 150}
-              rotationDeg={3}
-              zIndex={4}
-              top={isMobile ? 40 : 10}
-              left={isMobile ? 40 : 380}
-              $isVisible={visibleImages.has(5)}
-              $delay={0.2}
-            />
-          </PolaroidSection>
-        </BottomSection>
-      </ContentWrapper>
-    </MainWrapper>
-  )
+                        <BlueSquiggleImage
+                            ref={(el) => (imageRefs.current[2] = el)}
+                            src={blueSquiggle}
+                            alt=""
+                            $isVisible={visibleImages.has(2)}
+                            $delay={0.05}
+                        />
+                    </HobbiesContentSection>
+
+                    <PolaroidSection isMobile={isMobile}>
+                        <Polaroid
+                            ref={(el) => (imageRefs.current[3] = el)}
+                            src={`${process.env.PUBLIC_URL}/images/polaroid/ctrly.png`}
+                            alt="Ctrl+Y"
+                            title="Ctrl+Y"
+                            date="Nov 2024 - Current"
+                            width={isMobile ? 162 : 200}
+                            rotationDeg={5.75}
+                            zIndex={3}
+                            top={isMobile ? 0 : 20}
+                            left={isMobile ? 0 : 0}
+                            $isVisible={visibleImages.has(3)}
+                            $delay={0.1}
+                        />
+                        <Polaroid
+                            ref={(el) => (imageRefs.current[4] = el)}
+                            src={`${process.env.PUBLIC_URL}/images/polaroid/dpod.png`}
+                            alt="dPod"
+                            title="dPod"
+                            date="Aug 2019 - Dec 2019"
+                            width={isMobile ? 162 : 184}
+                            rotationDeg={-10}
+                            zIndex={2}
+                            top={isMobile ? 20 : 40}
+                            left={isMobile ? 20 : 200}
+                            $isVisible={visibleImages.has(4)}
+                            $delay={0.15}
+                        />
+                        <Polaroid
+                            ref={(el) => (imageRefs.current[5] = el)}
+                            src={`${process.env.PUBLIC_URL}/images/polaroid/hoop.png`}
+                            alt="LED Basketball Hoop"
+                            title="LED Basketball Hoop"
+                            date="Sept [wk] 2022"
+                            width={isMobile ? 162 : 150}
+                            rotationDeg={3}
+                            zIndex={4}
+                            top={isMobile ? 40 : 10}
+                            left={isMobile ? 40 : 380}
+                            $isVisible={visibleImages.has(5)}
+                            $delay={0.2}
+                        />
+                    </PolaroidSection>
+                </BottomSection>
+            </ContentWrapper>
+        </MainWrapper>
+    )
 }

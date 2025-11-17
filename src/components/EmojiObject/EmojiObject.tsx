@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Image as KonvaImage } from 'react-konva'
+import React, {useEffect, useState} from 'react'
+import {Image as KonvaImage} from 'react-konva'
 import useImage from 'use-image'
 
 type EmojiObjectProps = {
@@ -20,24 +20,24 @@ export default function EmojiObject({
                                         scale = 1
                                     }: EmojiObjectProps) {
     const [img] = useImage(src)
-    const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+    const [dimensions, setDimensions] = useState({width: 0, height: 0})
 
     useEffect(() => {
         if (img) {
-            // Grab original image dimensions
+
             const originalWidth = img.naturalWidth || img.width
             const originalHeight = img.naturalHeight || img.height
 
-            // Determine which dimension is bigger
+
             if (originalWidth >= originalHeight) {
-                // Width is the larger dimension; scale to 40, adjust height proportionally
+
                 const aspectRatio = originalHeight / originalWidth
                 setDimensions({
                     width: 40,
                     height: 40 * aspectRatio
                 })
             } else {
-                // Height is the larger dimension; scale to 40, adjust width proportionally
+
                 const aspectRatio = originalWidth / originalHeight
                 setDimensions({
                     width: 40 * aspectRatio,

@@ -1,1 +1,1 @@
-export { default } from './GemDraw'
+export {default} from './GemDraw'
