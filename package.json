@@ -2,7 +2,7 @@
   "name": "shelby-portfolio",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://Patrick-Sherlund.github.io/shelby-reilly-portfolio",
+  "homepage": "https://Patrick-Sherlund.github.io",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
