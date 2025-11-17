@@ -58,7 +58,7 @@ const FloatingNavBarContainer = styled(Paper)<{ open: boolean; $mobileOpen: bool
     background:
       theme.palette.mode === 'light'
         ? 'linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.6))'
-        : 'linear-gradient(180deg, rgba(18,18,18,.78), rgba(18,18,18,.66))',
+        : 'rgba(50, 50, 50, .8)',
     backdropFilter: 'blur(10px)',
     overflow: 'visible',
     transition: 'background .25s ease, box-shadow .25s ease, backdrop-filter .25s ease',
