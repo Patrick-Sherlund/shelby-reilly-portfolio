@@ -11,11 +11,12 @@ import {
     MainWrapper,
     MidSection,
     SubLineText,
-    Title
+    GoogleCodesignLogo
 } from './GoogleCodesignPage.styles'
 import {useZoomPanInteraction} from '../../hooks/useZoomPanInteraction'
 import macbook from "../../assets/images/macbook.png"
 import {useZoomPanContext} from '../../context/ZoomPanContext'
+import codesignLogo from '../../assets/images/codesign-logo.png'
 
 export default function GoogleCodesignPage() {
     const demoRef = useRef<HTMLDivElement>(null)
@@ -69,7 +70,12 @@ export default function GoogleCodesignPage() {
                     onMouseUp={descInteraction.handleMouseUp}
                     onMouseLeave={descInteraction.handleMouseLeave}
                 >
-                    <Title>Codesign</Title>
+                     <GoogleCodesignLogo
+                        src={codesignLogo}
+                        alt="Google Codesign"
+                        draggable={false}
+                        data-testid="pb-logo-small"
+                    />
                     <LineText>Web Component-based Prototyping Tool bridging the gap between design and
                         engineering</LineText>
                     <SubLineText>UX Designer</SubLineText>

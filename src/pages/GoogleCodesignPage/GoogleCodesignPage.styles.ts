@@ -22,7 +22,7 @@ export const LogoImage = styled('img')<{ $activeTool?: string }>(({$activeTool})
         width: 'auto',
         pointerEvents: isKonvaToolActive ? 'none' : 'auto',
         alignSelf: 'flex-start',
-        margin: '68px 32px 0px 60px',
+        margin: '148px 32px -80px 120px',
     }
 })
 
@@ -111,6 +111,17 @@ export const Title = styled('h2')(() => ({
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
+}))
+
+export const GoogleCodesignLogo = styled('img')(({theme}) => ({
+    height: '80px',
+    width: 'auto',
+    userSelect: 'none',
+    margin: 0,
+    top: 0,
+    [theme.breakpoints.up('md')]: {
+        height: '88px',
+    },
 }))
 
 
