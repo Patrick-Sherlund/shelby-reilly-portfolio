@@ -334,8 +334,8 @@ export default function FloatingTopNav({}: Props) {
 
                                 <Box
                                     component="a"
-                                    href={`${process.env.PUBLIC_URL}/files/Reilly_Resume.pdf`}
-                                    download="Reilly_Resume.pdf"
+                                    href={`${process.env.PUBLIC_URL}/files/Senior Product Designer Shelby Reilly Resume.pdf`}
+                                    download="Senior Product Designer Shelby Reilly Resume.pdf"
                                     sx={{textDecoration: 'none', color: 'inherit'}}
                                 >
                                     <MenuItemRow>
@@ -456,8 +456,8 @@ export default function FloatingTopNav({}: Props) {
                                                 aria-label={`${p.name} resume`}
                                                 edge="end"
                                                 component="a"
-                                                href={`${process.env.PUBLIC_URL}/files/Reilly_Resume.pdf`}
-                                                download="Reilly_Resume.pdf"
+                                                href={`${process.env.PUBLIC_URL}/files/Senior Product Designer Shelby Reilly Resume.pdf`}
+                                                download="Senior Product Designer Shelby Reilly Resume.pdf"
                                             >
                                                 <DescriptionOutlinedIcon sx={{fontSize: 18}}/>
                                                 <ChevronRightRoundedIcon sx={{fontSize: 18, ml: .25}}/>
