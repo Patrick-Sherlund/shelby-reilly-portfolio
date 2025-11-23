@@ -8,9 +8,11 @@ export const NavWrapper = styled(Box)(() => ({
     bottom: 20,
     left: 0,
     right: 0,
+    margin: "0px auto",
     display: 'flex',
     justifyContent: 'center',
     zIndex: 1500,
+    width: '380px',
     pointerEvents: 'auto'
 }))
 

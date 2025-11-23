@@ -10,7 +10,9 @@ import {
     SparklesImage,
     StickyNote,
     StickyNotesWrapper,
-    TextsWrapper
+    TextsWrapper,
+    StickyNoteTextBold,
+    StickyNoteTextRegular
 } from './IntroductionPage.styles'
 import {useZoomPanInteraction} from '../../hooks/useZoomPanInteraction'
 import {useZoomPanContext} from '../../context/ZoomPanContext'
@@ -463,7 +465,10 @@ export default function IntroductionPage() {
                         cursor: dragInfoRef.current?.id === 'note1' ? 'grabbing' : 'grab'
                     }}
                 >
-                    I'm a product designer in Austin Texas 🤠
+                    <StickyNoteTextRegular>I'm a </StickyNoteTextRegular>
+                    <StickyNoteTextBold>product designer</StickyNoteTextBold>
+                    <StickyNoteTextRegular> in </StickyNoteTextRegular>
+                    <StickyNoteTextBold>Austin Texas 🤠</StickyNoteTextBold>
                 </StickyNote>
 
                 <StickyNote

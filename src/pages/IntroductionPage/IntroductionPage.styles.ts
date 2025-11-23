@@ -1,7 +1,7 @@
-import {styled} from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 
-export const MainWrapper = styled('div')(({theme}) => ({
+export const MainWrapper = styled('div')(({ theme }) => ({
     width: '100%',
 
     minHeight: '100%',
@@ -18,7 +18,7 @@ export const MainWrapper = styled('div')(({theme}) => ({
     }
 }))
 
-export const PolaroidContainer = styled('div')(({theme}) => ({
+export const PolaroidContainer = styled('div')(({ theme }) => ({
     margin: '-60px 0 50px 0',
     transform: 'translateX(10vw)',
     willChange: 'transform',
@@ -43,7 +43,7 @@ export const PolaroidContainer = styled('div')(({theme}) => ({
     }
 }))
 
-export const PolaroidStage = styled('div')(({theme}) => ({
+export const PolaroidStage = styled('div')(({ theme }) => ({
 
     pointerEvents: 'none',
     [theme.breakpoints.down('md')]: {
@@ -55,7 +55,7 @@ export const PolaroidStage = styled('div')(({theme}) => ({
         display: 'flex',
         alignItems: 'flex-start',
         gap: 0,
-        '& > *:not(:first-child)': {marginLeft: '-12px'},
+        '& > *:not(:first-child)': { marginLeft: '-12px' },
 
 
         '&.mobile-compact-captions figcaption *:not(b):not(strong)': {
@@ -75,7 +75,21 @@ export const PolaroidStage = styled('div')(({theme}) => ({
 }))
 
 
-export const TextsWrapper = styled('div')(({theme}) => ({
+export const StickyNoteTextBold = styled('span')(({ theme }) => ({
+    fontSize: "16px",
+    fontWeight: "600",
+    display: "inline",
+
+}));
+
+export const StickyNoteTextRegular = styled('span')(({ theme }) => ({
+    fontSize: "16px",
+    fontWeight: "200",
+        display: "inline"
+
+}));
+
+export const TextsWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -92,7 +106,7 @@ export const TextsWrapper = styled('div')(({theme}) => ({
 }))
 
 
-export const SingleTextContainer = styled('div')(({theme}) => ({
+export const SingleTextContainer = styled('div')(({ theme }) => ({
     position: 'relative',
     backgroundColor: '#5263FF',
     borderRadius: 4,
@@ -113,7 +127,7 @@ export const SingleTextContainer = styled('div')(({theme}) => ({
 }))
 
 
-export const SparklesImage = styled('img')(({theme}) => ({
+export const SparklesImage = styled('img')(({ theme }) => ({
     position: 'absolute',
     bottom: '70%',
     right: '60%',
@@ -129,7 +143,7 @@ export const SparklesImage = styled('img')(({theme}) => ({
 }))
 
 
-export const StickyNotesWrapper = styled('div')(({theme}) => ({
+export const StickyNotesWrapper = styled('div')(({ theme }) => ({
     position: 'absolute',
     bottom: 40,
     left: 40,
@@ -142,7 +156,7 @@ export const StickyNotesWrapper = styled('div')(({theme}) => ({
     }
 }))
 
-export const StickyNote = styled('div')(({theme}) => ({
+export const StickyNote = styled('div')(({ theme }) => ({
     position: 'absolute',
     width: 160,
     height: 160,
@@ -170,7 +184,7 @@ export const StickyNote = styled('div')(({theme}) => ({
     }
 }))
 
-export const ContentWrapper = styled('div')(({theme}) => ({
+export const ContentWrapper = styled('div')(({ theme }) => ({
     transform: 'translateX(60px)',
     display: 'flex',
     flexDirection: 'column',
