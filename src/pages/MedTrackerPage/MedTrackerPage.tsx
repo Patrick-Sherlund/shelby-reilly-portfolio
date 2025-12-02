@@ -115,11 +115,13 @@ export default function MedTrackerPage() {
 
     useEffect(() => {
         const containers = Array.from(document.querySelectorAll<HTMLElement>('.konvajs-content'))
-        if (!containers.length) return
+        const carouselTrack = trackRef.current
+        const elements = carouselTrack ? [...containers, carouselTrack] : containers
+        if (!elements.length) return
 
         const cleanups: Array<() => void> = []
 
-        containers.forEach((el) => {
+        elements.forEach((el) => {
             let startX = 0
             let startY = 0
             let locked: 'x' | 'y' | null = null
@@ -163,7 +165,6 @@ export default function MedTrackerPage() {
                 if (locked === 'x') {
                     ;(e as any).stopImmediatePropagation?.()
                     e.stopPropagation()
-                    e.preventDefault()
                 }
             }
 
@@ -182,7 +183,7 @@ export default function MedTrackerPage() {
         })
 
         return () => cleanups.forEach((fn) => fn())
-    }, [])
+    }, [trackRef])
 
     return (
         <MainWrapper ref={sectionRef}>
@@ -248,9 +249,19 @@ export default function MedTrackerPage() {
             {!isDesktop && (
                 <MobileSection>
                     <MobileHeader ref={descRef}>
-                        <MobileTitle>MedTracker</MobileTitle>
+                        <MedTrackerLogo
+                            src={medTrackerLogo}
+                            alt="MedTracker"
+                            draggable={false}
+                        />
+                        <LineText style={{textAlign: 'center', fontSize: '18px', marginTop: '16px'}}>
+                            Streamlined medical inventory process saving {'>'} 11k hours annually
+                        </LineText>
+                        <MobileMeta style={{marginTop: '12px'}}>
+                            <span>Senior Product Designer</span>
+                        </MobileMeta>
                         <MobileMeta>
-                            <span>2024</span> · <span>UX Designer</span> · <span>Hardware Engineer</span>
+                            <span>2024 - 2025</span>
                         </MobileMeta>
                     </MobileHeader>
 

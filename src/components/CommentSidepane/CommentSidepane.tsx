@@ -20,7 +20,7 @@ type Props = {
 const PANEL_WIDTH = 300
 const COLLAPSED_WIDTH = 80
 
-const Panel = styled('aside')<{ $open: boolean; $collapsed: boolean }>(({$open, $collapsed}) => {
+const Panel = styled('aside')<{ $open: boolean; $collapsed: boolean }>(({theme, $open, $collapsed}) => {
     const width = $collapsed ? COLLAPSED_WIDTH : PANEL_WIDTH
     return {
         position: 'fixed',
@@ -37,7 +37,10 @@ const Panel = styled('aside')<{ $open: boolean; $collapsed: boolean }>(({$open, 
         display: 'flex',
         flexDirection: 'column',
         pointerEvents: $open ? 'auto' : 'none',
-        borderLeft: '1px solid rgba(255,255,255,0.16)'
+        borderLeft: '1px solid rgba(255,255,255,0.16)',
+        [theme.breakpoints.down('md')]: {
+            display: 'none'
+        }
     }
 })
 

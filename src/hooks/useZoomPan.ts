@@ -15,7 +15,11 @@ export function useZoomPan() {
     }, [])
 
     const clampStagePosition = useCallback((y: number) => {
-        const minY = -maxScrollPages * window.innerHeight * stageScale
+        const isMobile = window.innerWidth < 900
+        const pageGap = isMobile ? 200 : 0
+        const bishopGap = isMobile ? 400 : 0
+        const totalGaps = (maxScrollPages - 1) * pageGap + bishopGap
+        const minY = -(maxScrollPages * window.innerHeight + totalGaps) * stageScale
         if (y < minY) return minY
         if (y > 0) return 0
         return y
@@ -87,6 +91,7 @@ export function useZoomPan() {
             time: number;
         } | null>) => {
 
+            // Handle two-finger pinch and scroll
             if (e.evt.touches.length !== 2) {
                 prevTouch.current = null;
                 return;
@@ -112,7 +117,7 @@ export function useZoomPan() {
             const currentTime = Date.now();
 
 
-            if (!prevTouch.current) {
+            if (!prevTouch.current || prevTouch.current.touches.length !== 2) {
                 prevTouch.current = {
                     touches: [touch1, touch2],
                     distance: currentDistance,

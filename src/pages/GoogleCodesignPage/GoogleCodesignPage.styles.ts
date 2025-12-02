@@ -41,16 +41,20 @@ export const MidSection = styled('div')(() => ({
 }))
 
 
-export const DemoWrapper = styled('div')(() => ({
+export const DemoWrapper = styled('div')(({theme}) => ({
     width: '60%',
     display: 'flex',
     justifyContent: 'flex-start', // left align within section
     alignItems: 'center',
     pointerEvents: 'auto',
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+        justifyContent: 'center',
+    },
 }))
 
 
-export const DemoPlaceholder = styled('div')(() => ({
+export const DemoPlaceholder = styled('div')(({theme}) => ({
     width: '100%',
     maxWidth: '900px',
     display: 'flex',
@@ -58,6 +62,9 @@ export const DemoPlaceholder = styled('div')(() => ({
     alignItems: 'center',
     position: 'relative',
     userSelect: 'none',
+    [theme.breakpoints.down('md')]: {
+        maxWidth: '1800px',
+    },
 }))
 
 export const MacBookImage = styled('img')(() => ({

@@ -207,7 +207,7 @@ export const CarouselTrack = styled('div')(() => ({
     display: 'grid',
     gridAutoFlow: 'column',
     gridAutoColumns: '72%',
-    gap: '16px',
+    gap: '4px',
     overflowX: 'auto',
     padding: '0 16px',
     scrollSnapType: 'x mandatory',
@@ -226,7 +226,7 @@ export const Slide = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 'clamp(220px, 64vw, 320px)',
+    width: 'clamp(180px, 50vw, 260px)',
     pointerEvents: 'auto',
 }))
 
@@ -264,20 +264,12 @@ export const Dot = styled('button')(() => ({
 }))
 
 export const StickyCTA = styled('div')(() => ({
-    position: 'sticky',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    position: 'static',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    padding:
-        '12px calc(16px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left))',
-    backdropFilter: 'blur(8px)',
-    WebkitBackdropFilter: 'blur(8px)',
-    background: 'rgba(10,10,15,0.35)',
-    boxShadow: '0 -8px 24px rgba(0,0,0,0.3)',
-    zIndex: 2,
+    padding: '24px 16px 12px',
+    marginTop: '48px',
 }))
 
 export const MobileCaseStudyButton = styled(CaseStudyButton)(() => ({

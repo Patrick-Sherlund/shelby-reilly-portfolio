@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 
 
-export const NavWrapper = styled(Box)(() => ({
+export const NavWrapper = styled(Box)(({ theme }) => ({
     position: 'fixed',
     bottom: 20,
     left: 0,
@@ -13,7 +13,11 @@ export const NavWrapper = styled(Box)(() => ({
     justifyContent: 'center',
     zIndex: 1500,
     width: '380px',
-    pointerEvents: 'auto'
+    maxWidth: 'calc(100vw - 24px)',
+    pointerEvents: 'auto',
+    [theme.breakpoints.down('sm')]: {
+        bottom: 'max(12px, env(safe-area-inset-bottom) + 12px)'
+    }
 }))
 
 
@@ -43,15 +47,15 @@ export const ToolSection = styled('div')<{
     isActive: boolean
     isCursorTool?: boolean
     isStickerTool?: boolean
-}>(({isActive, isCursorTool, isStickerTool}) => ({
+}>(({isActive, isCursorTool, isStickerTool, theme}) => ({
     position: 'relative',
     flex: '1 1 33.333%',
     minWidth: 0,
-    height: 56,
+    height: 'clamp(44px, 7.5vw, 56px)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '0 30px',
+    padding: '0 clamp(18px, 4vw, 30px)',
     '&::before': isActive ? {
         content: '""',
         position: 'absolute',
@@ -70,8 +74,8 @@ export const ToolSection = styled('div')<{
 export const ToolImage = styled('img')<{
     isActive?: boolean
 }>(({isActive}) => ({
-    width: '56px',
-    height: '56px',
+    width: 'clamp(44px, 7.5vw, 56px)',
+    height: 'clamp(44px, 7.5vw, 56px)',
     objectFit: 'contain',
     transition: 'transform 0.2s ease',
     position: 'relative',

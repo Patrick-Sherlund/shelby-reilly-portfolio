@@ -104,6 +104,7 @@ export default function IntroductionPage() {
     const vw = isClient ? window.innerWidth : 1200
     const vh = isClient ? window.innerHeight : 800
     const isMobile = vw < 900
+    const isSmallMobile = vw < 380
 
 
     const diag = Math.hypot(vw, vh)
@@ -113,76 +114,6 @@ export default function IntroductionPage() {
     const POINT_SPEED = Math.round(200 * norm)
 
 
-    const [polaroidX, setPolaroidX] = useState<number>(0)
-    const [polaroidScale, setPolaroidScale] = useState<number>(() =>
-        isMobile ? Math.min(0.84, Math.max(0.62, vw / 560)) * 0.5 : 1
-    )
-
-    useEffect(() => {
-        if (!isMobile || !polaroidSectionRef.current || !polaroidInnerRef.current) return
-
-        const fitOnce = () => {
-            const wrap = polaroidSectionRef.current!
-            const child = polaroidInnerRef.current!
-
-            const wrapRect = wrap.getBoundingClientRect()
-            const childRect = child.getBoundingClientRect()
-            const currentScale = polaroidScale
-
-
-            const naturalW = childRect.width / currentScale
-            const naturalH = childRect.height / currentScale
-
-
-            const marginX = 20
-            const marginY = 20
-            const targetW = Math.max(240, wrapRect.width - marginX * 2)
-            const targetH = Math.max(180, wrapRect.height - marginY * 2)
-
-            const scaleW = targetW / naturalW
-            const scaleH = targetH / naturalH
-            const desired = Math.min(0.95, Math.max(0.58, Math.min(scaleW, scaleH))) * 0.5
-
-            const applyCenterClamp = () => {
-                const rect = child.getBoundingClientRect()
-
-                const wrapCenter = (wrapRect.left + wrapRect.right) / 2
-                const childCenter = (rect.left + rect.right) / 2
-                let shift = Math.round(wrapCenter - childCenter)
-
-                const leftAfter = rect.left + shift
-                const rightAfter = rect.right + shift
-                if (leftAfter < wrapRect.left + marginX) {
-                    shift += (wrapRect.left + marginX) - leftAfter
-                }
-                if (rightAfter > wrapRect.right - marginX) {
-                    shift -= rightAfter - (wrapRect.right - marginX)
-                }
-                setPolaroidX(shift)
-            }
-
-            if (Math.abs(desired - currentScale) > 0.01) {
-                setPolaroidScale(desired)
-                requestAnimationFrame(applyCenterClamp)
-            } else {
-                applyCenterClamp()
-            }
-        }
-
-        fitOnce()
-        const onResize = () => {
-            const base = Math.min(0.84, Math.max(0.62, window.innerWidth / 560)) * 0.5
-            setPolaroidScale(base)
-            requestAnimationFrame(fitOnce)
-        }
-        window.addEventListener('resize', onResize)
-        window.addEventListener('orientationchange', onResize)
-        return () => {
-            window.removeEventListener('resize', onResize)
-            window.removeEventListener('orientationchange', onResize)
-        }
-
-    }, [isMobile])
 
 
     useEffect(() => {
@@ -242,6 +173,7 @@ export default function IntroductionPage() {
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+                    offsetX: isMobile ? -window.innerWidth * 0.1 : 0,
                     chat: {
                         text: 'These are some of my past projects :)',
                         typingDuration: 800,
@@ -255,6 +187,7 @@ export default function IntroductionPage() {
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+                    offsetX: isMobile ? -window.innerWidth * 0.1 : 0,
                     chat: {
                         text: 'I have a Master\'s in Human-Computer Interaction from Georgia Tech',
                         typingDuration: 800,
@@ -313,20 +246,19 @@ export default function IntroductionPage() {
     const textTop = isMobile ? 0 : -50
 
 
-    const NOTE = isMobile ? 104 : 160
-    const DX = isMobile ? Math.round(NOTE * 0.10) : 10
+    const NOTE = isMobile ? (isSmallMobile ? 88 : 104) : 160
     const DY = isMobile ? Math.round(NOTE * 0.16) : 20
 
     const sticky1Pos = isMobile
-        ? {bottom: NOTE + DY, left: 40}
+        ? {bottom: NOTE + DY + 8, left: Math.max(20, Math.min(28, vw * 0.075))}
         : {bottom: 140, left: 50}
 
     const sticky2Pos = isMobile
-        ? {bottom: 8, left: DX}
+        ? {bottom: Math.max(32, Math.min(38, vh * 0.048)), left: Math.max(4, Math.min(8, vw * 0.02))}
         : {bottom: 0, left: 10}
 
     const sticky3Pos = isMobile
-        ? {bottom: Math.round(DY * 0.75) + 8, left: NOTE + DX + 14}
+        ? {bottom: Math.max(50, Math.min(58, vh * 0.072)), left: NOTE + Math.max(16, Math.min(20, vw * 0.053))}
         : {bottom: 20, left: 200}
 
 
@@ -336,8 +268,8 @@ export default function IntroductionPage() {
                 ref={topLeftRef}
                 style={{
                     position: 'absolute',
-                    top: 60,
-                    left: 60,
+                    top: isMobile ? Math.max(20, Math.min(24, vh * 0.03)) : 60,
+                    left: isMobile ? Math.max(12, Math.min(16, vw * 0.043)) : 60,
                     width: 1,
                     height: 1,
                     opacity: 0,
@@ -345,41 +277,37 @@ export default function IntroductionPage() {
                 }}
             />
 
-            <ContentWrapper>
-                <PolaroidContainer
-                    ref={polaroidSectionRef}
-                    style={
-                        isMobile
-                            ? ({
-                                ['--polaroidScale' as any]: polaroidScale,
-                                ['--polaroidX' as any]: `${polaroidX}px`,
-                                ['--polaroidY' as any]: '-16px'
-                            } as React.CSSProperties)
-                            : undefined
-                    }
+            <PolaroidContainer
+                ref={polaroidSectionRef}
+                style={
+                    isSmallMobile
+                        ? { transform: 'scale(0.85)', transformOrigin: 'top right' }
+                        : undefined
+                }
+            >
+                <PolaroidStage
+                    ref={polaroidInnerRef}
+                    className={isMobile ? 'mobile-compact-captions' : undefined}
                 >
-                    <PolaroidStage
-                        ref={polaroidInnerRef}
-                        className={isMobile ? 'mobile-compact-captions' : undefined}
-                    >
 
-                        <div
-                            ref={polaroidTopLeftRef}
-                            style={{
-                                position: 'absolute',
-                                top: 40,
-                                left: 180,
-                                width: 1,
-                                height: 1,
-                                opacity: 0,
-                                pointerEvents: 'none',
-                                zIndex: 100
-                            }}
-                        />
-                        <PolaroidCollection/>
-                    </PolaroidStage>
-                </PolaroidContainer>
+                    <div
+                        ref={polaroidTopLeftRef}
+                        style={{
+                            position: 'absolute',
+                            top: 40,
+                            left: 180,
+                            width: 1,
+                            height: 1,
+                            opacity: 0,
+                            pointerEvents: 'none',
+                            zIndex: 100
+                        }}
+                    />
+                    <PolaroidCollection/>
+                </PolaroidStage>
+            </PolaroidContainer>
 
+            <ContentWrapper>
                 <div
                     ref={textSectionRef}
                     style={{position: 'relative', top: textTop}}
@@ -414,10 +342,10 @@ export default function IntroductionPage() {
                         <SingleTextContainer>
                             <SparklesImage as="div">
                                 <GemDraw
-                                    width={160}
-                                    height={172}
+                                    width={isMobile ? Math.max(120, Math.min(180, vw * 0.48)) : 160}
+                                    height={isMobile ? Math.max(80, Math.min(119, vw * 0.32)) : 172}
                                     stroke="#FFFFFF"
-                                    strokeWidth={6}
+                                    strokeWidth={isMobile ? 4 : 6}
                                     duration={0.3}
                                     stagger={0.3}
                                     trigger="mount"
@@ -479,11 +407,14 @@ export default function IntroductionPage() {
                         ...sticky2Pos,
                         zIndex: 1,
                         transform: `translate(${noteOffsets.note2.x}px, ${noteOffsets.note2.y}px)`,
-                        cursor: dragInfoRef.current?.id === 'note2' ? 'grabbing' : 'grab'
+                        cursor: dragInfoRef.current?.id === 'note2' ? 'grabbing' : 'grab',
+                        fontSize: isMobile ? 'clamp(8px, 2.5vw, 11px)' : undefined
                     }}
                 >
-                    M.S. HCI @ Georgia Tech
-                    <Typography sx={{fontSize: 24}}>🐝</Typography>
+                    <div style={{fontSize: isMobile ? 'clamp(8px, 2.5vw, 11px)' : undefined}}>
+                        M.S. HCI @ Georgia Tech
+                    </div>
+                    <Typography sx={{fontSize: isMobile ? 'clamp(12px, 3vw, 14px)' : 24}}>🐝</Typography>
                 </StickyNote>
 
                 <StickyNote
@@ -491,7 +422,7 @@ export default function IntroductionPage() {
                     style={{
                         backgroundColor: '#FFFFFF',
                         width: NOTE, height: NOTE,
-                        paddingTop: isMobile ? 14 : 18,
+                        paddingTop: isMobile ? 8 : 18,
                         ...sticky3Pos,
                         zIndex: 2,
                         transform: `translate(${noteOffsets.note3.x}px, ${noteOffsets.note3.y}px)`,
@@ -501,8 +432,8 @@ export default function IntroductionPage() {
                     <Typography
                         sx={{
                             fontWeight: 800,
-                            fontSize: isMobile ? 16 : 20,
-                            mb: isMobile ? 1 : 1.5,
+                            fontSize: isMobile ? 'clamp(9px, 2.8vw, 11px)' : 20,
+                            mb: isMobile ? 0.3 : 1.5,
                             lineHeight: 1.1,
                             whiteSpace: 'nowrap',
                             textAlign: 'center'
@@ -514,11 +445,11 @@ export default function IntroductionPage() {
                         src={`${process.env.PUBLIC_URL}/images/intro/logos.png`}
                         alt="Previously at logos"
                         style={{
-                            width: '96%',
+                            width: isMobile ? '92%' : '96%',
                             height: 'auto',
                             objectFit: 'contain',
                             marginTop: isMobile ? 0 : 2,
-                            borderRadius: 8,
+                            borderRadius: isMobile ? 4 : 8,
                             padding: isMobile ? 0 : 2,
                             background: 'rgba(255,255,255,0.9)'
                         }}

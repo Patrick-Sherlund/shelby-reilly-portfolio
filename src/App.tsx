@@ -90,6 +90,11 @@ function AppContent() {
         h: window.innerHeight
     })
 
+    const isMobile = viewport.w < 900
+    const INTRO_MEDTRACKER_GAP = isMobile ? 100 : 0  // Half of original 200
+    const MEDTRACKER_BISHOP_GAP = isMobile ? 334 : 0  // 2/3 of original 400, plus 25%
+    const BISHOP_CODESIGN_GAP = isMobile ? 250 : 0    // Original 200, plus 25%
+
 
     const diag = Math.hypot(viewport.w, viewport.h)
     const norm = Math.min(1.0, Math.max(0.72, diag / 1450))
@@ -263,6 +268,111 @@ function AppContent() {
     }, [activeTool, stageScale, stagePos, clampStagePosition, setStageScale, setStagePos, currentRoute])
 
     useEffect(() => {
+        const isProjectPage = currentRoute === '#/medtracker-project' ||
+            currentRoute === '#/bishop-project' ||
+            currentRoute === '#/googlecodesign-project'
+        if (isProjectPage) return
+
+        const isWandActive = activeTool === 'emoji' && emojiSubMode === 'wand'
+        const needsGlobalTouch = (activeTool === 'hand' || activeTool === null || (activeTool === 'emoji' && emojiSubMode === 'stamp')) && !isWandActive
+        if (!needsGlobalTouch) return
+
+        let lastTouch: Touch | null = null
+        let lastTime: number = 0
+        let velocityY: number = 0
+        let momentumRAF: number | null = null
+
+        const stopMomentum = () => {
+            if (momentumRAF !== null) {
+                cancelAnimationFrame(momentumRAF)
+                momentumRAF = null
+            }
+        }
+
+        const handleGlobalTouchStart = (e: TouchEvent) => {
+            if (e.touches.length === 1) {
+                stopMomentum()
+                lastTouch = e.touches[0]
+                lastTime = Date.now()
+                velocityY = 0
+            }
+        }
+
+        const handleGlobalTouchMove = (e: TouchEvent) => {
+            if (e.touches.length === 1 && lastTouch) {
+                e.preventDefault()
+                const touch = e.touches[0]
+                const currentTime = Date.now()
+                const deltaTime = currentTime - lastTime
+                const deltaY = touch.clientY - lastTouch.clientY
+
+                if (deltaTime > 0) {
+                    velocityY = deltaY / deltaTime
+                }
+
+                setStagePos((prev) => {
+                    const newY = clampStagePosition(prev.y + deltaY)
+                    return {x: prev.x, y: newY}
+                })
+
+                lastTouch = touch
+                lastTime = currentTime
+            } else {
+                lastTouch = null
+            }
+        }
+
+        const handleGlobalTouchEnd = () => {
+            lastTouch = null
+
+            // Start momentum scrolling if velocity is significant
+            if (Math.abs(velocityY) > 0.05) {
+                const deceleration = 0.97
+                const minVelocity = 0.01
+
+                const animate = () => {
+                    velocityY *= deceleration
+
+                    if (Math.abs(velocityY) < minVelocity) {
+                        stopMomentum()
+                        return
+                    }
+
+                    setStagePos((prev) => {
+                        const deltaY = velocityY * 30
+                        const newY = clampStagePosition(prev.y + deltaY)
+
+                        // Stop momentum if we hit a boundary
+                        if (newY === prev.y) {
+                            stopMomentum()
+                            return prev
+                        }
+
+                        return {x: prev.x, y: newY}
+                    })
+
+                    momentumRAF = requestAnimationFrame(animate)
+                }
+
+                momentumRAF = requestAnimationFrame(animate)
+            }
+        }
+
+        window.addEventListener('touchstart', handleGlobalTouchStart, {passive: true})
+        window.addEventListener('touchmove', handleGlobalTouchMove, {passive: false})
+        window.addEventListener('touchend', handleGlobalTouchEnd, {passive: true})
+        window.addEventListener('touchcancel', handleGlobalTouchEnd, {passive: true})
+
+        return () => {
+            stopMomentum()
+            window.removeEventListener('touchstart', handleGlobalTouchStart)
+            window.removeEventListener('touchmove', handleGlobalTouchMove)
+            window.removeEventListener('touchend', handleGlobalTouchEnd)
+            window.removeEventListener('touchcancel', handleGlobalTouchEnd)
+        }
+    }, [activeTool, emojiSubMode, clampStagePosition, setStagePos, currentRoute])
+
+    useEffect(() => {
         if (prevScaleRef.current === 1 && stageScale !== 1) {
             yBeforeZoomRef.current = stagePos.y
             scrolledWhileZoomedRef.current = false
@@ -279,9 +389,29 @@ function AppContent() {
 
     const resetView = () => {
         const pageH = viewport.h
-        const approxIndex = Math.round(-stagePos.y / (pageH * stageScale))
-        const clampedIndex = Math.max(0, Math.min(3, approxIndex))
-        const targetY = -clampedIndex * pageH
+        const currentY = -stagePos.y / stageScale
+
+        // Calculate distances to each page
+        const pagePositions = [
+            0,
+            pageH + INTRO_MEDTRACKER_GAP,
+            pageH * 2 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP,
+            pageH * 3 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP
+        ]
+
+        // Find closest page
+        let closestIndex = 0
+        let minDistance = Math.abs(currentY - pagePositions[0])
+
+        for (let i = 1; i < pagePositions.length; i++) {
+            const distance = Math.abs(currentY - pagePositions[i])
+            if (distance < minDistance) {
+                minDistance = distance
+                closestIndex = i
+            }
+        }
+
+        const targetY = -pagePositions[closestIndex]
         setStageScale(1)
         setStagePos({x: 0, y: targetY})
     }
@@ -793,15 +923,15 @@ function AppContent() {
                                  $activeTool={activeTool}>
                         <IntroductionPage/>
                     </PageWrapper>
-                    <PageWrapper baseY={viewport.h} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}
+                    <PageWrapper baseY={viewport.h + INTRO_MEDTRACKER_GAP} translateX={stagePos.x} translateY={stagePos.y} scale={stageScale}
                                  $activeTool={activeTool}>
                         <MedTrackerPage/>
                     </PageWrapper>
-                    <PageWrapper baseY={viewport.h * 2} translateX={stagePos.x} translateY={stagePos.y}
+                    <PageWrapper baseY={viewport.h * 2 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP} translateX={stagePos.x} translateY={stagePos.y}
                                  scale={stageScale} $activeTool={activeTool}>
                         <ProjectBishopPage/>
                     </PageWrapper>
-                    <PageWrapper baseY={viewport.h * 3} translateX={stagePos.x} translateY={stagePos.y}
+                    <PageWrapper baseY={viewport.h * 3 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP} translateX={stagePos.x} translateY={stagePos.y}
                                  scale={stageScale} $activeTool={activeTool}>
                         <GoogleCodesignPage/>
                     </PageWrapper>

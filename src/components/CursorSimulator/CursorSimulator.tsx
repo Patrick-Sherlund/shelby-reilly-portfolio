@@ -41,6 +41,8 @@ export type Waypoint = {
     speed?: number
     anchor?: Anchor
     pathStyle?: PathStyle
+    offsetX?: number
+    offsetY?: number
     midOffsetX1?: number
     midOffsetY1?: number
     midOffsetX2?: number
@@ -162,6 +164,11 @@ function ChatBubble({
     cursorWidth: number
     cursorHeight: number
 }) {
+    const isMobile = window.innerWidth < 900
+    const fontSize = isMobile ? 11 : 16
+    const padding = isMobile ? '6px 10px' : '8px 16px'
+    const borderRadius = isMobile ? 14 : 24
+
     return (
         <div
             style={{
@@ -173,13 +180,13 @@ function ChatBubble({
                 zIndex: 2147483647,
                 backgroundColor: bgColor,
                 border: `2px solid ${borderColor}`,
-                borderTopRightRadius: 24,
-                borderBottomLeftRadius: 24,
-                borderBottomRightRadius: 24,
+                borderTopRightRadius: borderRadius,
+                borderBottomLeftRadius: borderRadius,
+                borderBottomRightRadius: borderRadius,
                 borderTopLeftRadius: 2,
-                padding: '8px 16px',
+                padding,
                 color: '#fff',
-                fontSize: 16,
+                fontSize,
                 fontWeight: 'bold',
                 fontFamily: 'Futura, Arial, sans-serif',
                 whiteSpace: 'nowrap'
@@ -205,8 +212,12 @@ function NameLabel({
     typing: boolean
     bgColor?: string
 }) {
-    const CHAT_HEIGHT = 28
+    const isMobile = window.innerWidth < 900
+    const CHAT_HEIGHT = isMobile ? 20 : 28
+    const fontSize = isMobile ? 9 : 12
+    const padding = isMobile ? '1px 4px' : '2px 6px'
     const offsetY = cursorHeight / 2 + 10 + (typing ? CHAT_HEIGHT + 4 : 0)
+
     return (
         <div
             style={{
@@ -218,10 +229,10 @@ function NameLabel({
                 backgroundColor: bgColor,
                 border: '2px solid #5160e1ff',
                 color: '#fff',
-                fontSize: 12,
+                fontSize,
                 fontWeight: 600,
                 fontFamily: 'Futura, Arial, sans-serif',
-                padding: '2px 6px',
+                padding,
                 borderRadius: 0,
                 whiteSpace: 'nowrap'
             }}
@@ -494,17 +505,21 @@ export function CursorSimulator({
         const rect = w.element.getBoundingClientRect()
 
         const anchorPos = getAnchorPosition(rect, w.anchor || 'center', stagePos.y, stagePos.x, stageScale)
+        const targetPos = {
+            x: anchorPos.x + (w.offsetX || 0),
+            y: anchorPos.y + (w.offsetY || 0)
+        }
         const stPos = {x: position.x, y: position.y}
-        const distVal = distance(stPos, anchorPos)
+        const distVal = distance(stPos, targetPos)
         const speedVal = w.speed || 150
         const totalTime = (distVal / speedVal) * 1000
         let cp1 = stPos
-        let cp2 = anchorPos
+        let cp2 = targetPos
         if (w.pathStyle === 'bezier') {
-            const mx1 = (stPos.x + anchorPos.x) / 2 + (w.midOffsetX1 || 0)
-            const my1 = (stPos.y + anchorPos.y) / 2 + (w.midOffsetY1 || 0)
-            const mx2 = (stPos.x + anchorPos.x) / 2 + (w.midOffsetX2 || 0)
-            const my2 = (stPos.y + anchorPos.y) / 2 + (w.midOffsetY2 || 0)
+            const mx1 = (stPos.x + targetPos.x) / 2 + (w.midOffsetX1 || 0)
+            const my1 = (stPos.y + targetPos.y) / 2 + (w.midOffsetY1 || 0)
+            const mx2 = (stPos.x + targetPos.x) / 2 + (w.midOffsetX2 || 0)
+            const my2 = (stPos.y + targetPos.y) / 2 + (w.midOffsetY2 || 0)
             cp1 = {x: mx1, y: my1}
             cp2 = {x: mx2, y: my2}
         }
@@ -512,7 +527,7 @@ export function CursorSimulator({
             start: stPos,
             cp1,
             cp2,
-            end: anchorPos,
+            end: targetPos,
             total: totalTime,
             startTime: performance.now(),
             wait: w.waitTime || 0

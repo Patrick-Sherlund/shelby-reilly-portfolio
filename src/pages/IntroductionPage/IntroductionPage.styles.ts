@@ -12,8 +12,8 @@ export const MainWrapper = styled('div')(({ theme }) => ({
     position: 'relative',
     pointerEvents: 'auto',
     [theme.breakpoints.down('md')]: {
-        justifyContent: 'flex-start',
-        paddingTop: 72,
+        justifyContent: 'center',
+        paddingTop: 0,
         paddingBottom: 'max(24px, env(safe-area-inset-bottom))'
     }
 }))
@@ -23,23 +23,22 @@ export const PolaroidContainer = styled('div')(({ theme }) => ({
     transform: 'translateX(10vw)',
     willChange: 'transform',
     [theme.breakpoints.down('md')]: {
-
-        width: 'calc(100% + 80px)',
-        height: 0,
-        maxWidth: 'none',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        margin: '0 0 8px 0',
-        position: 'relative',
+        position: 'absolute',
+        top: 'clamp(56px, 10vh, 90px)',
+        right: 'clamp(4px, 1vw, 12px)',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '52vw',
+        left: 'auto',
+        transform: 'none',
+        margin: '0',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'flex-start',
-
-
-        padding: '24px 16px 10px',
-
-        minHeight: 'calc(clamp(180px, 30vh, 280px) + 34px)',
-        overflow: 'hidden'
+        padding: '0',
+        minHeight: 'auto',
+        overflow: 'visible',
+        zIndex: 2
     }
 }))
 
@@ -47,9 +46,8 @@ export const PolaroidStage = styled('div')(({ theme }) => ({
 
     pointerEvents: 'none',
     [theme.breakpoints.down('md')]: {
-        transform:
-            'translate(var(--polaroidX, 0px), var(--polaroidY, 0px)) scale(var(--polaroidScale, 0.8))',
-        transformOrigin: 'top center',
+        transform: 'scale(0.38)',
+        transformOrigin: 'top right',
         willChange: 'transform',
         pointerEvents: 'none',
         display: 'flex',
@@ -79,14 +77,20 @@ export const StickyNoteTextBold = styled('span')(({ theme }) => ({
     fontSize: "16px",
     fontWeight: "600",
     display: "inline",
-
+    [theme.breakpoints.down('md')]: {
+        fontSize: 'clamp(8px, 2.5vw, 11px)',
+        fontWeight: "700"
+    }
 }));
 
 export const StickyNoteTextRegular = styled('span')(({ theme }) => ({
     fontSize: "16px",
     fontWeight: "200",
-        display: "inline"
-
+    display: "inline",
+    [theme.breakpoints.down('md')]: {
+        fontSize: 'clamp(8px, 2.5vw, 11px)',
+        fontWeight: "300"
+    }
 }));
 
 export const TextsWrapper = styled('div')(({ theme }) => ({
@@ -97,11 +101,12 @@ export const TextsWrapper = styled('div')(({ theme }) => ({
     transform: 'translate(-9vw, -9vh)',
     [theme.breakpoints.down('md')]: {
         transform: 'none',
-        padding: '0 16px',
-        maxWidth: '92vw',
-        gap: '12px',
+        padding: '0 12px',
+        maxWidth: '100%',
+        gap: '14px',
         alignItems: 'flex-start',
-        textAlign: 'center'
+        textAlign: 'left',
+        marginTop: '0px'
     }
 }))
 
@@ -118,11 +123,23 @@ export const SingleTextContainer = styled('div')(({ theme }) => ({
     lineHeight: 1.2,
     overflow: 'visible',
     [theme.breakpoints.down('md')]: {
-        fontSize: 'clamp(28px, 9vw, 44px)',
-        maxWidth: '92vw',
+        fontSize: 'clamp(32px, 9vw, 48px)',
+        maxWidth: '90vw',
         width: 'fit-content',
         display: 'inline-block',
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
+        padding: '12px 20px',
+        '&:first-of-type': {
+            fontSize: 'clamp(48px, 12vw, 64px)',
+            padding: '12px 28px',
+            letterSpacing: '-0.02em'
+        },
+        '&:last-of-type': {
+            fontSize: 'clamp(32px, 9vw, 48px)',
+            padding: '12px 24px',
+            maxWidth: '90vw',
+            letterSpacing: '-0.01em'
+        }
     }
 }))
 
@@ -134,10 +151,10 @@ export const SparklesImage = styled('img')(({ theme }) => ({
     zIndex: 10,
     pointerEvents: 'none',
     [theme.breakpoints.down('md')]: {
-        width: 'clamp(64px, 12vw, 96px)',
         height: 'auto',
-        bottom: '130%',
-        left: '-28px',
+        bottom: 'auto',
+        top: 'clamp(-110px, -13vh, -80px)',
+        left: 'clamp(-100px, -12vw, -75px)',
         right: 'auto'
     }
 }))
@@ -177,10 +194,11 @@ export const StickyNote = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         width: 104,
         height: 104,
-        padding: '10px',
-        fontSize: 'clamp(12px, 3.4vw, 14px)',
+        padding: '6px',
+        fontSize: 'clamp(8px, 2.5vw, 11px)',
         wordBreak: 'break-word',
-        hyphens: 'auto'
+        hyphens: 'auto',
+        lineHeight: 1.2
     }
 }))
 
@@ -191,6 +209,8 @@ export const ContentWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     [theme.breakpoints.down('md')]: {
         transform: 'none',
-        width: '100%'
+        width: '100%',
+        position: 'relative',
+        alignItems: 'center'
     }
 }))

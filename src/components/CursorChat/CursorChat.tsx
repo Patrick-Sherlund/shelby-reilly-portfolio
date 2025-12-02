@@ -157,29 +157,37 @@ export default function CursorChat() {
             }}
         >
 
-            {(sentText || open) && (
-                <div
-                    style={{
-                        position: 'relative',
-                        backgroundColor: '#5263FF',
-                        border: '2px solid #3646d9ff',
-                        borderTopRightRadius: 24,
-                        borderBottomLeftRadius: 24,
-                        borderBottomRightRadius: 24,
-                        borderTopLeftRadius: 2,
-                        padding: '8px 16px',
-                        color: '#fff',
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                        fontFamily: 'Futura, Arial, sans-serif',
-                        whiteSpace: 'nowrap',
-                        minHeight: 28,
-                        display: 'flex',
-                        alignItems: 'center',
-                        opacity: bubbleOpacity,
-                        transition: 'opacity 500ms ease'
-                    }}
-                >
+            {(sentText || open) && (() => {
+                const isMobile = window.innerWidth < 900
+                const fontSize = isMobile ? 11 : 16
+                const padding = isMobile ? '6px 10px' : '8px 16px'
+                const borderRadius = isMobile ? 14 : 24
+                const minHeight = isMobile ? 20 : 28
+
+                return (
+                    <div
+                        style={{
+                            position: 'relative',
+                            backgroundColor: '#5263FF',
+                            border: '2px solid #3646d9ff',
+                            borderTopRightRadius: borderRadius,
+                            borderBottomLeftRadius: borderRadius,
+                            borderBottomRightRadius: borderRadius,
+                            borderTopLeftRadius: 2,
+                            padding,
+                            color: '#fff',
+                            fontSize,
+                            fontWeight: 'bold',
+                            fontFamily: 'Futura, Arial, sans-serif',
+                            whiteSpace: 'nowrap',
+                            minHeight,
+                            display: 'flex',
+                            alignItems: 'center',
+                            opacity: bubbleOpacity,
+                            transition: 'opacity 500ms ease'
+                        }}
+                    >
+
 
                     {sentText && (
                         <div
@@ -198,9 +206,10 @@ export default function CursorChat() {
                         </div>
                     )}
 
-                    {text || ' '}
-                </div>
-            )}
+                        {text || ' '}
+                    </div>
+                )
+            })()}
         </div>
     )
 } 
