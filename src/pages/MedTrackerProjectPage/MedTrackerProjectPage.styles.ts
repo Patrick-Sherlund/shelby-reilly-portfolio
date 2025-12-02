@@ -14,7 +14,8 @@ export const ProjectPageContainer = styled('div')(({theme}) => ({
     backgroundColor: theme.palette.background.default,
     backgroundImage: 'none',
     color: theme.palette.text.primary,
-    transition: 'background-color 0.3s ease, color 0.3s ease'
+    transition: 'background-color 0.3s ease, color 0.3s ease',
+    overflow: 'visible'
 }))
 
 export const BoardContent = styled('div')(() => ({
@@ -23,7 +24,8 @@ export const BoardContent = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'center',
     paddingBottom: 60,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    overflow: 'visible'
 }))
 
 export const ContentWrapper = styled('div')(({theme}) => ({
@@ -34,6 +36,7 @@ export const ContentWrapper = styled('div')(({theme}) => ({
     margin: '0 auto',
     padding: '40px 32px 40px 32px',
     boxSizing: 'border-box',
+    overflow: 'visible',
     [theme.breakpoints.down('md')]: {padding: '32px 24px 40px 24px'},
     [theme.breakpoints.down('sm')]: {padding: '24px 16px 40px 16px'},
 }))
@@ -276,7 +279,12 @@ export const SectionDivider = styled('div')(() => ({
 export const Section = styled('div')(({theme}) => ({
     marginBottom: 60,
     color: theme.palette.text.primary,
-    position: 'relative'
+    position: 'relative',
+    // Ensure no overflow hidden that would break sticky positioning
+    overflow: 'visible',
+    [theme.breakpoints.down('md')]: {
+        paddingBottom: 104
+    }
 }))
 export const SectionTitle = styled('h2')(({theme}) => ({
     margin: '0 0 28px 0',
@@ -431,77 +439,151 @@ export const StepContent = styled('div')(() => ({
 }))
 
 // Mobile-specific sticky step tracker styles
-export const MobileStepTracker = styled('div')(({theme}) => ({
-    display: 'none',
+export const MobileStepTracker = styled('div')<{ $pinned?: boolean }>(({theme, $pinned}) => ({
+    display: 'none', // Default: hidden
+    position: $pinned ? 'fixed' : 'sticky',
+    top: 'auto',
+    bottom: $pinned ? 0 : 0,
+    left: 0,
+    right: 0,
+    width: '100%',
+    zIndex: $pinned ? 1400 : 999,
+    marginBottom: 0,
+    boxSizing: 'border-box',
+
     [theme.breakpoints.down('md')]: {
-        display: 'block',
-        position: 'sticky',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        backgroundColor: theme.palette.background.default,
-        borderBottom: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
+        display: 'block', // Show on mobile
+        backgroundColor: theme.palette.mode === 'dark'
+            ? 'rgba(12, 12, 12, 0.70)'
+            : 'rgba(255, 255, 255, 0.70)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderBottom: theme.palette.mode === 'dark'
+            ? '1px solid rgba(255,255,255,0.12)'
+            : '1px solid rgba(0,0,0,0.12)',
         overflowX: 'auto',
         overflowY: 'hidden',
+        scrollPaddingLeft: 32,
+        scrollPaddingRight: 32,
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
+        WebkitOverflowScrolling: 'touch',
+        paddingLeft: 16,
+        paddingRight: 16,
         '&::-webkit-scrollbar': {
             display: 'none'
         },
-        // Shadow for depth
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        boxShadow: theme.palette.mode === 'dark'
+            ? '0 8px 26px rgba(0,0,0,0.28)'
+            : '0 8px 22px rgba(0,0,0,0.12)',
     }
 }))
 
 export const MobileStepTrackInner = styled('div')(() => ({
     display: 'flex',
-    gap: '8px',
-    padding: '12px 16px',
-    minWidth: 'max-content',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 10,
+    padding: '14px 16px',
+    width: '100%',
+    position: 'relative',
+    // Progress line
+    '&::before': {
+        content: '""',
+        position: 'absolute',
+        left: 16,
+        right: 16,
+        top: '50%',
+        height: 2,
+        background: 'linear-gradient(90deg, rgba(27,24,135,0.2) 0%, rgba(27,24,135,0.4) 50%, rgba(27,24,135,0.2) 100%)',
+        transform: 'translateY(-50%)',
+        zIndex: 0,
+        pointerEvents: 'none',
+    }
 }))
 
 export const MobileStepChip = styled('button')<{ $active?: boolean }>(({$active, theme}) => ({
     flex: '0 0 auto',
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
-    padding: '8px 12px',
-    borderRadius: '8px',
-    border: '1px solid',
+    gap: '8px',
+    padding: '10px 14px',
+    borderRadius: '12px',
+    border: '2px solid',
     borderColor: $active
-        ? (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.28)')
-        : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.14)'),
+        ? INDIGO
+        : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'),
     background: $active
-        ? (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')
-        : 'transparent',
+        ? (theme.palette.mode === 'dark' ? 'rgba(27,24,135,0.2)' : 'rgba(27,24,135,0.1)')
+        : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'),
     cursor: 'pointer',
-    transition: 'all .2s ease',
+    transition: 'all .3s cubic-bezier(0.4, 0, 0.2, 1)',
     whiteSpace: 'nowrap',
     fontSize: '13px',
-    fontWeight: 700,
-    color: theme.palette.text.primary,
-    boxShadow: $active ? '0 4px 12px rgba(0,0,0,0.2)' : 'none',
+    fontWeight: $active ? 800 : 700,
+    color: $active
+        ? (theme.palette.mode === 'dark' ? '#FFFFFF' : theme.palette.text.primary)
+        : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)'),
+    boxShadow: $active
+        ? '0 4px 16px rgba(27,24,135,0.3), 0 2px 8px rgba(0,0,0,0.15)'
+        : 'none',
+    transform: $active ? 'scale(1.05)' : 'scale(1)',
+    zIndex: $active ? 2 : 1,
+    position: 'relative',
+    '&:hover': {
+        transform: $active ? 'scale(1.05)' : 'scale(1.02)',
+        borderColor: $active
+            ? INDIGO
+            : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'),
+    },
     '&:active': {
-        transform: 'scale(0.96)',
-    }
+        transform: 'scale(0.98)',
+    },
+    // Glow effect for active
+    ...($active && {
+        '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: -2,
+            left: -2,
+            right: -2,
+            bottom: -2,
+            borderRadius: '12px',
+            background: `linear-gradient(135deg, ${INDIGO}, rgba(27,24,135,0.6))`,
+            zIndex: -1,
+            opacity: 0.3,
+            filter: 'blur(8px)',
+        }
+    }),
 }))
 
-export const MobileStepBadge = styled('span')(({theme}) => ({
+export const MobileStepBadge = styled('span')<{ $active?: boolean }>(({$active, theme}) => ({
     display: 'inline-grid',
     placeItems: 'center',
-    width: '20px',
-    height: '20px',
+    width: '24px',
+    height: '24px',
     borderRadius: '50%',
     fontWeight: 900,
-    fontSize: '11px',
+    fontSize: '12px',
     color: '#FFFFFF',
-    background: INDIGO,
+    background: $active
+        ? `linear-gradient(135deg, ${INDIGO} 0%, rgba(27,24,135,0.8) 100%)`
+        : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'),
     flexShrink: 0,
+    transition: 'all .3s ease',
+    boxShadow: $active
+        ? '0 2px 8px rgba(27,24,135,0.4), inset 0 1px 0 rgba(255,255,255,0.2)'
+        : 'none',
 }))
 
 export const MobileStepLabel = styled('span')(() => ({
-    fontSize: '12px',
-    fontWeight: 700,
+    fontSize: '13px',
+    fontWeight: 800,
     lineHeight: 1.2,
+    letterSpacing: '0.3px',
+}))
+
+export const MobileStepSpacer = styled('div')<{ $height?: number }>(({ $height }) => ({
+    height: 0,
+    transition: 'height 160ms ease',
 }))

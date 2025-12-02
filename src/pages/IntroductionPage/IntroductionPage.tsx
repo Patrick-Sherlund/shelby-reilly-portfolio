@@ -135,7 +135,9 @@ export default function IntroductionPage() {
                     speed: SPEED,
                     anchor: 'center',
                     pathStyle: 'straight',
-                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`
+                    cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
+                    offsetX: isMobile ? 10 : 0,
+                    offsetY: isMobile ? 10 : 0
                 },
                 {
                     element: topLeftRef.current,
@@ -143,6 +145,8 @@ export default function IntroductionPage() {
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/wave.png`,
+                    offsetX: isMobile ? 10 : 0,
+                    offsetY: isMobile ? 10 : 0,
                     wave: {
                         waveSpeed: WAVE_SPEED,
                         waveDuration: 1800
@@ -173,7 +177,7 @@ export default function IntroductionPage() {
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
-                    offsetX: isMobile ? -window.innerWidth * 0.1 : 0,
+                    offsetX: isMobile ? -window.innerWidth * 0.2 : 0,
                     chat: {
                         text: 'These are some of my past projects :)',
                         typingDuration: 800,
@@ -187,9 +191,9 @@ export default function IntroductionPage() {
                     anchor: 'center',
                     pathStyle: 'straight',
                     cursor: `${process.env.PUBLIC_URL}/images/regular-cursor.png`,
-                    offsetX: isMobile ? -window.innerWidth * 0.1 : 0,
+                    offsetX: isMobile ? -window.innerWidth * 0.14 : 0,
                     chat: {
-                        text: 'I have a Master\'s in Human-Computer Interaction from Georgia Tech',
+                        text: 'I have a Master\'s in HCI from Georgia Tech',
                         typingDuration: 800,
                         startTiming: 'after',
                         waitAfterTyping: 3400

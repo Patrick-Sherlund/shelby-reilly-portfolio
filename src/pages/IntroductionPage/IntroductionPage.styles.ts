@@ -25,7 +25,7 @@ export const PolaroidContainer = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         position: 'absolute',
         top: 'clamp(56px, 10vh, 90px)',
-        right: 'clamp(4px, 1vw, 12px)',
+        right: 'clamp(16px, 5vw, 32px)',
         width: 'auto',
         height: 'auto',
         maxWidth: '52vw',

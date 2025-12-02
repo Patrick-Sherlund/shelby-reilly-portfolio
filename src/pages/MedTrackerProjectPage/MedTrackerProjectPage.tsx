@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import Box from '@mui/material/Box'
 import FloatingTopNav from "../../components/FloatingTopNav/FloatingTopNav";
 import {GlobalStyles, Typography, useTheme} from '@mui/material';
@@ -19,6 +19,7 @@ import {
     MobileStepLabel,
     MobileStepTrackInner,
     MobileStepTracker,
+    MobileStepSpacer,
     ProjectPageContainer,
     Section,
     SectionContent,
@@ -56,7 +57,10 @@ import IPhoneCarousel from '../../components/IPhoneCarousel/IPhoneCarousel'
 
 export default function ProjectPage() {
 
+    const MOBILE_MEDIA_QUERY = '(max-width:900px)'
+
     const [activeDesignStep, setActiveDesignStep] = useState<number>(0)
+    const [isMobile, setIsMobile] = useState<boolean>(false)
 
     const step1Ref = useRef<HTMLDivElement>(null)
     const step2Ref = useRef<HTMLDivElement>(null)
@@ -200,6 +204,127 @@ export default function ProjectPage() {
     const rStickyInnerRef = useRef<HTMLDivElement>(null)
     const [rStickyStyle, setRStickyStyle] = useState<React.CSSProperties>({})
     const [rSlotMinH, setRSlotMinH] = useState<number>(0)
+
+    const researchSectionRef = useRef<HTMLDivElement>(null)
+    const designSectionRef = useRef<HTMLDivElement>(null)
+    const researchTrackerRef = useRef<HTMLDivElement>(null)
+    const designTrackerRef = useRef<HTMLDivElement>(null)
+    const [researchTrackerHeight, setResearchTrackerHeight] = useState<number>(0)
+    const [designTrackerHeight, setDesignTrackerHeight] = useState<number>(0)
+    const [pinResearchTracker, setPinResearchTracker] = useState(false)
+    const [pinDesignTracker, setPinDesignTracker] = useState(false)
+    const researchChipRefs = useRef<Array<HTMLButtonElement | null>>([])
+    const designChipRefs = useRef<Array<HTMLButtonElement | null>>([])
+    const setResearchChipRef = useCallback((el: HTMLButtonElement | null, idx: number) => {
+        researchChipRefs.current[idx] = el
+    }, [])
+    const setDesignChipRef = useCallback((el: HTMLButtonElement | null, idx: number) => {
+        designChipRefs.current[idx] = el
+    }, [])
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        const mql = window.matchMedia(MOBILE_MEDIA_QUERY)
+        const handler = (event: MediaQueryListEvent) => setIsMobile(event.matches)
+        setIsMobile(mql.matches)
+        mql.addEventListener('change', handler)
+        return () => mql.removeEventListener('change', handler)
+    }, [])
+
+    useEffect(() => {
+        const el = researchTrackerRef.current
+        if (!el) return
+        const measure = () => setResearchTrackerHeight(el.getBoundingClientRect().height)
+        const ro = new ResizeObserver(measure)
+        ro.observe(el)
+        measure()
+        return () => ro.disconnect()
+    }, [])
+
+    useEffect(() => {
+        const el = designTrackerRef.current
+        if (!el) return
+        const measure = () => setDesignTrackerHeight(el.getBoundingClientRect().height)
+        const ro = new ResizeObserver(measure)
+        ro.observe(el)
+        measure()
+        return () => ro.disconnect()
+    }, [])
+
+    useEffect(() => {
+        const MOBILE_TOP_OFFSET = 96
+        const recompute = () => {
+            if (!isMobile) {
+                setPinResearchTracker(false)
+                setPinDesignTracker(false)
+                return
+            }
+
+            const researchRect = researchSectionRef.current?.getBoundingClientRect()
+            const designRect = designSectionRef.current?.getBoundingClientRect()
+            const researchSpace = researchTrackerHeight ? researchTrackerHeight + 32 : 0
+            const designSpace = designTrackerHeight ? designTrackerHeight + 32 : 0
+            const viewportH = window.innerHeight || 0
+            const researchStart = viewportH - researchSpace
+            const designStart = viewportH - designSpace
+
+            setPinResearchTracker(
+                !!researchRect &&
+                researchRect.top <= researchStart &&
+                researchRect.bottom >= researchSpace
+            )
+
+            setPinDesignTracker(
+                !!designRect &&
+                designRect.top <= designStart &&
+                designRect.bottom >= designSpace
+            )
+        }
+
+        recompute()
+        window.addEventListener('scroll', recompute, {passive: true})
+        window.addEventListener('resize', recompute)
+        return () => {
+            window.removeEventListener('scroll', recompute)
+            window.removeEventListener('resize', recompute)
+        }
+    }, [isMobile, designTrackerHeight, researchTrackerHeight])
+
+    useEffect(() => {
+        if (!isMobile) return
+        const chip = researchChipRefs.current[activeResearchStep]
+        const container = researchTrackerRef.current
+        if (!chip || !container) return
+
+        const rect = container.getBoundingClientRect()
+        const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 0)
+        if (!inView) return
+
+        if (activeResearchStep === 0) {
+            container.scrollTo({left: 0, behavior: 'smooth'})
+            chip.scrollIntoView({behavior: 'smooth', inline: 'start', block: 'nearest'})
+        } else {
+            chip.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'})
+        }
+    }, [activeResearchStep, isMobile])
+
+    useEffect(() => {
+        if (!isMobile) return
+        const chip = designChipRefs.current[activeDesignStep]
+        const container = designTrackerRef.current
+        if (!chip || !container) return
+
+        const rect = container.getBoundingClientRect()
+        const inView = rect.bottom > 0 && rect.top < (window.innerHeight || 0)
+        if (!inView) return
+
+        if (activeDesignStep === 0) {
+            container.scrollTo({left: 0, behavior: 'smooth'})
+            chip.scrollIntoView({behavior: 'smooth', inline: 'start', block: 'nearest'})
+        } else {
+            chip.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'})
+        }
+    }, [activeDesignStep, isMobile])
 
 
     useEffect(() => {
@@ -431,8 +556,7 @@ export default function ProjectPage() {
                 'html, body, #root': {
                     height: 'auto',
                     minHeight: '100%',
-                    overflowY: 'auto',
-                    overflowX: 'hidden'
+                    overflowY: 'auto'
                 }
             }}/>
 
@@ -516,38 +640,43 @@ export default function ProjectPage() {
 
                     <SectionDivider/>
 
-                    <Section id="research">
+                    <Section id="research" ref={researchSectionRef}>
                         <SectionTitle>Research</SectionTitle>
 
                         {/* Mobile Sticky Step Tracker for Research */}
-                        <MobileStepTracker>
+                        <MobileStepSpacer $height={pinResearchTracker ? researchTrackerHeight : 0}/>
+                        <MobileStepTracker ref={researchTrackerRef} $pinned={pinResearchTracker}>
                             <MobileStepTrackInner>
                                 <MobileStepChip
                                     $active={activeResearchStep === 0}
+                                    ref={(el) => setResearchChipRef(el, 0)}
                                     onClick={() => rStep1Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
                                 >
-                                    <MobileStepBadge>1</MobileStepBadge>
+                                    <MobileStepBadge $active={activeResearchStep === 0}>1</MobileStepBadge>
                                     <MobileStepLabel>On-Site Research</MobileStepLabel>
                                 </MobileStepChip>
                                 <MobileStepChip
                                     $active={activeResearchStep === 1}
+                                    ref={(el) => setResearchChipRef(el, 1)}
                                     onClick={() => rStep2Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
                                 >
-                                    <MobileStepBadge>2</MobileStepBadge>
+                                    <MobileStepBadge $active={activeResearchStep === 1}>2</MobileStepBadge>
                                     <MobileStepLabel>Affinity Mapping</MobileStepLabel>
                                 </MobileStepChip>
                                 <MobileStepChip
                                     $active={activeResearchStep === 2}
+                                    ref={(el) => setResearchChipRef(el, 2)}
                                     onClick={() => rStep3Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
                                 >
-                                    <MobileStepBadge>3</MobileStepBadge>
+                                    <MobileStepBadge $active={activeResearchStep === 2}>3</MobileStepBadge>
                                     <MobileStepLabel>Prioritization</MobileStepLabel>
                                 </MobileStepChip>
                                 <MobileStepChip
                                     $active={activeResearchStep === 3}
+                                    ref={(el) => setResearchChipRef(el, 3)}
                                     onClick={() => rStep4Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
                                 >
-                                    <MobileStepBadge>4</MobileStepBadge>
+                                    <MobileStepBadge $active={activeResearchStep === 3}>4</MobileStepBadge>
                                     <MobileStepLabel>Problem Statement</MobileStepLabel>
                                 </MobileStepChip>
                             </MobileStepTrackInner>
@@ -567,6 +696,7 @@ export default function ProjectPage() {
                                 <Box
                                     ref={rStickySlotRef}
                                     sx={{
+                                        display: {xs: 'none', md: 'block'},
                                         position: 'relative',
                                         alignSelf: 'start',
                                         minHeight: {md: rSlotMinH || 'auto'}
@@ -827,31 +957,35 @@ export default function ProjectPage() {
 
                     <SectionDivider/>
 
-                    <Section id="design">
+                    <Section id="design" ref={designSectionRef}>
                         <SectionTitle>Design</SectionTitle>
 
                         {/* Mobile Sticky Step Tracker for Design */}
-                        <MobileStepTracker>
+                        <MobileStepSpacer $height={pinDesignTracker ? designTrackerHeight : 0}/>
+                        <MobileStepTracker ref={designTrackerRef} $pinned={pinDesignTracker}>
                             <MobileStepTrackInner>
                                 <MobileStepChip
                                     $active={activeDesignStep === 0}
+                                    ref={(el) => setDesignChipRef(el, 0)}
                                     onClick={() => step1Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
                                 >
-                                    <MobileStepBadge>1</MobileStepBadge>
+                                    <MobileStepBadge $active={activeDesignStep === 0}>1</MobileStepBadge>
                                     <MobileStepLabel>User Flows</MobileStepLabel>
                                 </MobileStepChip>
                                 <MobileStepChip
                                     $active={activeDesignStep === 1}
+                                    ref={(el) => setDesignChipRef(el, 1)}
                                     onClick={() => step2Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
                                 >
-                                    <MobileStepBadge>2</MobileStepBadge>
+                                    <MobileStepBadge $active={activeDesignStep === 1}>2</MobileStepBadge>
                                     <MobileStepLabel>Data Mapping</MobileStepLabel>
                                 </MobileStepChip>
                                 <MobileStepChip
                                     $active={activeDesignStep === 2}
+                                    ref={(el) => setDesignChipRef(el, 2)}
                                     onClick={() => step3Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
                                 >
-                                    <MobileStepBadge>3</MobileStepBadge>
+                                    <MobileStepBadge $active={activeDesignStep === 2}>3</MobileStepBadge>
                                     <MobileStepLabel>UI Design</MobileStepLabel>
                                 </MobileStepChip>
                             </MobileStepTrackInner>
@@ -871,7 +1005,12 @@ export default function ProjectPage() {
 
                                 <Box
                                     ref={stickySlotRef}
-                                    sx={{position: 'relative', alignSelf: 'start', minHeight: {md: slotMinH || 'auto'}}}
+                                    sx={{
+                                        display: {xs: 'none', md: 'block'},
+                                        position: 'relative',
+                                        alignSelf: 'start',
+                                        minHeight: {md: slotMinH || 'auto'}
+                                    }}
                                 >
                                     <Box ref={stickyInnerRef} style={stickyStyle}>
                                         {StepperRailDesign}

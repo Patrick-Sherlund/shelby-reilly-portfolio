@@ -206,10 +206,10 @@ export const CarouselShell = styled('div')(() => ({
 export const CarouselTrack = styled('div')(() => ({
     display: 'grid',
     gridAutoFlow: 'column',
-    gridAutoColumns: '72%',
-    gap: '4px',
+    gridAutoColumns: '70%',
+    gap: '12px',
     overflowX: 'auto',
-    padding: '0 16px',
+    padding: '0 48px',
     scrollSnapType: 'x mandatory',
     WebkitOverflowScrolling: 'touch',
     scrollbarWidth: 'none',
@@ -226,7 +226,7 @@ export const Slide = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 'clamp(180px, 50vw, 260px)',
+    width: 'clamp(180px, 52vw, 240px)',
     pointerEvents: 'auto',
 }))
 
