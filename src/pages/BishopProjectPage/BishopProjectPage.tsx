@@ -39,7 +39,9 @@ import {
     HeroBannerRight,
     HeroBannerWrapper,
     HeroContent,
-    HeroDevices,
+    HeroDevicesContainer,
+    HeroDeviceBottom,
+    HeroDeviceTop,
     HeroLogo,
     HeroSection,
     ImpactHighlight,
@@ -85,7 +87,8 @@ import {
 
 import bishopLogo from '../../assets/images/bishop-logo.png'
 import bishopHeroBanner from '../../assets/images/bishop-hero-banner.png'
-import bishopDevices from '../../assets/images/bishop_devices.png'
+import bishopDevice1 from '../../assets/images/bishop-hero-device-1.png'
+import bishopDevice2 from '../../assets/images/bishop-hero-device-2.png'
 import droneIcon from '../../assets/images/drone-white.svg'
 import sparkleIcon from '../../assets/images/sparkle-white.svg'
 import handshakeIcon from '../../assets/images/handshake-white.svg'
@@ -115,6 +118,8 @@ export default function BishopProjectPage() {
     const [sparkleHover, setSparkleHover] = useState(false)
     const [handshakeHover, setHandshakeHover] = useState(false)
 
+    const [device1Hover, setDevice1Hover] = useState(false)
+    const [device2Hover, setDevice2Hover] = useState(false)
 
     const [isPausedTop, setIsPausedTop] = useState(false)
     const [isPausedBottom, setIsPausedBottom] = useState(false)
@@ -218,9 +223,23 @@ export default function BishopProjectPage() {
 
                             <SectionDivider/>
                         </HeroContent>
-
                         <Box sx={{marginY: 6, width: '80%', display: 'flex', justifyContent: 'center'}}>
-                            <HeroDevices src={bishopDevices} alt="Bishop devices"/>
+                            <HeroDevicesContainer>
+                                <HeroDeviceBottom
+                                    src={bishopDevice1}
+                                    alt="Bishop device 1"
+                                    isHovered={device1Hover}
+                                    onMouseEnter={() => setDevice1Hover(true)}
+                                    onMouseLeave={() => setDevice1Hover(false)}
+                                />
+                                <HeroDeviceTop
+                                    src={bishopDevice2}
+                                    alt="Bishop device 2"
+                                    isHovered={device2Hover}
+                                    onMouseEnter={() => setDevice2Hover(true)}
+                                    onMouseLeave={() => setDevice2Hover(false)}
+                                />
+                            </HeroDevicesContainer>
                         </Box>
                     </HeroSection>
 
@@ -579,8 +598,10 @@ export default function BishopProjectPage() {
                             </LinkButton>
 
                             <LinkButton
-                                href="#"
-                                onClick={(e) => e.preventDefault()}
+                                href="https://www.meetup.com/meetup-group-atxdesignjam/events/306702958/"
+                                target="_blank"
+                                                                rel="noopener noreferrer"
+
                             >
                                 Bishop x Austin Design Jam Event
                             </LinkButton>

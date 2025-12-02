@@ -175,6 +175,45 @@ export const HeroDevices = styled('img')(() => ({
     userSelect: 'none'
 }))
 
+export const HeroDevicesContainer = styled('div')(() => ({
+    position: 'relative',
+    width: '100%',
+    height: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 0
+}))
+
+interface HeroDeviceProps {
+    isHovered: boolean
+}
+
+export const HeroDevice = styled('img')<HeroDeviceProps>(({isHovered}) => ({
+    width: '52%',
+    height: 'auto',
+    display: 'block',
+    borderRadius: 12,
+    filter: 'drop-shadow(0 24px 60px rgba(0,0,0,0.65))',
+    userSelect: 'none',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    cursor: 'pointer',
+    pointerEvents: 'auto'
+}))
+
+export const HeroDeviceBottom = styled(HeroDevice)<HeroDeviceProps>(({isHovered}) => ({
+    position: 'relative',
+    marginRight: '-16%',
+    transform: isHovered ? 'translateY(-14%) scale(1.05)' : 'translateY(-14%)',
+    zIndex: isHovered ? 10 : 1
+}))
+
+export const HeroDeviceTop = styled(HeroDevice)<HeroDeviceProps>(({isHovered}) => ({
+    position: 'relative',
+    transform: isHovered ? 'translateY(14%) scale(1.05)' : 'translateY(14%)',
+    zIndex: isHovered ? 10 : 2
+}))
+
 
 export const SectionDivider = styled('div')(() => ({
     height: 2, width: "100%", background: PROCESS_BAR_GRADIENT_H, margin: '60px 0', borderRadius: 999
