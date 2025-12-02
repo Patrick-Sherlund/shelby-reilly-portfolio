@@ -35,8 +35,7 @@ import {ReactComponent as LinkedInIconLight} from '../../assets/linkedin-light.s
 type Props = {}
 
 const PROFILES = [
-    {name: 'Shelby Reilly', src: `${process.env.PUBLIC_URL}/images/shelby-rodeo.png`},
-    {name: 'Anonymous', src: `${process.env.PUBLIC_URL}/images/anonymous.png`}
+    {name: 'Shelby Reilly', src: `${process.env.PUBLIC_URL}/images/shelby-rodeo.png`}
 ]
 
 
@@ -438,35 +437,38 @@ export default function FloatingTopNav({}: Props) {
                     <Divider/>
 
                     <List sx={{py: 0}}>
-                        {PROFILES.map((p, idx) => {
-                            const isShelby = idx === 0
-                            return (
-                                <ListItem key={p.src} disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <Avatar src={p.src} sx={{width: 28, height: 28}}/>
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primary={p.name}
-                                            primaryTypographyProps={{fontWeight: 800}}
-                                        />
-                                        {isShelby && (
-                                            <IconButton
-                                                size="small"
-                                                aria-label={`${p.name} resume`}
-                                                edge="end"
-                                                component="a"
-                                                href={`${process.env.PUBLIC_URL}/files/Senior Product Designer Shelby Reilly Resume.pdf`}
-                                                download="Senior Product Designer Shelby Reilly Resume.pdf"
-                                            >
-                                                <DescriptionOutlinedIcon sx={{fontSize: 18}}/>
-                                                <ChevronRightRoundedIcon sx={{fontSize: 18, ml: .25}}/>
-                                            </IconButton>
-                                        )}
-                                    </ListItemButton>
-                                </ListItem>
-                            )
-                        })}
+                        {PROFILES.map((p) => (
+                            <ListItem key={p.src} disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <Avatar src={p.src} sx={{width: 28, height: 28}}/>
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={p.name}
+                                        primaryTypographyProps={{fontWeight: 800}}
+                                    />
+                                    <IconButton
+                                        size="small"
+                                        aria-label={`${p.name} resume`}
+                                        edge="end"
+                                        component="a"
+                                        href={`${process.env.PUBLIC_URL}/files/Senior Product Designer Shelby Reilly Resume.pdf`}
+                                        download="Senior Product Designer Shelby Reilly Resume.pdf"
+                                    >
+                                        <DescriptionOutlinedIcon sx={{fontSize: 18}}/>
+                                        <ChevronRightRoundedIcon sx={{fontSize: 18, ml: .25}}/>
+                                    </IconButton>
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                        <ListItem disablePadding>
+                            <ListItemButton component="a" href="#/about" onClick={closeMenu}>
+                                <ListItemIcon>
+                                    <InfoOutlinedIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="About me" primaryTypographyProps={{fontWeight: 700}}/>
+                            </ListItemButton>
+                        </ListItem>
                     </List>
 
                     <Divider sx={{my: 0.5}}/>

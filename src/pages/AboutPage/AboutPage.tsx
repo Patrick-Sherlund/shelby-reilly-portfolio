@@ -190,12 +190,12 @@ export default function AboutPage() {
                             </ContentBlock>
 
                             <ContentBlock>
-                                <Paragraph>
-                                    I completed my <strong>Masters in Human Computer Interaction at Georgia
-                                    Tech</strong>{' '}
-                                    where I worked as a lab Assistant in the{' '}
-                                    <strong>GVU Prototyping & Usability Labs.</strong>
-                                </Paragraph>
+                            <Paragraph>
+                                I completed my <strong>Masters in Human Computer Interaction</strong>
+                                <br style={{display: isMobile ? 'block' : 'none'}}/>
+                                <strong> at Georgia Tech</strong> where I worked as a lab Assistant in the{' '}
+                                <strong>GVU Prototyping & Usability Labs.</strong>
+                            </Paragraph>
                             </ContentBlock>
 
                             <ContentBlock>
@@ -270,7 +270,7 @@ export default function AboutPage() {
                             alt="Ctrl+Y"
                             title="Ctrl+Y"
                             date="Nov 2024 - Current"
-                            width={isMobile ? 162 : 200}
+                            width={isMobile ? 150 : 200}
                             rotationDeg={5.75}
                             zIndex={3}
                             top={isMobile ? 0 : 20}
@@ -284,11 +284,11 @@ export default function AboutPage() {
                             alt="dPod"
                             title="dPod"
                             date="Aug 2019 - Dec 2019"
-                            width={isMobile ? 162 : 184}
+                            width={isMobile ? 150 : 184}
                             rotationDeg={-10}
                             zIndex={2}
-                            top={isMobile ? 20 : 40}
-                            left={isMobile ? 20 : 200}
+                            top={isMobile ? 16 : 40}
+                            left={isMobile ? 0 : 200}
                             $isVisible={visibleImages.has(4)}
                             $delay={0.15}
                         />
@@ -298,11 +298,11 @@ export default function AboutPage() {
                             alt="LED Basketball Hoop"
                             title="LED Basketball Hoop"
                             date="Sept [wk] 2022"
-                            width={isMobile ? 162 : 150}
+                            width={isMobile ? 150 : 150}
                             rotationDeg={3}
                             zIndex={4}
-                            top={isMobile ? 40 : 10}
-                            left={isMobile ? 40 : 380}
+                            top={isMobile ? 28 : 10}
+                            left={isMobile ? 0 : 380}
                             $isVisible={visibleImages.has(5)}
                             $delay={0.2}
                         />

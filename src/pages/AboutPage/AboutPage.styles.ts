@@ -46,10 +46,14 @@ export const ContentWrapper = styled('div')(({theme}) => ({
 
 
 export const TitleSectionContainer = styled('div')<{ isMobile: boolean }>(({isMobile}) => ({
-    position: 'absolute',
-    top: isMobile ? 72 : 90,
-    left: isMobile ? 32 : 84,
-    zIndex: 10
+    position: isMobile ? 'relative' : 'absolute',
+    top: isMobile ? 'auto' : 90,
+    left: isMobile ? 'auto' : 84,
+    zIndex: 10,
+    width: isMobile ? '100%' : 'auto',
+    display: isMobile ? 'flex' : 'block',
+    justifyContent: isMobile ? 'center' : 'flex-start',
+    marginBottom: isMobile ? 16 : 0
 }))
 
 export const TitleSectionInner = styled('div')(() => ({
@@ -73,21 +77,22 @@ export const TitleChip = styled('div')<{ isMobile: boolean }>(({isMobile}) => ({
 
 export const MainContentArea = styled('div')<{ isMobile: boolean }>(({isMobile}) => ({
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: isMobile ? 'column' : 'row',
     alignItems: 'stretch',
     justifyContent: 'center',
     gap: isMobile ? 24 : 40,
     width: '100%',
     maxWidth: 1600,
     margin: '0 auto',
-    padding: isMobile ? '200px 0 20px' : '300px 0 28px',
+    padding: isMobile ? '140px 0 24px' : '300px 0 28px',
     position: 'relative'
 }))
 
 export const PresentationSection = styled('div')<{ isMobile: boolean }>(({isMobile}) => ({
     position: 'relative',
     flex: '0 0 auto',
-    width: isMobile ? '100%' : 500
+    width: isMobile ? '100%' : 500,
+    marginBottom: isMobile ? 20 : 0
 }))
 
 export const TextContentSection = styled('div')(({theme}) => ({
@@ -123,7 +128,9 @@ export const AboutTextCard = styled('div')(({theme}) => ({
     boxSizing: 'border-box',
     [theme.breakpoints.down('md')]: {
         padding: '20px',
-        paddingRight: '20px',
+        paddingRight: '120px',
+        paddingLeft: '20px',
+        paddingBottom: '120px',
         fontSize: '15px',
         height: 'auto',
         display: 'block'
@@ -188,9 +195,12 @@ export const IconTextRow = styled('div')(() => ({
 
 export const ShelbyImageContainer = styled('div')<{ isMobile: boolean }>(({isMobile}) => ({
     position: 'absolute',
-    bottom: -40,
-    right: isMobile ? -20 : -80,
-    zIndex: 10
+    bottom: isMobile ? -24 : -40,
+    right: isMobile ? 12 : -80,
+    left: 'auto',
+    zIndex: 10,
+    display: 'block',
+    pointerEvents: 'none'
 }))
 
 
