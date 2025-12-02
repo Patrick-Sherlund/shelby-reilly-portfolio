@@ -128,6 +128,43 @@ export default function IPhoneCarousel({images, height = 600}: IPhoneCarouselPro
         setIsDragging(false)
     }
 
+    // Touch event handlers for mobile swipe
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setIsDragging(true)
+        setStartX(e.touches[0].pageX - (containerRef.current?.offsetLeft || 0))
+        setScrollLeft(scrollPosition)
+    }
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (!isDragging) return
+        const x = e.touches[0].pageX - (containerRef.current?.offsetLeft || 0)
+        const walk = (x - startX) * 2
+
+        setScrollPosition(prev => {
+            const newPos = scrollLeft - walk
+
+            // Handle infinite scroll wrapping
+            const singleSetWidth = images.length * itemWidth
+            const minPos = 0
+            const maxPos = singleSetWidth * 2
+
+            if (newPos >= maxPos) {
+                setScrollLeft(scrollLeft - singleSetWidth)
+                return newPos - singleSetWidth
+            }
+            if (newPos <= minPos) {
+                setScrollLeft(scrollLeft + singleSetWidth)
+                return newPos + singleSetWidth
+            }
+
+            return newPos
+        })
+    }
+
+    const handleTouchEnd = () => {
+        setIsDragging(false)
+    }
+
 
     const getHeight = (index: number) => {
         if (!containerRef.current) return CENTER_HEIGHT
@@ -187,6 +224,9 @@ export default function IPhoneCarousel({images, height = 600}: IPhoneCarouselPro
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             $height={height}
             $isDragging={isDragging}
         >

@@ -345,7 +345,11 @@ export const ResearchHeader = styled('div')(() => ({
     gridTemplateColumns: 'auto 1fr',
     gap: '60px',
     alignItems: 'start',
-    marginBottom: '0'
+    marginBottom: '0',
+    '@media (max-width: 900px)': {
+        gridTemplateColumns: '1fr',
+        gap: '40px'
+    }
 }))
 
 export const ResearchTitleWrapper = styled('div')(() => ({
@@ -1359,7 +1363,11 @@ export const IdeationHeader = styled('div')(() => ({
     gridTemplateColumns: 'auto 1fr',
     gap: '60px',
     alignItems: 'start',
-    marginBottom: '0'
+    marginBottom: '0',
+    '@media (max-width: 900px)': {
+        gridTemplateColumns: '1fr',
+        gap: '40px'
+    }
 }))
 
 export const IdeationTitleWrapper = styled('div')(() => ({
@@ -1722,7 +1730,11 @@ export const EvaluationHeader = styled('div')(() => ({
     gridTemplateColumns: 'auto 1fr',
     gap: '60px',
     alignItems: 'start',
-    marginBottom: '0'
+    marginBottom: '0',
+    '@media (max-width: 900px)': {
+        gridTemplateColumns: '1fr',
+        gap: '40px'
+    }
 }))
 
 export const EvaluationTitleWrapper = styled('div')(() => ({
@@ -1974,7 +1986,11 @@ export const ConclusionHeader = styled('div')(() => ({
     gridTemplateColumns: 'auto 1fr',
     gap: '60px',
     alignItems: 'start',
-    marginBottom: '0'
+    marginBottom: '0',
+    '@media (max-width: 900px)': {
+        gridTemplateColumns: '1fr',
+        gap: '40px'
+    }
 }))
 
 export const ConclusionTitleWrapper = styled('div')(() => ({

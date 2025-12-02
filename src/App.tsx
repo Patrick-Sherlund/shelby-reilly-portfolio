@@ -327,7 +327,7 @@ function AppContent() {
 
             // Start momentum scrolling if velocity is significant
             if (Math.abs(velocityY) > 0.05) {
-                const deceleration = 0.97
+                const deceleration = 0.95
                 const minVelocity = 0.01
 
                 const animate = () => {
@@ -339,7 +339,7 @@ function AppContent() {
                     }
 
                     setStagePos((prev) => {
-                        const deltaY = velocityY * 30
+                        const deltaY = velocityY * 60
                         const newY = clampStagePosition(prev.y + deltaY)
 
                         // Stop momentum if we hit a boundary

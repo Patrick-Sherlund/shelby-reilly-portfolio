@@ -147,7 +147,7 @@ export const SubLineText = styled('div')(({theme}) => ({
 }))
 
 
-export const CaseStudyButton = styled('button')(() => ({
+export const CaseStudyButton = styled('button')(({theme}) => ({
     position: 'relative',
     display: 'inline-block',
     cursor: 'pointer',
@@ -173,5 +173,15 @@ export const CaseStudyButton = styled('button')(() => ({
         backgroundColor: '#4285F4',
         border: '8px solid #A9A9A9',
         zIndex: -1,
+    },
+    [theme.breakpoints.down('md')]: {
+        fontSize: '20px',
+        padding: '10px 14px',
+        border: '6px solid #FFFFFF',
+        '&::after': {
+            border: '6px solid #A9A9A9',
+            top: '10px',
+            left: '10px',
+        },
     },
 })) 

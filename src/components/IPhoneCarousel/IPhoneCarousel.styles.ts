@@ -19,7 +19,9 @@ export const CarouselContainer = styled('div')<CarouselContainerProps>(({$height
     userSelect: 'none',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    touchAction: 'pan-y',
+    WebkitOverflowScrolling: 'touch',
 }))
 
 export const CarouselTrack = styled('div')(() => ({

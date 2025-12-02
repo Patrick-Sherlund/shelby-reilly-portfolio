@@ -238,9 +238,10 @@ export const LearnMoreButton = styled('button')(({theme}) => ({
         zIndex: -1,
     },
     [theme.breakpoints.down('md')]: {
-        fontSize: '24px',
-        padding: '6px 12px',
+        fontSize: '20px',
+        padding: '10px 14px',
         border: '6px solid #FFFFFF',
+        minWidth: 'auto',
         '&::after': {
             border: '6px solid #A9A9A9',
             top: '10px',
@@ -249,12 +250,13 @@ export const LearnMoreButton = styled('button')(({theme}) => ({
     },
     [theme.breakpoints.down('sm')]: {
         fontSize: '20px',
-        padding: '4px 8px',
-        border: '4px solid #FFFFFF',
+        padding: '10px 14px',
+        border: '6px solid #FFFFFF',
+        minWidth: 'auto',
         '&::after': {
-            border: '4px solid #A9A9A9',
-            top: '8px',
-            left: '8px',
+            border: '6px solid #A9A9A9',
+            top: '10px',
+            left: '10px',
         },
     },
 }))
@@ -288,9 +290,10 @@ export const CaseStudyButton = styled('button')(({theme}) => ({
         zIndex: -1,
     },
     [theme.breakpoints.down('md')]: {
-        fontSize: '24px',
-        padding: '6px 12px',
+        fontSize: '20px',
+        padding: '10px 14px',
         border: '6px solid #FFFFFF',
+        minWidth: 'auto',
         '&::after': {
             border: '6px solid #A9A9A9',
             top: '10px',
@@ -299,12 +302,13 @@ export const CaseStudyButton = styled('button')(({theme}) => ({
     },
     [theme.breakpoints.down('sm')]: {
         fontSize: '20px',
-        padding: '4px 8px',
-        border: '4px solid #FFFFFF',
+        padding: '10px 14px',
+        border: '6px solid #FFFFFF',
+        minWidth: 'auto',
         '&::after': {
-            border: '4px solid #A9A9A9',
-            top: '8px',
-            left: '8px',
+            border: '6px solid #A9A9A9',
+            top: '10px',
+            left: '10px',
         },
     },
 }))

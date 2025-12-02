@@ -14,6 +14,11 @@ import {
     HeroLogo,
     HeroSection,
     ListItem,
+    MobileStepBadge,
+    MobileStepChip,
+    MobileStepLabel,
+    MobileStepTrackInner,
+    MobileStepTracker,
     ProjectPageContainer,
     Section,
     SectionContent,
@@ -513,6 +518,41 @@ export default function ProjectPage() {
 
                     <Section id="research">
                         <SectionTitle>Research</SectionTitle>
+
+                        {/* Mobile Sticky Step Tracker for Research */}
+                        <MobileStepTracker>
+                            <MobileStepTrackInner>
+                                <MobileStepChip
+                                    $active={activeResearchStep === 0}
+                                    onClick={() => rStep1Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
+                                >
+                                    <MobileStepBadge>1</MobileStepBadge>
+                                    <MobileStepLabel>On-Site Research</MobileStepLabel>
+                                </MobileStepChip>
+                                <MobileStepChip
+                                    $active={activeResearchStep === 1}
+                                    onClick={() => rStep2Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
+                                >
+                                    <MobileStepBadge>2</MobileStepBadge>
+                                    <MobileStepLabel>Affinity Mapping</MobileStepLabel>
+                                </MobileStepChip>
+                                <MobileStepChip
+                                    $active={activeResearchStep === 2}
+                                    onClick={() => rStep3Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
+                                >
+                                    <MobileStepBadge>3</MobileStepBadge>
+                                    <MobileStepLabel>Prioritization</MobileStepLabel>
+                                </MobileStepChip>
+                                <MobileStepChip
+                                    $active={activeResearchStep === 3}
+                                    onClick={() => rStep4Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
+                                >
+                                    <MobileStepBadge>4</MobileStepBadge>
+                                    <MobileStepLabel>Problem Statement</MobileStepLabel>
+                                </MobileStepChip>
+                            </MobileStepTrackInner>
+                        </MobileStepTracker>
+
                         <SectionContent>
                             <Box
                                 ref={rProcessGridRef}
@@ -789,6 +829,34 @@ export default function ProjectPage() {
 
                     <Section id="design">
                         <SectionTitle>Design</SectionTitle>
+
+                        {/* Mobile Sticky Step Tracker for Design */}
+                        <MobileStepTracker>
+                            <MobileStepTrackInner>
+                                <MobileStepChip
+                                    $active={activeDesignStep === 0}
+                                    onClick={() => step1Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
+                                >
+                                    <MobileStepBadge>1</MobileStepBadge>
+                                    <MobileStepLabel>User Flows</MobileStepLabel>
+                                </MobileStepChip>
+                                <MobileStepChip
+                                    $active={activeDesignStep === 1}
+                                    onClick={() => step2Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
+                                >
+                                    <MobileStepBadge>2</MobileStepBadge>
+                                    <MobileStepLabel>Data Mapping</MobileStepLabel>
+                                </MobileStepChip>
+                                <MobileStepChip
+                                    $active={activeDesignStep === 2}
+                                    onClick={() => step3Ref.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}
+                                >
+                                    <MobileStepBadge>3</MobileStepBadge>
+                                    <MobileStepLabel>UI Design</MobileStepLabel>
+                                </MobileStepChip>
+                            </MobileStepTrackInner>
+                        </MobileStepTracker>
+
                         <SectionContent>
                             <Box
                                 ref={processGridRef}

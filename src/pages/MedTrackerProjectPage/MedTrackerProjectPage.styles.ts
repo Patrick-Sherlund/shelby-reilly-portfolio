@@ -429,3 +429,79 @@ export const StepBadge = styled('span')(({theme}) => ({
 export const StepContent = styled('div')(() => ({
     paddingLeft: '36px',
 }))
+
+// Mobile-specific sticky step tracker styles
+export const MobileStepTracker = styled('div')(({theme}) => ({
+    display: 'none',
+    [theme.breakpoints.down('md')]: {
+        display: 'block',
+        position: 'sticky',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        backgroundColor: theme.palette.background.default,
+        borderBottom: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        '&::-webkit-scrollbar': {
+            display: 'none'
+        },
+        // Shadow for depth
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+    }
+}))
+
+export const MobileStepTrackInner = styled('div')(() => ({
+    display: 'flex',
+    gap: '8px',
+    padding: '12px 16px',
+    minWidth: 'max-content',
+}))
+
+export const MobileStepChip = styled('button')<{ $active?: boolean }>(({$active, theme}) => ({
+    flex: '0 0 auto',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '8px 12px',
+    borderRadius: '8px',
+    border: '1px solid',
+    borderColor: $active
+        ? (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.28)')
+        : (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.14)'),
+    background: $active
+        ? (theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')
+        : 'transparent',
+    cursor: 'pointer',
+    transition: 'all .2s ease',
+    whiteSpace: 'nowrap',
+    fontSize: '13px',
+    fontWeight: 700,
+    color: theme.palette.text.primary,
+    boxShadow: $active ? '0 4px 12px rgba(0,0,0,0.2)' : 'none',
+    '&:active': {
+        transform: 'scale(0.96)',
+    }
+}))
+
+export const MobileStepBadge = styled('span')(({theme}) => ({
+    display: 'inline-grid',
+    placeItems: 'center',
+    width: '20px',
+    height: '20px',
+    borderRadius: '50%',
+    fontWeight: 900,
+    fontSize: '11px',
+    color: '#FFFFFF',
+    background: INDIGO,
+    flexShrink: 0,
+}))
+
+export const MobileStepLabel = styled('span')(() => ({
+    fontSize: '12px',
+    fontWeight: 700,
+    lineHeight: 1.2,
+}))
