@@ -130,7 +130,7 @@ export const AboutTextCard = styled('div')(({theme}) => ({
         padding: '20px',
         paddingRight: '120px',
         paddingLeft: '20px',
-        paddingBottom: '120px',
+        paddingBottom: '24px',
         fontSize: '15px',
         height: 'auto',
         display: 'block'
@@ -195,8 +195,8 @@ export const IconTextRow = styled('div')(() => ({
 
 export const ShelbyImageContainer = styled('div')<{ isMobile: boolean }>(({isMobile}) => ({
     position: 'absolute',
-    bottom: isMobile ? -24 : -40,
-    right: isMobile ? 12 : -80,
+    bottom: isMobile ? 6 : -40,
+    right: isMobile ? 0 : -80,
     left: 'auto',
     zIndex: 10,
     display: 'block',
