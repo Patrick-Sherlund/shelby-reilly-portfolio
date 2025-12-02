@@ -287,8 +287,8 @@ export default function AboutPage() {
                             width={isMobile ? 150 : 184}
                             rotationDeg={-10}
                             zIndex={2}
-                            top={isMobile ? 16 : 40}
-                            left={isMobile ? 0 : 200}
+                            top={isMobile ? 10 : 40}
+                            left={isMobile ? 120 : 200}
                             $isVisible={visibleImages.has(4)}
                             $delay={0.15}
                         />
@@ -301,8 +301,8 @@ export default function AboutPage() {
                             width={isMobile ? 150 : 150}
                             rotationDeg={3}
                             zIndex={4}
-                            top={isMobile ? 28 : 10}
-                            left={isMobile ? 0 : 380}
+                            top={isMobile ? 20 : 10}
+                            left={isMobile ? 240 : 380}
                             $isVisible={visibleImages.has(5)}
                             $delay={0.2}
                         />

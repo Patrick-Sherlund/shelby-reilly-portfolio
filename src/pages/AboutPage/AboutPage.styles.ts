@@ -53,7 +53,6 @@ export const TitleSectionContainer = styled('div')<{ isMobile: boolean }>(({isMo
     width: isMobile ? '100%' : 'auto',
     display: isMobile ? 'flex' : 'block',
     justifyContent: isMobile ? 'center' : 'flex-start',
-    marginBottom: isMobile ? 16 : 0
 }))
 
 export const TitleSectionInner = styled('div')(() => ({
@@ -84,7 +83,7 @@ export const MainContentArea = styled('div')<{ isMobile: boolean }>(({isMobile})
     width: '100%',
     maxWidth: 1600,
     margin: '0 auto',
-    padding: isMobile ? '140px 0 24px' : '300px 0 28px',
+    padding: isMobile ? '100px 0 24px' : '300px 0 28px',
     position: 'relative'
 }))
 
@@ -213,7 +212,7 @@ export const BottomSection = styled('div')<{ isMobile: boolean }>(({isMobile}) =
     width: '100%',
     maxWidth: 1600,
     margin: '0 auto',
-    padding: isMobile ? '48px 0 32px' : '60px 0 40px',
+    padding: isMobile ? '24px 0 0px' : '60px 0 40px',
     position: 'relative'
 }))
 
@@ -266,14 +265,15 @@ export const BlueSquiggleImage = styled('img')<{
 export const PolaroidSection = styled('div')<{ isMobile: boolean }>(({isMobile}) => ({
     position: 'relative',
     display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
+    flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'center',
     gap: 0,
     flex: '0 0 auto',
     marginTop: isMobile ? 0 : 40,
-    height: isMobile ? 'auto' : 285,
-    width: isMobile ? '100%' : 640
+    height: isMobile ? 0 : 285,
+    width: isMobile ? '100%' : 640,
+    overflow: 'visible'
 }))
 
 
