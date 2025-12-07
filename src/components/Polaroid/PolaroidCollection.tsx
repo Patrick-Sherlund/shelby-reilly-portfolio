@@ -46,10 +46,10 @@ const shuffleIn = keyframes`
 `;
 
 
-const SelectionBox = styled('div')<{ $isExpanded?: boolean }>(({ $isExpanded }) => ({
+const SelectionBox = styled('div')<{ $isExpanded?: boolean; $isMobile?: boolean }>(({ $isExpanded, $isMobile }) => ({
     position: 'absolute',
     top: 0, left: 0, right: 0,
-    bottom: $isExpanded ? '-150px' : '24px',
+    bottom: $isExpanded ? ($isMobile ? '-240px' : '-150px') : '24px',
     border: '2px solid #5263FF',
     borderRadius: '6px',
     backgroundColor: '#5263FF26',
@@ -147,7 +147,7 @@ export default function PolaroidCollection() {
                 } as React.CSSProperties
             }
         >
-            <SelectionBox $isExpanded={showHiddenPolaroids}>
+            <SelectionBox $isExpanded={showHiddenPolaroids} $isMobile={isMobile}>
                 <SelectionDot position="top-left"/>
                 <SelectionDot position="top-right"/>
                 <SelectionDot position="bottom-left"/>
