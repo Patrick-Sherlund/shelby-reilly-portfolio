@@ -25,7 +25,7 @@ const PolaroidWrapper = styled('div')<{
     $isVisible?: boolean;
     $delay?: number;
     $activeTool?: string;
-}>(({rotationDeg, zIndex, top, left, $isVisible, $delay = 0, $activeTool}) => {
+}>(({rotationDeg, zIndex, top, left, $isVisible, $delay = 0, $activeTool, theme}) => {
 
     const hasAnimation = $isVisible !== undefined;
 
@@ -63,17 +63,19 @@ const PolaroidWrapper = styled('div')<{
                 }
             }
         }),
-        '&:hover': {
-            boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
-            transform: 'rotate(0deg) scale(1.1)',
-            zIndex: 200,
-            cursor: 'pointer',
-        },
-        '&:focus-visible': {
-            boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
-            transform: 'rotate(0deg) scale(1.02)',
-            outline: 'none',
-        },
+        [theme.breakpoints.up('md')]: {
+            '&:hover': {
+                boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
+                transform: 'rotate(0deg) scale(1.1)',
+                zIndex: 200,
+                cursor: 'pointer',
+            },
+            '&:focus-visible': {
+                boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
+                transform: 'rotate(0deg) scale(1.02)',
+                outline: 'none',
+            },
+        }
     };
 });
 

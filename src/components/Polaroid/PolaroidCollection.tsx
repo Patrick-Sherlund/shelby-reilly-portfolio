@@ -155,9 +155,9 @@ export default function PolaroidCollection() {
             </SelectionBox>
 
             <PolaroidGroup
-                onMouseEnter={() => setShowHiddenPolaroids(true)}
-                onMouseLeave={() => setShowHiddenPolaroids(false)}
-                onTouchStart={() => setShowHiddenPolaroids(true)}
+                onMouseEnter={() => !isMobile && setShowHiddenPolaroids(true)}
+                onMouseLeave={() => !isMobile && setShowHiddenPolaroids(false)}
+                onClick={() => isMobile && setShowHiddenPolaroids(prev => !prev)}
             >
                 {/* Hidden polaroids - appear on hover/tap below originals */}
                 {showHiddenPolaroids && (
