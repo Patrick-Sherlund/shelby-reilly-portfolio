@@ -22,6 +22,7 @@ export const PolaroidContainer = styled('div')(({ theme }) => ({
     margin: '-60px 0 50px 0',
     transform: 'translateX(10vw)',
     willChange: 'transform',
+    zIndex: 20,
     [theme.breakpoints.down('md')]: {
         position: 'absolute',
         top: 'clamp(56px, 10vh, 90px)',
@@ -38,7 +39,7 @@ export const PolaroidContainer = styled('div')(({ theme }) => ({
         padding: '0',
         minHeight: 'auto',
         overflow: 'visible',
-        zIndex: 2
+        zIndex: 20
     }
 }))
 

@@ -47,12 +47,12 @@ const PolaroidWrapper = styled('div')<{
         padding: '10px 10px 10px 10px',
         boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)',
         display: 'inline-block',
-        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-in-out, z-index 0s',
         willChange: 'transform',
         pointerEvents: isKonvaToolActive ? 'none' : 'auto',
         ...(hasAnimation && {
             opacity: $isVisible ? 1 : 0,
-            animation: $isVisible ? `${keyframeName} 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s both` : 'none',
+            animation: $isVisible ? `${keyframeName} 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${$delay}s` : 'none',
             [`@keyframes ${keyframeName}`]: {
                 '0%': {
                     opacity: 0,
@@ -60,13 +60,11 @@ const PolaroidWrapper = styled('div')<{
                 },
                 '100%': {
                     opacity: 1,
-                    transform: `translateY(0) scale(1) rotate(${rotationDeg}deg)`,
                 }
             }
         }),
         '&:hover': {
             boxShadow: '0 7px 14px rgba(0, 0, 0, 0.2)',
-
             transform: 'rotate(0deg) scale(1.1)',
             zIndex: 200,
             cursor: 'pointer',
@@ -95,23 +93,24 @@ const PolaroidCaption = styled('div')(() => ({
     textAlign: 'center',
     fontSize: '14px',
     lineHeight: '1.2',
-    fontFamily: '"Courier New", monospace',
+    fontFamily: 'Futura, sans-serif',
     whiteSpace: 'normal',
-    padding: '0 5px',
 }));
 
 const PolaroidTitle = styled('div')(() => ({
-    fontWeight: 'bold',
+    fontWeight: 700,
     color: '#000',
     marginBottom: '0px',
-    fontSize: '12px',
+    fontSize: '10px',
     whiteSpace: 'normal',
+    padding: '6px'
+
 }));
 
 const PolaroidDate = styled('div')(() => ({
     fontSize: '11px',
-    color: '#555',
-    whiteSpace: 'normal',
+    color: '#000',
+    whiteSpace: 'nowrap',
 }));
 
 const Polaroid = forwardRef<HTMLDivElement, PolaroidProps>(({

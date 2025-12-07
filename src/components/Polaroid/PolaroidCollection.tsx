@@ -19,6 +19,7 @@ const CollectionContainer = styled('div')(() => ({
     marginTop: '70px',
     marginLeft: 'clamp(140px, 5vw, 120px)',
     pointerEvents: 'auto',
+    zIndex: 10,
 }));
 
 const growFromCorner = keyframes`
@@ -33,10 +34,22 @@ const growFromCorner = keyframes`
     }
 `;
 
+const shuffleIn = keyframes`
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+`;
 
-const SelectionBox = styled('div')(() => ({
+
+const SelectionBox = styled('div')<{ $isExpanded?: boolean }>(({ $isExpanded }) => ({
     position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
+    top: 0, left: 0, right: 0,
+    bottom: $isExpanded ? '-150px' : '24px',
     border: '2px solid #5263FF',
     borderRadius: '6px',
     backgroundColor: '#5263FF26',
@@ -44,6 +57,7 @@ const SelectionBox = styled('div')(() => ({
     transformOrigin: 'bottom right',
     transform: 'scale(0)',
     animation: `${growFromCorner} 0.8s ease-out forwards`,
+    transition: 'bottom 0.3s ease-in-out',
 }));
 
 const SelectionDot = styled('div')<{ position: string }>(({position}) => {
@@ -89,6 +103,7 @@ export default function PolaroidCollection() {
     const [localScale, setLocalScale] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
     const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set());
+    const [showHiddenPolaroids, setShowHiddenPolaroids] = useState(false);
     const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
@@ -132,52 +147,102 @@ export default function PolaroidCollection() {
                 } as React.CSSProperties
             }
         >
-            <SelectionBox>
+            <SelectionBox $isExpanded={showHiddenPolaroids}>
                 <SelectionDot position="top-left"/>
                 <SelectionDot position="top-right"/>
                 <SelectionDot position="bottom-left"/>
                 <SelectionDot position="bottom-right"/>
             </SelectionBox>
 
-            <PolaroidGroup>
+            <PolaroidGroup
+                onMouseEnter={() => setShowHiddenPolaroids(true)}
+                onMouseLeave={() => setShowHiddenPolaroids(false)}
+                onTouchStart={() => setShowHiddenPolaroids(true)}
+            >
+                {/* Hidden polaroids - appear on hover/tap below originals */}
+                {showHiddenPolaroids && (
+                    <>
+                        <Polaroid
+                            src={`${process.env.PUBLIC_URL}/images/polaroid/shelby-design-jam-polaroid.png`}
+                            alt="Design Community Advocate"
+                            title="Design Community Advocate"
+                            date="Austin Design Jam 2025"
+                            width={140}
+                            rotationDeg={-5.4}
+                            zIndex={1}
+                            top="202px"
+                            left="302px"
+                            $isVisible={true}
+                            $delay={0}
+                        />
+                        <Polaroid
+                            src={`${process.env.PUBLIC_URL}/images/polaroid/shelby-mission-polaroid.png`}
+                            alt="Mission Planning App"
+                            title="Mission Planning App"
+                            date="US Air Force 2020-2022"
+                            width={140}
+                            rotationDeg={2.74}
+                            zIndex={1}
+                            top="205px"
+                            left="160px"
+                            $isVisible={true}
+                            $delay={0}
+                        />
+                        <Polaroid
+                            src={`${process.env.PUBLIC_URL}/images/polaroid/shelby-industrial-design.png`}
+                            alt="Industrial Design"
+                            title="Industrial Design"
+                            date="MS HCI: 2021"
+                            width={140}
+                            rotationDeg={15}
+                            zIndex={1}
+                            top="205px"
+                            left="20px"
+                            $isVisible={true}
+                            $delay={0}
+                        />
+                    </>
+                )}
+
+                {/* Original polaroids - always visible */}
                 <Polaroid
                     ref={(el) => (imageRefs.current[2] = el)}
-                    src={`${process.env.PUBLIC_URL}/images/polaroid/hoop.png`}
-                    alt="LED Basketball Hoop"
-                    title="LED Basketball Hoop"
-                    date="Sept [wk] 2022"
+                    src={`${process.env.PUBLIC_URL}/images/polaroid/shelby-jamba-polaroid.png`}
+                    alt="Jamba Juice Mobile"
+                    title="Jamba Juice Mobile"
+                    date="MS HCI: 2021"
                     width={140}
                     rotationDeg={2.5}
                     zIndex={4}
-                    top="12px"
+                    top="32px"
                     left="302px"
                     $isVisible={visibleImages.has(2)}
                     $delay={0.1}
                 />
                 <Polaroid
                     ref={(el) => (imageRefs.current[1] = el)}
-                    src={`${process.env.PUBLIC_URL}/images/polaroid/dpod.png`}
-                    alt="dPod"
-                    title="dPod"
-                    date="Aug 2019 - Dec 2019"
-                    width={140}
+                    src={`${process.env.PUBLIC_URL}/images/polaroid/shelby-vmware-polaroid.png`}
+                    alt="VMware"
+                    title="VMware"
+                    date="Sep 2022 - Apr 2025"
+                    width={146}
                     rotationDeg={-10}
                     zIndex={2}
-                    top="35px"
-                    left="160px"
+                    top="20px"
+                    left="154px"
                     $isVisible={visibleImages.has(1)}
                     $delay={0.2}
                 />
                 <Polaroid
                     ref={(el) => (imageRefs.current[0] = el)}
-                    src={`${process.env.PUBLIC_URL}/images/polaroid/ctrly.png`}
-                    alt="Ctrl+Y"
-                    title="Ctrl+Y"
-                    date="Nov 2024 - Current"
+                    src={`${process.env.PUBLIC_URL}/images/polaroid/shelby-drone-polaroid.png`}
+                    alt="Ctrl+Y: Drones + AI"
+                    title="Ctrl+Y: Drones + AI"
+                    date="Nov 2024 - May 2025"
                     width={140}
                     rotationDeg={5.75}
                     zIndex={3}
-                    top="15px"
+                    top="35px"
                     left="20px"
                     $isVisible={visibleImages.has(0)}
                     $delay={0.3}
