@@ -48,6 +48,10 @@ export default function ProjectBishopPage() {
                             alt="Project Bishop"
                             draggable={false}
                             data-testid="pb-logo-small"
+                            
+                            onClick={() => {
+                                window.location.hash = '#/bishop-project'
+                            }}
                         />
 
                         <DescriptiveParagraph>
@@ -77,6 +81,10 @@ export default function ProjectBishopPage() {
                                 src={`${process.env.PUBLIC_URL}/images/ctrly-logo.png`}
                                 alt="CTRL+Y Logo"
                                 draggable={false}
+                                
+                            onClick={() => {
+                                window.location.hash = '#/bishop-project'
+                            }}
                             />
                         </CtrlYBadge>
 

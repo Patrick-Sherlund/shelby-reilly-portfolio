@@ -18,11 +18,11 @@ export const LogoImage = styled('img')<{ $activeTool?: string }>(({$activeTool})
     const isKonvaToolActive = $activeTool === 'emoji' || $activeTool === 'commenting-cursor';
 
     return {
-        height: 'clamp(30px, 5vw, 60px)',
+        height: 'clamp(48px, 8vw, 60px)',
         width: 'auto',
         pointerEvents: isKonvaToolActive ? 'none' : 'auto',
         alignSelf: 'flex-start',
-        margin: '148px 32px -80px 120px',
+        margin: '148px 32px 0px 140px',
     }
 })
 

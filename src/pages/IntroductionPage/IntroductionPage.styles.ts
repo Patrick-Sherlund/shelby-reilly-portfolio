@@ -19,7 +19,7 @@ export const MainWrapper = styled('div')(({ theme }) => ({
 }))
 
 export const PolaroidContainer = styled('div')(({ theme }) => ({
-    margin: '-60px 0 50px 0',
+    margin: '-60px -200px 120px 0',
     transform: 'translateX(10vw)',
     willChange: 'transform',
     zIndex: 20,

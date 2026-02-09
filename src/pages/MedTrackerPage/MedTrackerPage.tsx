@@ -199,6 +199,7 @@ export default function MedTrackerPage() {
                 src={`${process.env.PUBLIC_URL}/images/vmware.png`}
                 alt="VMware Logo"
                 $activeTool={activeTool}
+                onClick={handleCaseStudyClick}
             />
 
             {isDesktop && (
@@ -233,6 +234,7 @@ export default function MedTrackerPage() {
                             alt="Project Bishop"
                             draggable={false}
                             data-testid="pb-logo-small"
+                            onClick={handleCaseStudyClick}
                         />
                         <LineText>Streamlined medical inventory process saving {'>'} 11k hours annually</LineText>
                         <SubLineText>Senior Product Designer</SubLineText>

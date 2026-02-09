@@ -41,6 +41,7 @@ export default function GoogleCodesignPage() {
                         src={`${process.env.PUBLIC_URL}/images/google-logo.png`}
                         alt="Google Logo"
                         $activeTool={activeTool}
+                         onClick={handleCaseStudyClick}
                     />
 
                     <MidSection>
@@ -80,6 +81,7 @@ export default function GoogleCodesignPage() {
                                 alt="Google Codesign"
                                 draggable={false}
                                 data-testid="pb-logo-small"
+                                 onClick={handleCaseStudyClick}
                             />
                             <LineText>Web Component-based Prototyping Tool bridging the gap between design and
                                 engineering</LineText>
@@ -103,12 +105,14 @@ export default function GoogleCodesignPage() {
                             alt="Google Logo"
                             $activeTool={activeTool}
                             style={{ margin: 0, height: 'clamp(52.5px, 8.75vw, 105px)' }}
+                             onClick={handleCaseStudyClick}
                         />
                         <GoogleCodesignLogo
                             src={codesignLogo}
                             alt="Google Codesign"
                             draggable={false}
                             data-testid="pb-logo-small"
+                             onClick={handleCaseStudyClick}
                         />
                     </Box>
 
