@@ -22,6 +22,7 @@ import CommentingLayer from './components/CommentingLayer/CommentingLayer'
 import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
 import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
 import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
+import HobbyistPage from './pages/HobbyistPage/HobbyistPage'
 import {GlobalStyles} from '@mui/material'
 import SearchPalette from './components/SearchPalette/SearchPalette'
 import {CommentSidepane} from './components/CommentSidepane/CommentSidepane'
@@ -29,6 +30,7 @@ import {CommentsProvider, useComments} from './context/CommentsContext'
 import MedTrackerProjectPage from './pages/MedTrackerProjectPage/MedTrackerProjectPage'
 import BishopProjectPage from './pages/BishopProjectPage/BishopProjectPage'
 import GoogleCodesignProjectPage from './pages/GoogleCodesignProjectPage/GoogleCodesignProjectPage'
+import HobbyistProjectPage from './pages/HobbyistProjectPage/HobbyistProjectPage'
 import AboutPage from './pages/AboutPage/AboutPage'
 import {CursorSimulatorProvider, useCursorSimulator} from './context/CursorSimulatorContext'
 import {CursorSimulator} from './components/CursorSimulator/CursorSimulator'
@@ -94,6 +96,7 @@ function AppContent() {
     const INTRO_MEDTRACKER_GAP = isMobile ? 100 : 0  // Half of original 200
     const MEDTRACKER_BISHOP_GAP = isMobile ? 334 : 0  // 2/3 of original 400, plus 25%
     const BISHOP_CODESIGN_GAP = isMobile ? 250 : 0    // Original 200, plus 25%
+    const CODESIGN_HOBBYIST_GAP = isMobile ? 250 : 0
 
 
     const diag = Math.hypot(viewport.w, viewport.h)
@@ -210,7 +213,8 @@ function AppContent() {
 
         const isProjectPage = currentRoute === '#/medtracker-project' ||
             currentRoute === '#/bishop-project' ||
-            currentRoute === '#/googlecodesign-project'
+            currentRoute === '#/googlecodesign-project' ||
+            currentRoute === '#/hobbyist-project'
         if (isProjectPage) return
 
 
@@ -270,7 +274,8 @@ function AppContent() {
     useEffect(() => {
         const isProjectPage = currentRoute === '#/medtracker-project' ||
             currentRoute === '#/bishop-project' ||
-            currentRoute === '#/googlecodesign-project'
+            currentRoute === '#/googlecodesign-project' ||
+            currentRoute === '#/hobbyist-project'
         if (isProjectPage) return
 
         const isWandActive = activeTool === 'emoji' && emojiSubMode === 'wand'
@@ -396,7 +401,8 @@ function AppContent() {
             0,
             pageH + INTRO_MEDTRACKER_GAP,
             pageH * 2 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP,
-            pageH * 3 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP
+            pageH * 3 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP,
+            pageH * 4 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP + CODESIGN_HOBBYIST_GAP
         ]
 
         // Find closest page
@@ -458,7 +464,8 @@ function AppContent() {
     useEffect(() => {
         const isCaseStudyPage = currentRoute === '#/medtracker-project' ||
             currentRoute === '#/bishop-project' ||
-            currentRoute === '#/googlecodesign-project'
+            currentRoute === '#/googlecodesign-project' ||
+            currentRoute === '#/hobbyist-project'
 
         if (isCaseStudyPage) {
             setThemeMode('dark')
@@ -525,6 +532,27 @@ function AppContent() {
                 activeTool
             }}>
                 <GoogleCodesignProjectPage/>
+                <SearchPalette/>
+            </ZoomPanContext.Provider>
+        )
+    }
+
+    if (currentRoute === '#/hobbyist-project') {
+        return (
+            <ZoomPanContext.Provider value={{
+                stageRef,
+                stageScale,
+                setStageScale,
+                stagePos,
+                setStagePos,
+                maxScrollPages,
+                setMaxScrollPages,
+                clampStagePosition,
+                zoomIn,
+                zoomOut,
+                activeTool
+            }}>
+                <HobbyistProjectPage/>
                 <SearchPalette/>
             </ZoomPanContext.Provider>
         )
@@ -934,6 +962,10 @@ function AppContent() {
                     <PageWrapper baseY={viewport.h * 3 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP} translateX={stagePos.x} translateY={stagePos.y}
                                  scale={stageScale} $activeTool={activeTool}>
                         <GoogleCodesignPage/>
+                    </PageWrapper>
+                    <PageWrapper baseY={viewport.h * 4 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP + CODESIGN_HOBBYIST_GAP} translateX={stagePos.x} translateY={stagePos.y}
+                                 scale={stageScale} $activeTool={activeTool}>
+                        <HobbyistPage/>
                     </PageWrapper>
 
                     <CursorChat/>

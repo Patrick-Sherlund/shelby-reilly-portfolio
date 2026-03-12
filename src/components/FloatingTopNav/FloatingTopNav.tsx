@@ -245,6 +245,7 @@ export default function FloatingTopNav({}: Props) {
     const isProjectPage = window.location.hash.includes('bishop-project') ||
         window.location.hash.includes('codesign-project') ||
         window.location.hash.includes('medtracker-project') ||
+        window.location.hash.includes('hobbyist-project') ||
         window.location.hash.includes('about')
 
 
