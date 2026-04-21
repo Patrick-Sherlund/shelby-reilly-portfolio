@@ -57,7 +57,7 @@ export default function HobbyistPage() {
                                 alt="Hobbyist"
                                 draggable={false}
                             />
-                            <LineText>Cutie patootie</LineText>
+                            <LineText>A fun app to find your next hobby!</LineText>
                             <SubLineText>Product Designer</SubLineText>
                             <SubLineText>2025</SubLineText>
                             <ViewMoreButton onClick={handleViewMore}>
@@ -112,7 +112,7 @@ export default function HobbyistPage() {
                     {/* Text content */}
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', textAlign: 'center'}}>
                         <LineText style={{fontSize: '16px'}}>
-                            Cutie patootie
+                            A fun app to find your next hobby!
                         </LineText>
                         <SubLineText style={{fontSize: '14px'}}>Product Designer</SubLineText>
                         <SubLineText style={{fontSize: '14px'}}>2025</SubLineText>
