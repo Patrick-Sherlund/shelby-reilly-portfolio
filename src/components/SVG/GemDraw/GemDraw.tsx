@@ -2,7 +2,7 @@ import React from 'react'
 import {ReactComponent as GemSVGLight} from '../../../assets/images/gem_light.svg'
 import {ReactComponent as GemSVGDark} from '../../../assets/images/gem_dark.svg'
 import {useThemeMode} from '../../../theme/ThemeProvider'
-import SVGDraw from '../SVGDraw'
+import SVGDraw from '../SVGDraw/SVGDraw'
 
 type Props = {
     width?: number | string

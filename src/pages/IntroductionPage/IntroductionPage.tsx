@@ -17,7 +17,7 @@ import {
 import {useZoomPanInteraction} from '../../hooks/useZoomPanInteraction'
 import {useZoomPanContext} from '../../context/ZoomPanContext'
 import {useSearchContext} from '../../context/SearchContext'
-import GemDraw from '../../components/SVG/GemDraw'
+import GemDraw from '../../components/SVG/GemDraw/GemDraw'
 import {Typography} from '@mui/material'
 
 const MOBILE_CHAT_SHIFT_X = -40

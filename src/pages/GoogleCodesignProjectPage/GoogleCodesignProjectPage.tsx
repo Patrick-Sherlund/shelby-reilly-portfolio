@@ -171,7 +171,7 @@ import prototype12 from '../../assets/images/codesign-prototype/codesign-prototy
 import prototype13 from '../../assets/images/codesign-prototype/codesign-prototype-13.png'
 import prototype14 from '../../assets/images/codesign-prototype/codesign-prototype-14.png'
 import PersonaCarousel from '../../components/PersonaCarousel/PersonaCarousel'
-import SVGDraw from '../../components/SVG/SVGDraw'
+import SVGDraw from '../../components/SVG/SVGDraw/SVGDraw'
 import {ReactComponent as CutieIllustrationSVG} from '../../assets/images/cutie-illustration.svg'
 
 export default function GoogleCodesignProjectPage() {
