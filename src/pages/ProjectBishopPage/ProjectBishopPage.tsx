@@ -71,7 +71,7 @@ export default function ProjectBishopPage() {
                             }}
                             data-testid="pb-cta"
                         >
-                            Learn More
+                            View More
                         </LearnMoreButton>
                     </DescriptionWrapper>
 
@@ -176,7 +176,7 @@ export default function ProjectBishopPage() {
                             }}
                             data-testid="pb-cta"
                         >
-                            Learn More
+                            View More
                         </LearnMoreButton>
                     </Box>
                 </Box>

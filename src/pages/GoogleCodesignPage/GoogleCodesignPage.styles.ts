@@ -148,40 +148,26 @@ export const SubLineText = styled('div')(({theme}) => ({
 
 
 export const CaseStudyButton = styled('button')(({theme}) => ({
-    position: 'relative',
     display: 'inline-block',
     cursor: 'pointer',
-    backgroundColor: '#4285F4',
+    backgroundColor: '#292929',
     color: '#FFFFFF',
     fontFamily: 'Futura, sans-serif',
     fontWeight: 700,
-    fontSize: '32px',
-    padding: '8px 16px',
-    border: '8px solid #FFFFFF',
+    fontSize: '28px',
+    padding: '14px 60px',
+    border: 'none',
+    borderRadius: '50px',
     boxSizing: 'border-box',
     outline: 'none',
     pointerEvents: 'auto',
-
-    '&::after': {
-        content: '"READ CASE STUDY"',
-        position: 'absolute',
-        top: '14px',
-        left: '14px',
-        width: '100%',
-        height: '100%',
-        boxSizing: 'border-box',
-        backgroundColor: '#4285F4',
-        border: '8px solid #A9A9A9',
-        zIndex: -1,
+    marginTop: '8px',
+    transition: 'opacity 0.2s ease',
+    '&:hover': {
+        opacity: 0.9,
     },
     [theme.breakpoints.down('md')]: {
-        fontSize: '20px',
-        padding: '10px 14px',
-        border: '6px solid #FFFFFF',
-        '&::after': {
-            border: '6px solid #A9A9A9',
-            top: '10px',
-            left: '10px',
-        },
+        fontSize: '28px',
+        padding: '14px 60px',
     },
 })) 

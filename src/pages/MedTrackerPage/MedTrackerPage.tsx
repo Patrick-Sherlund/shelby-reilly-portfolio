@@ -241,7 +241,7 @@ export default function MedTrackerPage() {
                         <SubLineText>2024 - 2025</SubLineText>
                         <div style={{marginTop: '32px'}}>
                             <CaseStudyButton onClick={handleCaseStudyClick}>
-                                READ CASE STUDY
+                                View More
                             </CaseStudyButton>
                         </div>
                     </DescriptionWrapper>
@@ -302,7 +302,7 @@ export default function MedTrackerPage() {
 
                     <StickyCTA>
                         <MobileCaseStudyButton onClick={handleCaseStudyClick}>
-                            READ CASE STUDY
+                            View More
                         </MobileCaseStudyButton>
                     </StickyCTA>
                 </MobileSection>

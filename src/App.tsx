@@ -23,6 +23,7 @@ import MedTrackerPage from './pages/MedTrackerPage/MedTrackerPage'
 import ProjectBishopPage from './pages/ProjectBishopPage/ProjectBishopPage'
 import GoogleCodesignPage from './pages/GoogleCodesignPage/GoogleCodesignPage'
 import HobbyistPage from './pages/HobbyistPage/HobbyistPage'
+import ContactPage from './pages/ContactPage/ContactPage'
 import {GlobalStyles} from '@mui/material'
 import SearchPalette from './components/SearchPalette/SearchPalette'
 import {CommentSidepane} from './components/CommentSidepane/CommentSidepane'
@@ -97,6 +98,7 @@ function AppContent() {
     const MEDTRACKER_BISHOP_GAP = isMobile ? 334 : 0  // 2/3 of original 400, plus 25%
     const BISHOP_CODESIGN_GAP = isMobile ? 250 : 0    // Original 200, plus 25%
     const CODESIGN_HOBBYIST_GAP = isMobile ? 250 : 0
+    const HOBBYIST_CONTACT_GAP = 0
 
 
     const diag = Math.hypot(viewport.w, viewport.h)
@@ -402,7 +404,8 @@ function AppContent() {
             pageH + INTRO_MEDTRACKER_GAP,
             pageH * 2 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP,
             pageH * 3 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP,
-            pageH * 4 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP + CODESIGN_HOBBYIST_GAP
+            pageH * 4 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP + CODESIGN_HOBBYIST_GAP,
+            pageH * 5 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP + CODESIGN_HOBBYIST_GAP + HOBBYIST_CONTACT_GAP
         ]
 
         // Find closest page
@@ -966,6 +969,10 @@ function AppContent() {
                     <PageWrapper baseY={viewport.h * 4 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP + CODESIGN_HOBBYIST_GAP} translateX={stagePos.x} translateY={stagePos.y}
                                  scale={stageScale} $activeTool={activeTool}>
                         <HobbyistPage/>
+                    </PageWrapper>
+                    <PageWrapper baseY={viewport.h * 5 + INTRO_MEDTRACKER_GAP + MEDTRACKER_BISHOP_GAP + BISHOP_CODESIGN_GAP + CODESIGN_HOBBYIST_GAP + HOBBYIST_CONTACT_GAP} translateX={stagePos.x} translateY={stagePos.y}
+                                 scale={stageScale} $activeTool={activeTool}>
+                        <ContactPage/>
                     </PageWrapper>
 
                     <CursorChat/>

@@ -13,3 +13,4 @@ Observe the folder / file architecture for the project, ensure that you always f
 No amend: Never amend commits unless explicitly approved in writing.
 
 Rebase without editors: Use GIT_EDITOR=: and GIT_SEQUENCE_EDITOR=: (or --no-edit) to avoid interactive editors.
+

@@ -90,7 +90,7 @@ export default function GoogleCodesignPage() {
 
                             <div style={{marginTop: '32px'}}>
                                 <CaseStudyButton onClick={handleCaseStudyClick}>
-                                    READ CASE STUDY
+                                    View More
                                 </CaseStudyButton>
                             </div>
                         </DescriptionWrapper>
@@ -157,7 +157,7 @@ export default function GoogleCodesignPage() {
                     {/* Case study button */}
                     <Box sx={{ marginTop: '24px' }}>
                         <CaseStudyButton onClick={handleCaseStudyClick}>
-                            READ CASE STUDY
+                            View More
                         </CaseStudyButton>
                     </Box>
                 </Box>

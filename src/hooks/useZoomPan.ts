@@ -1,7 +1,7 @@
 import {RefObject, useCallback, useState} from 'react'
 import Konva from 'konva'
 
-export const DEFAULT_SCROLL_PAGES = 4
+export const DEFAULT_SCROLL_PAGES = 5
 
 export function useZoomPan() {
     const [stageScale, setStageScale] = useState(1)
